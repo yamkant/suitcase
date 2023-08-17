@@ -27,3 +27,24 @@ class IntegrationSerializerTestCase(TestCase):
         if serializer.is_valid(raise_exception=True):
             instance = serializer.create(data)
             return serializer
+
+class ViewSetTestCase(TestCase):
+    def generic_test(
+        self,
+        url,
+        method,
+        expected_status_code,
+        client: Optional[APIClient] = None,
+        **data,
+    ):
+        request = getattr(client, method)
+
+        headers = {}
+        response = request(
+            url,
+            data=data,
+            format='json',
+            **headers,
+        )
+        self.assertEqual(expected_status_code, response.status_code)
+        return response
