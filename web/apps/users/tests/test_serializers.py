@@ -1,5 +1,11 @@
 from core.tests import IntegrationSerializerTestCase
-from users.serializers import UserSerializer, UserCreateSerializer
+from users.serializers import (
+    UserSerializer,
+    UserCreateSerializer,
+    UserUpdateForGeneralLevelSerializer,
+    UserUpdateForAdminLevelSerializer
+)
+
 from users.models import User
 from users.constants import UserLevelEnum
 from unittest import skip
@@ -95,4 +101,64 @@ class UserSerializerTestCase(IntegrationSerializerTestCase):
             "level": UserLevelEnum.GENERAL.value
         }
 
+        self.assertEqual(serializer.data, fixture_data)
+
+class UserUpdateForGeneralLevelSerializerTestCase(IntegrationSerializerTestCase):
+    serializer = UserUpdateForGeneralLevelSerializer
+    
+    @classmethod
+    def setUpTestData(cls) -> None:
+        pass
+
+    def test_success(self):
+        '''
+        - level을 수정할 권한은 가지고 있지 않습니다.
+        '''
+        test_user = User.objects.create_user(
+            email="test@example.com",
+            username="yamkim",
+            phone="01050175933",
+            password="5933",
+        )
+        data = {
+            "username": "yamkant",
+            "level": UserLevelEnum.ADMIN.value,
+        }
+
+        fixture_data = {
+            "id": test_user.id,
+            "email": test_user.email,
+            "username": data['username'],
+            "phone": test_user.phone,
+            "level": test_user.level,
+        }
+        serializer = self.serializer_test(test_user, **data)
+        self.assertEqual(serializer.data, fixture_data)
+
+class UserUpdateForAdminLevelSerializerTestCase(IntegrationSerializerTestCase):
+    serializer = UserUpdateForAdminLevelSerializer
+    
+    @classmethod
+    def setUpTestData(cls) -> None:
+        pass
+
+    def test_success(self):
+        test_user = User.objects.create_user(
+            email="test@example.com",
+            username="yamkim",
+            phone="01050175933",
+            password="5933",
+        )
+        data = {
+            "username": "yamkant",
+            "level": UserLevelEnum.ADMIN.value,
+        }
+        fixture_data = {
+            "id": test_user.id,
+            "email": test_user.email,
+            "username": data['username'],
+            "phone": test_user.phone,
+            "level": data['level'],
+        }
+        serializer = self.serializer_test(test_user, **data)
         self.assertEqual(serializer.data, fixture_data)

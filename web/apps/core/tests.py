@@ -1,7 +1,7 @@
 from django.test import TestCase
 from typing import Optional, Dict
 from django.core.serializers.base import Serializer
-from core.serializers import CreateSerializer
+from core.serializers import CreateSerializer, UpdateSerializer
 from django.core.serializers.base import Serializer
 from rest_framework.serializers import ModelSerializer
 from rest_framework.test import APIClient
@@ -17,6 +17,8 @@ class IntegrationSerializerTestCase(TestCase):
     ):
         if isinstance(self.serializer(), CreateSerializer):
             return self.create(data)
+        elif isinstance(self.serializer(), UpdateSerializer):
+            return self.update(instance, data)
 
         if not instance:
             raise ValueError("instance must be a ModelSerializer")
@@ -26,6 +28,12 @@ class IntegrationSerializerTestCase(TestCase):
         serializer = self.serializer(data=data)
         if serializer.is_valid(raise_exception=True):
             instance = serializer.create(data)
+            return serializer
+
+    def update(self, instance, data):
+        serializer = self.serializer(instance, data=data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            updated_instance = serializer.save()
             return serializer
 
 class ViewSetTestCase(TestCase):
