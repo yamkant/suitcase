@@ -40,7 +40,7 @@ class User(AbstractBaseUser):
     is_active    = models.BooleanField(default=True)
     is_staff     = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    level        = models.CharField(max_length=30, unique=False, default="일반")
+    level        = models.IntegerField(unique=False, default=1)
 
     objects = UserManager()
 
