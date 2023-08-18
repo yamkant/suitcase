@@ -7,4 +7,6 @@ app_name = "accounts"
 urlpatterns = [
     path("join/", JoinAPIView.as_view(), name="join"),
     path("login/", LoginAPIView.as_view(), name="login"),
+
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
 ]
