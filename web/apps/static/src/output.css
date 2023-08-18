@@ -534,27 +534,27 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
-.bg-mybeige-100 {
+.bg-my-beige-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(196 165 102 / var(--tw-bg-opacity));
 }
 
-.bg-mybeige-300 {
+.bg-my-beige-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(207 163 107 / var(--tw-bg-opacity));
 }
 
-.bg-mybeige-500 {
+.bg-my-beige-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(183 137 105 / var(--tw-bg-opacity));
 }
 
-.bg-mybeige-700 {
+.bg-my-beige-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(207 134 107 / var(--tw-bg-opacity));
 }
 
-.bg-mybeige-900 {
+.bg-my-beige-900 {
   --tw-bg-opacity: 1;
   background-color: rgb(196 114 102 / var(--tw-bg-opacity));
 }
@@ -617,4 +617,9 @@ form.login-form > ul > li > input {
   height: 2.5rem;
   width: 5rem;
   border-width: 2px;
+}
+
+.errorlist {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
 }

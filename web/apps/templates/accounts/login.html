@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="login-form-container">
+    <form method="POST" action="{% url 'accounts:login' %}" class="login-form">
+        {% csrf_token %}
+        <ul>
+            {{form.as_ul}}
+        </ul>
+        <div class="form-btn-container">
+            <button type="submit" class="form-btn bg-[#C47266]">
+                로그인
+            </button>
+            <button type="button" class="form-btn bg-[#C47266]"
+                onclick="location.href=`{% url 'accounts:join' %}`"
+            >
+                회원가입
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

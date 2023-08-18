@@ -2,19 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-.bg-mybeige-100 {
+.bg-my-beige-100 {
     @apply bg-[#C4A566]
 }
-.bg-mybeige-300 {
+.bg-my-beige-300 {
     @apply bg-[#CFA36B]
 }
-.bg-mybeige-500 {
+.bg-my-beige-500 {
     @apply bg-[#B78969]
 }
-.bg-mybeige-700 {
+.bg-my-beige-700 {
     @apply bg-[#CF866B]
 }
-.bg-mybeige-900 {
+.bg-my-beige-900 {
     @apply bg-[#C47266]
 }
 
@@ -45,4 +45,8 @@ form.login-form > ul > li > input {
 }
 .form-btn {
     @apply w-20 border-2 h-10
+}
+
+.errorlist {
+    @apply text-black
 }
