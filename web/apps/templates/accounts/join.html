@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="join-form-container">
+    <form method="POST" action="{% url 'accounts:join' %}" class="login-form">
+        {% csrf_token %}
+        <ul>
+            {{form.as_ul}}
+        </ul>
+        <div class="form-btn-container">
+            <button type="submit" class="form-btn">신청하기</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}
