@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'compressor',
 
     # custom apps
+    'common',
     'users',
 ]
 
