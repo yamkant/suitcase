@@ -7,6 +7,13 @@
         <h1>home</h1>
     </div>
 
+    <form method="POST" action="{% url 'products:viewset' %}">
+        {% csrf_token %}
+        <input name="image_url" type="text" class="w-60" placeholder="제품 이미지 링크를 입력하세요">
+        <input name="name" type="text" class="w-60" placeholder="상품 이름을 입력하세요">
+        <button type="submit">제출</button>
+    </form>
+
     <div class="btn-container flex justify-end">
         <button onclick="location.href=`{% url 'accounts:logout' %}`"
         >로그아웃</button>

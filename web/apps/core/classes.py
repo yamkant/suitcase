@@ -2,6 +2,7 @@ from django.conf import settings
 from PIL import Image
 from io import BytesIO
 import boto3
+import uuid
 
 class S3ImageUploader():
     def __init__(self) -> None:
@@ -9,8 +10,10 @@ class S3ImageUploader():
         self.aws_secret_access_key = getattr(settings, 'AWS_SECRET_ACCESS_KEY', None)
         self.aws_region = getattr(settings, 'AWS_REGION', None)
         self.aws_storage_bucket_name = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+        self.aws_s3_custom_domain = getattr(settings, 'AWS_S3_CUSTOM_DOMAIN', None)
 
-    def upload_pil(self, img_src: Image, filename):
+    def upload_pil(self, img_src: Image, file_path):
+        file_id = str(uuid.uuid4())
         s3_transport_buffer = BytesIO()
         img_src.save(s3_transport_buffer, format="PNG")
         s3_resource = boto3.resource( 
@@ -18,7 +21,10 @@ class S3ImageUploader():
             aws_access_key_id=self.aws_access_key_id,
             aws_secret_access_key=self.aws_secret_access_key,
         )
+        filename = f'{file_path}/{file_id}'
         s3_resource.Bucket(self.aws_storage_bucket_name).put_object(Body=BytesIO(s3_transport_buffer.getvalue()), Key=filename)
+
+        return f'https://{self.aws_s3_custom_domain}/{file_id}'
 
 
 # class S3ImgUploader:

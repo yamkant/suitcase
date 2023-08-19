@@ -11,25 +11,25 @@ class ProductViewSetListTest(ViewSetTestCase):
 
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.request_general_user = TestUserHandler(
-            email="general@example.com",
-            username="general",
+        cls.request_tester_user = TestUserHandler(
+            email="tester@example.com",
+            username="tester",
             phone="01050175933",
             password="5933"
         )
-        general_user = cls.request_general_user.get_user()
-        general_user.level = UserLevelEnum.GENERAL.value
+        general_user = cls.request_tester_user.get_user()
+        general_user.level = UserLevelEnum.TESTER.value
         general_user.save()
 
         cls.data = {
             "name": "new_product",
-            "image_url": "https://origin_image_url/test_image.png",
+            "image_url": "https://us.lemaire.fr/cdn/shop/files/PA326_LD1001_BR495_PS1_2000x.jpeg?v=1690202108",
             "saved_image_url": "https://s3_bucket_address/test_image.png",
             "user_id": general_user.id
         }
     
     def test_success(self):
-        client = self.request_general_user.get_loggedin_user()
+        client = self.request_tester_user.get_loggedin_user()
 
         res = self.generic_test(
             url=self.endpoint,
@@ -49,7 +49,7 @@ class ProductViewSetListTest(ViewSetTestCase):
                 self.assertEqual(res.json()[field], self.data[field])
     
     def test_failure_empty_name(self):
-        client = self.request_general_user.get_loggedin_user()
+        client = self.request_tester_user.get_loggedin_user()
 
         res = self.generic_test(
             url=self.endpoint,
@@ -62,7 +62,7 @@ class ProductViewSetListTest(ViewSetTestCase):
         )
 
     def test_failure_empty_image_url(self):
-        client = self.request_general_user.get_loggedin_user()
+        client = self.request_tester_user.get_loggedin_user()
 
         res = self.generic_test(
             url=self.endpoint,
@@ -74,7 +74,7 @@ class ProductViewSetListTest(ViewSetTestCase):
         )
 
     def test_failure_empty_user_id(self):
-        client = self.request_general_user.get_loggedin_user()
+        client = self.request_tester_user.get_loggedin_user()
 
         res = self.generic_test(
             url=self.endpoint,
