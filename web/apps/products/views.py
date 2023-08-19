@@ -41,7 +41,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         rembg_image = remove(image)
         new_width = int(rembg_image._size[0] * 0.8)
         new_height = int(rembg_image._size[1] * 0.8)
-        resized_img = image.resize((new_width, new_height))
+        resized_img = rembg_image.resize((new_width, new_height))
 
         imgUploader = S3ImageUploader()
         request.data['saved_image_url'] = imgUploader.upload_pil(resized_img, f'{request.user.username}')

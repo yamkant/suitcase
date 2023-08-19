@@ -24,7 +24,7 @@ class S3ImageUploader():
         filename = f'{file_path}/{file_id}'
         s3_resource.Bucket(self.aws_storage_bucket_name).put_object(Body=BytesIO(s3_transport_buffer.getvalue()), Key=filename)
 
-        return f'https://{self.aws_s3_custom_domain}/{file_id}'
+        return f'https://{self.aws_s3_custom_domain}/{filename}'
 
 
 # class S3ImgUploader:
