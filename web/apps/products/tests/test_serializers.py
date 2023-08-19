@@ -1,0 +1,61 @@
+from core.tests import IntegrationSerializerTestCase
+from products.serializers import (
+    ProductCreateSerializer,
+)
+from rest_framework.exceptions import ValidationError
+from users.models import User
+
+EXCEPTION_MESSAGE = "이 필드는 필수 항목입니다."
+
+class ProductCreateSerializerTestCase(IntegrationSerializerTestCase):
+    serializer = ProductCreateSerializer
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.test_user = User.objects.create_user(
+            email="test@example.com",
+            username="yamkim",
+            phone="01050175933",
+            password="5933",
+        )
+        cls.data = {
+            "name": "new_product",
+            "image_url": "https://s3_bucket_address/test_image.png",
+            "user_id": cls.test_user.id
+        }
+
+    def test_success(self):
+        data = {
+            "name": "new_product",
+            "image_url": "https://s3_bucket_address/test_image.png",
+            "user_id": self.test_user.id
+        }
+        serializer = self.serializer_test(
+            name=self.data['name'],
+            image_url=self.data['image_url'],
+            user_id=self.data['user_id'],
+        )
+        self.assertEqual(serializer.data, self.data)
+    
+    def test_failure_empty_name(self):
+        with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
+            serializer = self.serializer_test(
+                image_url=self.data['image_url'],
+                user_id=self.data['user_id'],
+            )
+
+    def test_failure_empty_image_url(self):
+        with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
+            serializer = self.serializer_test(
+                name=self.data['name'],
+                user_id=self.data['user_id'],
+            )
+
+    def test_failure_empty_user_id(self):
+        with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
+            serializer = self.serializer_test(
+                name=self.data['name'],
+                image_url=self.data['image_url'],
+            )
+
+
