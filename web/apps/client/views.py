@@ -8,6 +8,13 @@ from products.models import Product
 @login_required
 def render_home(request):
     prod_list = Product.objects.filter()
-    context = {'prod_list': prod_list}
+    # TODO: Enum to dictionary로 리팩토링
+    cate_dict = {
+        "UNDEFINED": 1,
+        "PANTS": 2,
+        "TOPS": 3,
+    }
+
+    context = {'prod_list': prod_list, 'cate_dict': cate_dict}
 
     return render(request, 'client/home.html', context)

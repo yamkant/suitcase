@@ -5,6 +5,7 @@ from core.libs.help_test import TestUserHandler
 from users.constants import UserLevelEnum
 
 from products.models import Product
+from products.constants import CategoryEnum
 
 class ProductViewSetListTest(ViewSetTestCase):
     endpoint = reverse_lazy('products:viewset')
@@ -25,6 +26,7 @@ class ProductViewSetListTest(ViewSetTestCase):
             "name": "new_product",
             "image_url": "https://us.lemaire.fr/cdn/shop/files/PA326_LD1001_BR495_PS1_2000x.jpeg?v=1690202108",
             "saved_image_url": "https://s3_bucket_address/test_image.png",
+            "category": CategoryEnum.PANTS.value,
             "user_id": general_user.id
         }
     
@@ -39,10 +41,11 @@ class ProductViewSetListTest(ViewSetTestCase):
             name=self.data['name'],
             image_url=self.data['image_url'],
             saved_image_url=self.data['saved_image_url'],
+            category=self.data['category'],
             user_id=self.data['user_id'],
         )
 
-        test_field_list = ['name', 'image_url', 'saved_image_url', 'user_id']
+        test_field_list = ['name', 'image_url', 'saved_image_url', 'category', 'user_id']
 
         for field in test_field_list:
             with self.subTest(field=field):

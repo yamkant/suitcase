@@ -9,6 +9,7 @@ class Product(BaseModel):
     saved_image_url = models.CharField(max_length=255, blank=True, null=True)
     is_favorite = models.CharField(default="N", max_length=1)
     is_profile = models.CharField(default="N", max_length=1)
+    category = models.IntegerField(default=1)
 
     user_id = models.ForeignKey(User, db_column="user_id", on_delete=models.PROTECT)
 

@@ -4,6 +4,7 @@ from products.serializers import (
 )
 from rest_framework.exceptions import ValidationError
 from users.models import User
+from products.constants import CategoryEnum
 
 EXCEPTION_MESSAGE = "이 필드는 필수 항목입니다."
 
@@ -21,7 +22,8 @@ class ProductCreateSerializerTestCase(IntegrationSerializerTestCase):
         cls.data = {
             "name": "new_product",
             "image_url": "https://s3_bucket_address/test_image.png",
-            "user_id": cls.test_user.id
+            "user_id": cls.test_user.id,
+            "category": CategoryEnum.PANTS.value,
         }
 
     def test_success(self):
@@ -29,8 +31,9 @@ class ProductCreateSerializerTestCase(IntegrationSerializerTestCase):
             name=self.data['name'],
             image_url=self.data['image_url'],
             user_id=self.data['user_id'],
+            category=self.data['category'],
         )
-        test_field_list = ['name', 'image_url', 'user_id']
+        test_field_list = ['name', 'image_url', 'user_id', 'category']
 
         for field in test_field_list:
             with self.subTest(field=field):
