@@ -27,7 +27,7 @@ class IntegrationSerializerTestCase(TestCase):
     def create(self, data):
         serializer = self.serializer(data=data)
         if serializer.is_valid(raise_exception=True):
-            instance = serializer.create(data)
+            instance = serializer.save()
             return serializer
 
     def update(self, instance, data):

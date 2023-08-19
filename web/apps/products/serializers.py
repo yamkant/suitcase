@@ -34,5 +34,4 @@ class ProductCreateSerializer(CreateSerializer):
         return data
     
     def create(self, validated_data):
-        validated_data['user_id'] = get_object_or_404(User, id=validated_data['user_id'])
         return Product.objects.create(**validated_data)

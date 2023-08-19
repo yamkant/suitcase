@@ -25,17 +25,16 @@ class ProductCreateSerializerTestCase(IntegrationSerializerTestCase):
         }
 
     def test_success(self):
-        data = {
-            "name": "new_product",
-            "image_url": "https://s3_bucket_address/test_image.png",
-            "user_id": self.test_user.id
-        }
         serializer = self.serializer_test(
             name=self.data['name'],
             image_url=self.data['image_url'],
             user_id=self.data['user_id'],
         )
-        self.assertEqual(serializer.data, self.data)
+        test_field_list = ['name', 'image_url', 'user_id']
+
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(serializer.data[field], self.data[field])
     
     def test_failure_empty_name(self):
         with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
