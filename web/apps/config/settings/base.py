@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     # 3rd part apps
     'rest_framework',
     'compressor',
+    'storages',
 
     # custom apps
+    'common',
     'users',
 ]
 
@@ -141,3 +143,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 LOGOUT_REDIRECT_URL = '/'
+
+# AWS Setting
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_REGION = 'ap-northeast-2'
+
+
+###S3 Storages
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME') # 설정한 버킷 이름
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# 참고 블로그
+# - https://velog.io/@chaduri7913/Django-S3-이미지-업로드
+# - https://velog.io/@gogimon/Django-s3-boto3
+
+# # django >= 4.2
+# STORAGES = {"default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}}
