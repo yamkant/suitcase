@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="w-full">
+    <div class="flex justify-center">
+        <h1>home</h1>
+    </div>
+
+    <div class="btn-container flex justify-end">
+        <button onclick="location.href=`{% url 'accounts:logout' %}`"
+        >로그아웃</button>
+    </div>
+</div>
+
+
+{% endblock content %}
