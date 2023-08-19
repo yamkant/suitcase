@@ -6,6 +6,7 @@ class Product(BaseModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=False)
     image_url = models.CharField(max_length=255)
+    saved_image_url = models.CharField(max_length=255, blank=True, null=True)
     is_favorite = models.CharField(default="N", max_length=1)
     is_profile = models.CharField(default="N", max_length=1)
 

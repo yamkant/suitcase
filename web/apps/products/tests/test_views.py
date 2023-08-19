@@ -23,7 +23,8 @@ class ProductViewSetListTest(ViewSetTestCase):
 
         cls.data = {
             "name": "new_product",
-            "image_url": "https://s3_bucket_address/test_image.png",
+            "image_url": "https://origin_image_url/test_image.png",
+            "saved_image_url": "https://s3_bucket_address/test_image.png",
             "user_id": general_user.id
         }
     
@@ -37,10 +38,11 @@ class ProductViewSetListTest(ViewSetTestCase):
             client=client,
             name=self.data['name'],
             image_url=self.data['image_url'],
+            saved_image_url=self.data['saved_image_url'],
             user_id=self.data['user_id'],
         )
 
-        test_field_list = ['name', 'image_url', 'user_id']
+        test_field_list = ['name', 'image_url', 'saved_image_url', 'user_id']
 
         for field in test_field_list:
             with self.subTest(field=field):
@@ -55,6 +57,7 @@ class ProductViewSetListTest(ViewSetTestCase):
             expected_status_code=400,
             client=client,
             image_url=self.data['image_url'],
+            saved_image_url=self.data['saved_image_url'],
             user_id=self.data['user_id'],
         )
 

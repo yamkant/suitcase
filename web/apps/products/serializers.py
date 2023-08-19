@@ -13,6 +13,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "image_url",
+            "saved_image_url",
             "is_favorite",
             "is_profile",
             "user_id",
@@ -27,6 +28,7 @@ class ProductCreateSerializer(CreateSerializer):
         fields = (
             "name",
             "image_url",
+            "saved_image_url",
             "user_id",
         )
     
