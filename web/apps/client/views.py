@@ -37,7 +37,7 @@ def render_home(request):
 def render_manage(request):
     prod_list = Product.objects.filter(user_id=request.user.id, is_deleted="N")
 
-    cate_disp_dict = {
+    cate_dict = {
         "UNDEFINED": 1,
         "PANTS": 2,
         "TOPS": 3,
@@ -46,7 +46,7 @@ def render_manage(request):
 
     context = {
         'prod_list': prod_list,
-        'cate_disp_dict': cate_disp_dict,
+        'cate_dict': cate_dict,
     }
 
     return render(request, 'client/manage.html', context)
