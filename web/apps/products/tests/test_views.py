@@ -6,6 +6,7 @@ from users.constants import UserLevelEnum
 
 from products.models import Product
 from products.constants import CategoryEnum
+from products.serializers import ProductCreateSerializer
 
 class ProductViewSetListTest(ViewSetTestCase):
     endpoint = reverse_lazy('products:viewset')
@@ -86,4 +87,95 @@ class ProductViewSetListTest(ViewSetTestCase):
             client=client,
             name=self.data['name'],
             image_url=self.data['image_url'],
+        )
+
+class ProductViewSetDetailTest(ViewSetTestCase):
+    endpoint = reverse_lazy('products:viewset')
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.request_tester_user = TestUserHandler(
+            email="tester@example.com",
+            username="tester",
+            phone="01050175933",
+            password="5933"
+        )
+        general_user = cls.request_tester_user.get_user()
+        general_user.level = UserLevelEnum.TESTER.value
+        general_user.save()
+
+        cls.request_other_user = TestUserHandler(
+            email="other_tester@example.com",
+            username="tester2",
+            phone="01050175933",
+            password="5933"
+        )
+        other_user = cls.request_other_user.get_user()
+        other_user.level = UserLevelEnum.TESTER.value
+        other_user.save()
+
+        cls.data = {
+            "name": "new_prod",
+            "image_url": "https://s3_bucket_address/test_image.png",
+            "user_id": general_user.id,
+            "category": CategoryEnum.PANTS.value,
+        }
+        serializer = ProductCreateSerializer(data=cls.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        cls.prod_data = serializer.data
+
+        cls.other_data = {
+            "name": "new_other_prod",
+            "image_url": "https://s3_bucket_address/test_image.png",
+            "user_id": other_user.id,
+        }
+        serializer = ProductCreateSerializer(data=cls.other_data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        cls.other_prod_data = serializer.data
+
+        cls.update_data = {
+            "name": "updated_product",
+            "category": CategoryEnum.TOPS.value,
+            "is_active": "N",
+            "is_deleted": "Y",
+        }
+    
+    def test_success(self):
+        client = self.request_tester_user.get_loggedin_user()
+
+        endpoint = reverse_lazy('products:detail', args=[self.prod_data['id']])
+
+        res = self.generic_test(
+            url=endpoint,
+            method="patch",
+            expected_status_code=200,
+            client=client,
+            name=self.update_data['name'],
+            category=self.update_data['category'],
+            is_active=self.update_data['is_active'],
+            is_deleted=self.update_data['is_deleted'],
+        )
+
+        test_field_list = ['name', 'category', 'is_active', 'is_deleted']
+
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(res.json()[field], self.update_data[field])
+
+    def test_failure_is_not_owner_user(self):
+        client = self.request_tester_user.get_loggedin_user()
+
+        endpoint = reverse_lazy('products:detail', args=[self.other_prod_data['id']])
+
+        res = self.generic_test(
+            url=endpoint,
+            method="patch",
+            expected_status_code=403,
+            client=client,
+            name=self.update_data['name'],
+            category=self.update_data['category'],
+            is_active=self.update_data['is_active'],
+            is_deleted=self.update_data['is_deleted'],
         )

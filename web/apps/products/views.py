@@ -4,8 +4,11 @@ from rest_framework import status
 from products.models import Product
 from products.serializers import (
     ProductSerializer,
-    ProductCreateSerializer
+    ProductCreateSerializer,
+    ProductUpdateSerializer,
 )
+from products.permissions import IsOwner
+
 from users.constants import UserLevelEnum
 
 from PIL import Image
@@ -16,11 +19,17 @@ from core.classes import S3ImageUploader
 
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
+    permission_classes = [IsOwner]
+    lookup_field = "id"
 
     serializer_action_classes = {
         'list': ProductSerializer,
         'create': ProductCreateSerializer,
+        'retrieve': ProductUpdateSerializer,
     }
+
+    def get_queryset(self):
+        return Product.objects.filter(is_deleted="N")
 
     def get_serializer_class(self):
         try:
@@ -48,3 +57,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         request.data['user_id'] = request.user.id
 
         return super().create(request, *args, **kwargs)
+
+    # TODO: 해당 상품이 해당 유저의 상품인지 조회하는 알고리즘 추가
+    def retrieve(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)

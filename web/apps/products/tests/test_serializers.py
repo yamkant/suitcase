@@ -1,7 +1,7 @@
 from core.tests import IntegrationSerializerTestCase
 from products.serializers import (
     ProductCreateSerializer,
-    ProducUpdateSerializer,
+    ProductUpdateSerializer,
 )
 from rest_framework.exceptions import ValidationError
 from users.models import User
@@ -65,7 +65,7 @@ class ProductCreateSerializerTestCase(IntegrationSerializerTestCase):
 
 
 class ProductUpdateSerializerTestCase(IntegrationSerializerTestCase):
-    serializer = ProducUpdateSerializer
+    serializer = ProductUpdateSerializer
 
     @classmethod
     def setUpTestData(cls) -> None:

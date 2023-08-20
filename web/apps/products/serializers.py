@@ -42,7 +42,7 @@ class ProductCreateSerializer(CreateSerializer):
     def create(self, validated_data):
         return Product.objects.create(**validated_data)
 
-class ProducUpdateSerializer(UpdateSerializer):
+class ProductUpdateSerializer(UpdateSerializer):
     representation_serializer_class = ProductSerializer
 
     class Meta:

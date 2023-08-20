@@ -6,4 +6,5 @@ app_name = "products"
 
 urlpatterns = [
     path("", ProductViewSet.as_view({"post": "create"}), name="viewset"),
+    path("<int:id>/", ProductViewSet.as_view({"patch": "retrieve"}), name="detail"),
 ]
