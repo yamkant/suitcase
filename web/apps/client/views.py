@@ -15,6 +15,16 @@ def render_home(request):
         "TOPS": 3,
     }
 
-    context = {'prod_list': prod_list, 'cate_dict': cate_dict}
+    cate_disp_dict = {
+        "TOPS": 3,
+        "PANTS": 2,
+        "UNDEFINED": 1,
+    }
+
+    context = {
+        'prod_list': prod_list,
+        'cate_dict': cate_dict,
+        'cate_disp_dict': cate_disp_dict,
+    }
 
     return render(request, 'client/home.html', context)
