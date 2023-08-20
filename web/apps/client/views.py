@@ -13,11 +13,13 @@ def render_home(request):
         "UNDEFINED": 1,
         "PANTS": 2,
         "TOPS": 3,
+        "SHOES": 4,
     }
 
     cate_disp_dict = {
         "TOPS": 3,
         "PANTS": 2,
+        "SHOES": 4,
         "UNDEFINED": 1,
     }
 
