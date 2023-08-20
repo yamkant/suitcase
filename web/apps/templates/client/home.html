@@ -4,14 +4,29 @@
 {% block content %}
 
 <div class="w-full flex flex-col">
-    <div class="flex justify-end mb-5">
-        <!-- Modal toggle -->
+    <div class="flex justify-end mb-5 space-x-3 my-5 mx-5 text-xs md:text-sm">
         <button
+            type="button"
+            class="text-black bg-white hover:bg-white/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg px-5 py-2.5 text-center inline-flex items-center"
             data-modal-target="small-modal"
             data-modal-toggle="small-modal"
-            class="block w-40 md:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" class="mr-3 ">
+                <path d="M14.707 4.79306L10.707 0.793055C10.6141 0.699929 10.5038 0.626043 10.3823 0.57563C10.2608 0.525217 10.1305 0.499268 9.999 0.499268C9.86747 0.499268 9.73722 0.525217 9.61573 0.57563C9.49424 0.626043 9.38389 0.699929 9.291 0.793055L5.291 4.79306C5.10349 4.98083 4.99826 5.2354 4.99844 5.50076C4.99863 5.76613 5.10423 6.02055 5.292 6.20806C5.47977 6.39556 5.73434 6.5008 5.99971 6.50061C6.26507 6.50042 6.51949 6.39483 6.707 6.20706L9 3.91406V12.5001C9 12.7653 9.10536 13.0196 9.29289 13.2072C9.48043 13.3947 9.73478 13.5001 10 13.5001C10.2652 13.5001 10.5196 13.3947 10.7071 13.2072C10.8946 13.0196 11 12.7653 11 12.5001V3.91406L13.293 6.20706C13.4816 6.38921 13.7342 6.49001 13.9964 6.48773C14.2586 6.48545 14.5094 6.38028 14.6948 6.19487C14.8802 6.00947 14.9854 5.75865 14.9877 5.49646C14.99 5.23426 14.8892 4.98166 14.707 4.79306Z" fill="#2F2F38"/>
+                <path d="M18 12.0001H13V12.5001C13 13.2957 12.6839 14.0588 12.1213 14.6214C11.5587 15.184 10.7956 15.5001 10 15.5001C9.20435 15.5001 8.44129 15.184 7.87868 14.6214C7.31607 14.0588 7 13.2957 7 12.5001V12.0001H2C1.46957 12.0001 0.960859 12.2108 0.585786 12.5858C0.210714 12.9609 0 13.4696 0 14.0001V18.0001C0 18.5305 0.210714 19.0392 0.585786 19.4143C0.960859 19.7893 1.46957 20.0001 2 20.0001H18C18.5304 20.0001 19.0391 19.7893 19.4142 19.4143C19.7893 19.0392 20 18.5305 20 18.0001V14.0001C20 13.4696 19.7893 12.9609 19.4142 12.5858C19.0391 12.2108 18.5304 12.0001 18 12.0001ZM15 17.0001C14.8022 17.0001 14.6089 16.9414 14.4444 16.8315C14.28 16.7216 14.1518 16.5655 14.0761 16.3827C14.0004 16.2 13.9806 15.9989 14.0192 15.805C14.0578 15.611 14.153 15.4328 14.2929 15.2929C14.4327 15.1531 14.6109 15.0579 14.8049 15.0193C14.9989 14.9807 15.2 15.0005 15.3827 15.0762C15.5654 15.1519 15.7216 15.28 15.8315 15.4445C15.9414 15.6089 16 15.8023 16 16.0001C16 16.2653 15.8946 16.5196 15.7071 16.7072C15.5196 16.8947 15.2652 17.0001 15 17.0001Z" fill="#2F2F38"/>
+            </svg>
+            상품 추가
+        </button>
+
+        <button
             type="button"
-        >상품 추가
+            class="text-black bg-white hover:bg-white/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg px-5 py-2.5 text-center inline-flex items-center"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16" fill="none" class="mr-3 ">
+                <path d="M19 0H1C0.447715 0 0 0.447715 0 1V3C0 3.55228 0.447715 4 1 4H19C19.5523 4 20 3.55228 20 3V1C20 0.447715 19.5523 0 19 0Z" fill="#2F2F38"/>
+                <path d="M2 6V14C2 14.5304 2.21071 15.0391 2.58579 15.4142C2.96086 15.7893 3.46957 16 4 16H16C16.5304 16 17.0391 15.7893 17.4142 15.4142C17.7893 15.0391 18 14.5304 18 14V6H2ZM13 9C13 9.26522 12.8946 9.51957 12.7071 9.70711C12.5196 9.89464 12.2652 10 12 10H8C7.73478 10 7.48043 9.89464 7.29289 9.70711C7.10536 9.51957 7 9.26522 7 9V8C7 7.73478 7.10536 7.48043 7.29289 7.29289C7.48043 7.10536 7.73478 7 8 7C8.26522 7 8.51957 7.10536 8.70711 7.29289C8.89464 7.48043 9 7.73478 9 8H11C11 7.73478 11.1054 7.48043 11.2929 7.29289C11.4804 7.10536 11.7348 7 12 7C12.2652 7 12.5196 7.10536 12.7071 7.29289C12.8946 7.48043 13 7.73478 13 8V9Z" fill="#2F2F38"/>
+            </svg>
+            상품리스트 관리
         </button>
     </div>
     <div class="flex flex-col items-center">
@@ -19,7 +34,7 @@
             {% for key, value in cate_disp_dict.items %}
             <div id="gallery" class="relative w-full" data-carousel="static">
                 <!-- Carousel wrapper -->
-                <div class="relative overflow-hidden rounded-lg w-48 h-52 right-0 left-0">
+                <div class="relative overflow-hidden rounded-lg w-48 h-52 md:w-80 md:h-96 right-0 left-0">
                     {% for prod in prod_list %}
                         {% if value == prod.category %}
                             <div class="hidden duration-700 ease-in-out" data-carousel-item>

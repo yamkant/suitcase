@@ -20,7 +20,6 @@ def render_home(request):
         "TOPS": 3,
         "PANTS": 2,
         "SHOES": 4,
-        "UNDEFINED": 1,
     }
 
     context = {
