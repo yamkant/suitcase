@@ -31,6 +31,8 @@ class ProductCreateSerializerTestCase(IntegrationSerializerTestCase):
 
     def test_success(self):
         serializer = self.serializer_test(
+            expected_query_count=2,
+            instance=None,
             name=self.data['name'],
             image_url=self.data['image_url'],
             user_id=self.data['user_id'],
@@ -97,7 +99,8 @@ class ProductUpdateSerializerTestCase(IntegrationSerializerTestCase):
         prod = get_object_or_404(Product, id=self.prod_data['id'])
 
         serializer = self.serializer_test(
-            prod,
+            expected_query_count=1,
+            instance=prod,
             name=self.update_data['name'],
             category=self.update_data['category'],
             is_active=self.update_data['is_active'],
