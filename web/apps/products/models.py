@@ -10,6 +10,8 @@ class Product(BaseModel):
     is_favorite = models.CharField(default="N", max_length=1)
     is_profile = models.CharField(default="N", max_length=1)
     category = models.IntegerField(default=1)
+    is_active = models.CharField(default="Y", max_length=1)
+    is_deleted = models.CharField(default="N", max_length=1)
 
     user_id = models.ForeignKey(User, db_column="user_id", on_delete=models.PROTECT)
 

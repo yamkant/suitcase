@@ -17,6 +17,8 @@ class ProductSerializer(serializers.ModelSerializer):
             "saved_image_url",
             "is_favorite",
             "is_profile",
+            "is_active",
+            "is_deleted",
             "user_id",
         )
         read_only_fields = fields
@@ -39,3 +41,18 @@ class ProductCreateSerializer(CreateSerializer):
     
     def create(self, validated_data):
         return Product.objects.create(**validated_data)
+
+class ProductUpdateSerializer(UpdateSerializer):
+    representation_serializer_class = ProductSerializer
+
+    class Meta:
+        model = Product
+        fields = (
+            "name",
+            "category",
+            "is_active",
+            "is_deleted",
+        )
+    
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
