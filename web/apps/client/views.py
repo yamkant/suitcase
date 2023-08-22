@@ -28,6 +28,7 @@ def render_home(request):
         'prod_list': prod_list,
         'cate_dict': cate_dict,
         'cate_disp_dict': cate_disp_dict,
+        'is_logged_in': request.user.is_authenticated
     }
 
     return render(request, 'client/home.html', context)

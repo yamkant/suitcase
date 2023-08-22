@@ -1137,6 +1137,16 @@ input:checked + .toggle-bg {
   margin-bottom: 1.25rem;
 }
 
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -1175,6 +1185,14 @@ input:checked + .toggle-bg {
 
 .mr-2 {
   margin-right: 0.5rem;
+}
+
+.mr-6 {
+  margin-right: 1.5rem;
+}
+
+.mt-0 {
+  margin-top: 0px;
 }
 
 .block {
@@ -1257,6 +1275,10 @@ input:checked + .toggle-bg {
   height: 0.625rem;
 }
 
+.h-5 {
+  height: 1.25rem;
+}
+
 .max-h-full {
   max-height: 100%;
 }
@@ -1313,6 +1335,10 @@ input:checked + .toggle-bg {
   width: 20rem;
 }
 
+.w-5 {
+  width: 1.25rem;
+}
+
 .max-w-full {
   max-width: 100%;
 }
@@ -1323,6 +1349,10 @@ input:checked + .toggle-bg {
 
 .max-w-2xl {
   max-width: 42rem;
+}
+
+.max-w-screen-xl {
+  max-width: 1280px;
 }
 
 .flex-1 {
@@ -1397,6 +1427,10 @@ input:checked + .toggle-bg {
   resize: both;
 }
 
+.list-none {
+  list-style-type: none;
+}
+
 .grid-cols-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -1413,8 +1447,16 @@ input:checked + .toggle-bg {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .flex-col {
   flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .items-start {
@@ -1473,6 +1515,12 @@ input:checked + .toggle-bg {
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 
+.space-x-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(2rem * var(--tw-space-x-reverse));
+  margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
 .divide-y > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-y-reverse: 0;
   border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
@@ -1482,6 +1530,10 @@ input:checked + .toggle-bg {
 .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-opacity: 1;
   border-color: rgb(243 244 246 / var(--tw-divide-opacity));
+}
+
+.self-center {
+  align-self: center;
 }
 
 .overflow-hidden {
@@ -1498,6 +1550,12 @@ input:checked + .toggle-bg {
 
 .overflow-x-hidden {
   overflow-x: hidden;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .whitespace-nowrap {
@@ -1779,6 +1837,11 @@ input:checked + .toggle-bg {
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .font-medium {
@@ -2115,6 +2178,11 @@ form.login-form > ul > li > input {
   --tw-ring-color: rgb(28 100 242 / var(--tw-ring-opacity));
 }
 
+.focus\:ring-gray-300:focus {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(209 213 219 / var(--tw-ring-opacity));
+}
+
 .group:hover .group-hover\:bg-white\/50 {
   background-color: rgb(255 255 255 / 0.5);
 }
@@ -2190,6 +2258,11 @@ form.login-form > ul > li > input {
 
 :is(.dark .dark\:bg-gray-800\/50) {
   background-color: rgb(31 41 55 / 0.5);
+}
+
+:is(.dark .dark\:bg-gray-900) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(17 24 39 / var(--tw-bg-opacity));
 }
 
 :is(.dark .dark\:bg-opacity-80) {
@@ -2335,6 +2408,18 @@ form.login-form > ul > li > input {
 @media (min-width: 768px) {
   .md\:inset-0 {
     inset: 0px;
+  }
+
+  .md\:order-2 {
+    order: 2;
+  }
+
+  .md\:mr-0 {
+    margin-right: 0px;
+  }
+
+  .md\:hidden {
+    display: none;
   }
 
   .md\:h-96 {
