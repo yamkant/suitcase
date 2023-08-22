@@ -91,7 +91,7 @@
             </div>
             <!-- Modal body -->
             <div class="w-full p-5">
-                <form method="POST" action="{% url 'products:viewset' %}" id="add-product-form" class="flex flex-col space-y-2">
+                <form id="add-product-form" class="flex flex-col space-y-2">
                     {% csrf_token %}
                     <div class="relative w-full">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -136,7 +136,7 @@
                     data-modal-hide="small-modal"
                     type="submit"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    onclick="document.getElementById('add-product-form').submit();"
+                    onclick="onSubmit();"
                 >I accept</button>
                 <button data-modal-hide="small-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
             </div>
@@ -144,3 +144,27 @@
     </div>
 </div>
 {% endblock content %}
+{% block javascripts %}
+<script>
+    const onSubmit = () => {
+        const form_object = document.getElementById('add-product-form');
+        const bodyFormData = new FormData(form_object);
+        if (!confirm('Are you sure you want to add?')) {
+            return;
+        } 
+        axios({
+            url: `/api/products/`,
+            method: 'post',
+            headers: {
+                "Content-Type": "multipart/form-data",
+                'X-CSRFToken': '{{csrf_token}}'
+            },
+            data: bodyFormData,
+        }).then((res) => {
+            return res;
+        }).catch(() => {
+            alert("ERROR")
+        });
+    }
+</script>
+{% endblock %}
