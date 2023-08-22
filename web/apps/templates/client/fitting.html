@@ -3,23 +3,24 @@
 
 {% block content %}
 
-<div class="w-full flex flex-col">
-    <div class="flex justify-end mb-5 space-x-3 my-5 mx-5 text-xs md:text-sm">
+<div class="flex flex-col">
+    <div class="fixed right-0 top-15 mb-5 space-x-3 my-5 mx-5 text-xs md:text-sm">
         <button
             type="button"
-            class="text-black bg-white hover:bg-white/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg px-5 py-2.5 text-center inline-flex items-center"
+            class="text-black bg-white hover:bg-white/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-full md:rounded-lg px-5 py-2.5 text-center inline-flex items-center"
             data-modal-target="small-modal"
             data-modal-toggle="small-modal"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" class="mr-3 ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" class="md:mr-3">
                 <path d="M14.707 4.79306L10.707 0.793055C10.6141 0.699929 10.5038 0.626043 10.3823 0.57563C10.2608 0.525217 10.1305 0.499268 9.999 0.499268C9.86747 0.499268 9.73722 0.525217 9.61573 0.57563C9.49424 0.626043 9.38389 0.699929 9.291 0.793055L5.291 4.79306C5.10349 4.98083 4.99826 5.2354 4.99844 5.50076C4.99863 5.76613 5.10423 6.02055 5.292 6.20806C5.47977 6.39556 5.73434 6.5008 5.99971 6.50061C6.26507 6.50042 6.51949 6.39483 6.707 6.20706L9 3.91406V12.5001C9 12.7653 9.10536 13.0196 9.29289 13.2072C9.48043 13.3947 9.73478 13.5001 10 13.5001C10.2652 13.5001 10.5196 13.3947 10.7071 13.2072C10.8946 13.0196 11 12.7653 11 12.5001V3.91406L13.293 6.20706C13.4816 6.38921 13.7342 6.49001 13.9964 6.48773C14.2586 6.48545 14.5094 6.38028 14.6948 6.19487C14.8802 6.00947 14.9854 5.75865 14.9877 5.49646C14.99 5.23426 14.8892 4.98166 14.707 4.79306Z" fill="#2F2F38"/>
                 <path d="M18 12.0001H13V12.5001C13 13.2957 12.6839 14.0588 12.1213 14.6214C11.5587 15.184 10.7956 15.5001 10 15.5001C9.20435 15.5001 8.44129 15.184 7.87868 14.6214C7.31607 14.0588 7 13.2957 7 12.5001V12.0001H2C1.46957 12.0001 0.960859 12.2108 0.585786 12.5858C0.210714 12.9609 0 13.4696 0 14.0001V18.0001C0 18.5305 0.210714 19.0392 0.585786 19.4143C0.960859 19.7893 1.46957 20.0001 2 20.0001H18C18.5304 20.0001 19.0391 19.7893 19.4142 19.4143C19.7893 19.0392 20 18.5305 20 18.0001V14.0001C20 13.4696 19.7893 12.9609 19.4142 12.5858C19.0391 12.2108 18.5304 12.0001 18 12.0001ZM15 17.0001C14.8022 17.0001 14.6089 16.9414 14.4444 16.8315C14.28 16.7216 14.1518 16.5655 14.0761 16.3827C14.0004 16.2 13.9806 15.9989 14.0192 15.805C14.0578 15.611 14.153 15.4328 14.2929 15.2929C14.4327 15.1531 14.6109 15.0579 14.8049 15.0193C14.9989 14.9807 15.2 15.0005 15.3827 15.0762C15.5654 15.1519 15.7216 15.28 15.8315 15.4445C15.9414 15.6089 16 15.8023 16 16.0001C16 16.2653 15.8946 16.5196 15.7071 16.7072C15.5196 16.8947 15.2652 17.0001 15 17.0001Z" fill="#2F2F38"/>
             </svg>
-            상품 추가
+            <div class="hidden md:block">
+                상품 추가
+            </div>
         </button>
-
     </div>
-    <div class="flex flex-col items-center">
+    <div class="flex flex-col items-center w-full">
         <div class="background px-2 py-5 bg-white/50">
             {% for key, value in cate_disp_dict.items %}
             <div id="gallery" class="relative w-full" data-carousel="static">

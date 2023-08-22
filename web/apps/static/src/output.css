@@ -1066,6 +1066,10 @@ input:checked + .toggle-bg {
   position: relative;
 }
 
+.sticky {
+  position: sticky;
+}
+
 .inset-0 {
   inset: 0px;
 }
@@ -1103,6 +1107,22 @@ input:checked + .toggle-bg {
   top: 50%;
 }
 
+.right-5 {
+  right: 1.25rem;
+}
+
+.right-6 {
+  right: 1.5rem;
+}
+
+.top-6 {
+  top: 1.5rem;
+}
+
+.top-10 {
+  top: 2.5rem;
+}
+
 .z-10 {
   z-index: 10;
 }
@@ -1125,6 +1145,10 @@ input:checked + .toggle-bg {
 
 .col-span-6 {
   grid-column: span 6 / span 6;
+}
+
+.m-2 {
+  margin: 0.5rem;
 }
 
 .mx-5 {
@@ -1377,6 +1401,30 @@ input:checked + .toggle-bg {
 
 .w-24 {
   width: 6rem;
+}
+
+.w-screen {
+  width: 100vw;
+}
+
+.w-40 {
+  width: 10rem;
+}
+
+.min-w-\[500px\] {
+  min-width: 500px;
+}
+
+.min-w-\[300px\] {
+  min-width: 300px;
+}
+
+.min-w-\[400px\] {
+  min-width: 400px;
+}
+
+.min-w-\[350px\] {
+  min-width: 350px;
 }
 
 .max-w-full {
@@ -2482,6 +2530,10 @@ form.login-form > ul > li > input {
     margin-right: 0px;
   }
 
+  .md\:mr-3 {
+    margin-right: 0.75rem;
+  }
+
   .md\:block {
     display: block;
   }
@@ -2498,8 +2550,21 @@ form.login-form > ul > li > input {
     width: 20rem;
   }
 
+  .md\:w-\[1000px\] {
+    width: 1000px;
+  }
+
+  .md\:rounded-lg {
+    border-radius: 0.5rem;
+  }
+
   .md\:p-5 {
     padding: 1.25rem;
+  }
+
+  .md\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .md\:text-sm {
