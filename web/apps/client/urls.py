@@ -5,5 +5,5 @@ app_name = "client"
 
 urlpatterns = [
     path("", views.render_home, name="home"),
-    path("manage/", views.render_manage, name="manage"),
+    path("fitting/", views.render_fitting, name="fitting"),
 ]
