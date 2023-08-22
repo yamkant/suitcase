@@ -149,7 +149,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
 
         res = self.generic_test(
             url=endpoint,
-            method="post",
+            method="patch",
             expected_status_code=200,
             client=client,
             name=self.update_data['name'],
@@ -171,7 +171,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
 
         res = self.generic_test(
             url=endpoint,
-            method="post",
+            method="patch",
             expected_status_code=403,
             client=client,
             name=self.update_data['name'],
