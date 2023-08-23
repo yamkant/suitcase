@@ -9,7 +9,7 @@ from products.constants import CategoryEnum
 from products.serializers import ProductCreateSerializer
 
 class ProductViewSetListTest(ViewSetTestCase):
-    endpoint = reverse_lazy('products:viewset')
+    endpoint = reverse_lazy('products:list')
 
     @classmethod
     def setUpTestData(cls) -> None:
@@ -90,7 +90,7 @@ class ProductViewSetListTest(ViewSetTestCase):
         )
 
 class ProductViewSetDetailTest(ViewSetTestCase):
-    endpoint = reverse_lazy('products:viewset')
+    endpoint = reverse_lazy('products:list')
 
     @classmethod
     def setUpTestData(cls) -> None:
