@@ -22,10 +22,10 @@ class ImageHandler():
         return remove(self._image)
     
     def get_resized_image(self, image, w_ratio: float, h_ratio: float):
-        return image.resize(
+        return image.resize((
             image._size[0] * w_ratio,
             image._size[1] * h_ratio
-        )
+        ))
 
 class S3ImageUploader():
     def __init__(self) -> None:
