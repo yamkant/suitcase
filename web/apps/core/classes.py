@@ -21,10 +21,10 @@ class ImageHandler():
     def get_removed_background_image(self):
         return remove(self._image)
     
-    def get_resized_image(self, w_ratio: float, h_ratio: float):
-        return self._image.resize(
-            self._image._size[0] * w_ratio,
-            self._image._size[1] * h_ratio
+    def get_resized_image(self, image, w_ratio: float, h_ratio: float):
+        return image.resize(
+            image._size[0] * w_ratio,
+            image._size[1] * h_ratio
         )
 
 class S3ImageUploader():
@@ -34,9 +34,13 @@ class S3ImageUploader():
         self.aws_region = getattr(settings, 'AWS_REGION', None)
         self.aws_storage_bucket_name = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
         self.aws_s3_custom_domain = getattr(settings, 'AWS_S3_CUSTOM_DOMAIN', None)
-
-    def upload_pil(self, img_src: Image, file_path):
+    
+    @staticmethod
+    def get_file_name(file_path):
         file_id = str(uuid.uuid4())
+        return f'{file_path}/{file_id}'
+
+    def upload_pil(self, img_src: Image, filename):
         s3_transport_buffer = BytesIO()
         img_src.save(s3_transport_buffer, format="PNG")
         s3_resource = boto3.resource( 
@@ -44,7 +48,6 @@ class S3ImageUploader():
             aws_access_key_id=self.aws_access_key_id,
             aws_secret_access_key=self.aws_secret_access_key,
         )
-        filename = f'{file_path}/{file_id}'
         s3_resource.Bucket(self.aws_storage_bucket_name).put_object(Body=BytesIO(s3_transport_buffer.getvalue()), Key=filename)
 
         return f'https://{self.aws_s3_custom_domain}/{filename}'

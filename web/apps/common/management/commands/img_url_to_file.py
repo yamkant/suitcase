@@ -20,4 +20,5 @@ class Command(BaseCommand):
         removed_bg_img = image_handler.get_removed_background_image()
 
         imgUploader = S3ImageUploader()
-        imgUploader.upload_pil(removed_bg_img, 'test')
+        filename = S3ImageUploader.get_file_name('test')
+        imgUploader.upload_pil(removed_bg_img, filename)
