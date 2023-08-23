@@ -163,6 +163,25 @@ class ProductViewSetDetailTest(ViewSetTestCase):
             with self.subTest(field=field):
                 self.assertEqual(res.json()[field], self.update_data[field])
 
+    def test_success_update_partial(self):
+        client = self.request_tester_user.get_loggedin_user()
+
+        endpoint = reverse_lazy('products:detail', args=[self.prod_data['id']])
+
+        res = self.generic_test(
+            url=endpoint,
+            method="patch",
+            expected_status_code=200,
+            client=client,
+            is_active=self.update_data['is_active'],
+        )
+
+        test_field_list = ['is_active']
+
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(res.json()[field], self.update_data[field])
+
     def test_failure_update__is_not_owner_user(self):
         client = self.request_tester_user.get_loggedin_user()
 

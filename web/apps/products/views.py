@@ -25,7 +25,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_action_classes = {
         'list': ProductSerializer,
         'create': ProductCreateSerializer,
-        'retrieve': ProductUpdateSerializer,
+        'update': ProductUpdateSerializer,
         'destroy': ProductDeleteSerializer,
     }
 
@@ -52,9 +52,12 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         return super().create(request, *args, **kwargs)
 
-    def retrieve(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
         return super().update(request, *args, **kwargs)
     
     def destroy(self, request, *args, **kwargs):
-        request.data.update({'is_deleted': ProductStatusEnum.DELETED.value})
+        # NOTE: request.POST는 QueryDict 형태로, request.data는 Dict 형태로 반환합니다.
+        request.POST._mutable = True
+        request.data['is_deleted'] = ProductStatusEnum.DELETED.value
         return super().update(request, *args, **kwargs)

@@ -31,7 +31,7 @@ def render_home(request):
 @require_http_methods(['GET'])
 @login_required
 def render_fitting(request):
-    prod_list = Product.objects.filter(user_id=request.user.id, is_deleted="N")
+    prod_list = Product.objects.filter(user_id=request.user.id, is_deleted="N", is_active="Y")
     # TODO: Enum to dictionary로 리팩토링
     cate_dict = {
         "UNDEFINED": 1,

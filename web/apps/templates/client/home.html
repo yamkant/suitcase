@@ -25,14 +25,14 @@
                             <li>
                                 <button
                                     class="w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    onclick="onclick_action_button('ACTIVE')"
+                                    onclick="onclick_action_button('ACTIVATE')"
                                 >Activate products
                                 </button>
                             </li>
                             <li>
                                 <button
                                     class="w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    onclick="onclick_action_button('DEACTIVE')"
+                                    onclick="onclick_action_button('DEACTIVATE')"
                                 >Deactivate products
                                 </button>
                             </li>
@@ -201,26 +201,30 @@
 
 {% block javascripts %}
 <script>
-    const onSubmit = () => {
+    async function update_product_api(method, prod_id, data) {
+        return axios({
+            method: method,
+            url: `/api/products/${prod_id}/`,
+            headers: {
+                "Content-Type": "multipart/form-data",
+                'X-CSRFToken': '{{csrf_token}}'
+            },
+            data: data,
+        }).then((res) => {
+            return res;
+        }).catch(() => {
+            alert("ERROR")
+        });
+    }
+
+    const onSubmit = async () => {
         const prod_id = location.hash.substring(1);
         const form_object = document.getElementById('edit-product-form');
         const bodyFormData = new FormData(form_object);
         if (!confirm('Are you sure you want to update?')) {
             return;
         } 
-        axios({
-            method: 'patch',
-            url: `/api/products/${prod_id}/`,
-            headers: {
-                "Content-Type": "multipart/form-data",
-                'X-CSRFToken': '{{csrf_token}}'
-            },
-            data: bodyFormData,
-        }).then((res) => {
-            return res;
-        }).catch(() => {
-            alert("ERROR")
-        });
+        await update_product_api('patch', prod_id, bodyFormData);
     }
 
     const list = document.querySelectorAll('.edit-btn');
@@ -242,27 +246,30 @@
     })
 
     const onclick_action_button = async (type) => {
+        if (!confirm('Are you sure want to proceed?')) {
+            return ;
+        }
         const checkboxes = Array.from(document.querySelectorAll('.checkbox-action'));
         const promisess = [];
-        if (type === 'DELETE') {
-            checkboxes.forEach((checkbox) => {
-                if (checkbox.checked) {
-                    const prod_id = checkbox.closest('.prod-row').dataset.value
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+                const prod_id = checkbox.closest('.prod-row').dataset.value
+                if (type === 'DELETE') {
                     promisess.push(
-                        axios({
-                            method: 'delete',
-                            url: `/api/products/${prod_id}/`,
-                            headers: {
-                                "Content-Type": "multipart/form-data",
-                                'X-CSRFToken': '{{csrf_token}}'
-                            },
-                        })
+                        update_product_api('delete', prod_id, {})
+                    )
+                } else if (type === 'ACTIVATE') {
+                    promisess.push(
+                        update_product_api('patch', prod_id, { is_active: 'Y' })
+                    )
+                } else if (type === 'DEACTIVATE') {
+                    promisess.push(
+                        update_product_api('patch', prod_id, { is_active: 'N' })
                     )
                 }
-            });
-        }
+            }
+        });
         const res = await Promise.allSettled(promisess);
-
         location.reload();
     }
 </script>
