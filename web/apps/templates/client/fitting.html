@@ -9,7 +9,7 @@
             {% for key, value in cate_disp_dict.items %}
             <div id="gallery" class="relative w-full" data-carousel="static">
                 <!-- Carousel wrapper -->
-                <div class="relative overflow-hidden rounded-lg w-48 h-52 md:w-80 md:h-96 right-0 left-0">
+                <div class="relative overflow-hidden rounded-lg w-48 h-52 md:w-60 md:h-72 right-0 left-0">
                     {% for prod in prod_list %}
                         {% if value == prod.category %}
                             <div class="hidden duration-700 ease-in-out" data-carousel-item>
