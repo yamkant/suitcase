@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # 3rd part apps
     'rest_framework',
+    'django_filters',
     'compressor',
     'storages',
 
@@ -174,3 +175,8 @@ CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
 CELERY_TIMEZONE = "Asia/Seoul"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+# Restframework setting
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}

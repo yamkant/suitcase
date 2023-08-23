@@ -1,9 +1,9 @@
 from django.urls import path
-from client import views
+from client.views import ProductTemplateViewSet, render_fitting
 
 app_name = "client"
 
 urlpatterns = [
-    path("", views.render_home, name="home"),
-    path("fitting/", views.render_fitting, name="fitting"),
+    path("", ProductTemplateViewSet.as_view(), name="home"),
+    path("fitting/", render_fitting, name="fitting"),
 ]

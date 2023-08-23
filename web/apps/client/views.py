@@ -1,33 +1,50 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from client.libs.custom_decorators import login_required
+from rest_framework import viewsets
+from products.serializers import ProductSerializer
 
 from products.models import Product
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
+from rest_framework import filters
+from rest_framework import generics
 
 # TODO: 기본 필터는 묶어서 전처리로 수행되도록 수정
 
-@require_http_methods(['GET'])
-@login_required
-def render_home(request):
-    prod_list = Product.objects.filter(user_id=request.user.id, is_deleted="N")
+class ProductTemplateViewSet(generics.ListAPIView):
+    queryset = Product.objects.filter(is_deleted="N")
+    serializer_class = ProductSerializer
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'client/home.html'
 
-    cate_dict = {
-        "UNDEFINED": 1,
-        "PANTS": 2,
-        "TOPS": 3,
-        "SHOES": 4,
-    }
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
-    context = {
-        'prod_list': prod_list,
-        'cate_dict': cate_dict,
-        'is_logged_in': request.user.is_authenticated,
-        'username': request.user.username,
-        'email': request.user.email,
-    }
+    def get_queryset(self):
+        return self.queryset.filter(user_id=self.request.user.id)
 
-    return render(request, 'client/home.html', context)
+    def get(self, request, *args, **kwargs):
+        cate_dict = {
+            "UNDEFINED": 1,
+            "PANTS": 2,
+            "TOPS": 3,
+            "SHOES": 4,
+        }
 
+        search_value = ''
+        if 'name' in request.query_params:
+            search_value = request.query_params['name']
+
+        context = {
+            'prod_list': self.get_queryset().filter(name__contains=search_value),
+            'cate_dict': cate_dict,
+            'is_logged_in': request.user.is_authenticated,
+            'username': request.user.username,
+            'email': request.user.email,
+        }
+        return Response(context)
+    
 @require_http_methods(['GET'])
 @login_required
 def render_fitting(request):
