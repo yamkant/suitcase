@@ -309,7 +309,7 @@
         });
     }
 
-    async function create_product_api(method, prod_id, data) {
+    async function create_product_api(data) {
         return axios({
             url: `/api/products/`,
             method: 'post',
@@ -317,7 +317,7 @@
                 "Content-Type": "multipart/form-data",
                 'X-CSRFToken': '{{csrf_token}}'
             },
-            data: bodyFormData,
+            data: data,
         }).then((res) => {
             return res;
         }).catch(() => {
@@ -357,8 +357,9 @@
         const form_object = document.getElementById('add-product-form');
         const bodyFormData = new FormData(form_object);
         if (!confirm('Are you sure you want to add?\n(take some time to upload the product.)')) {
-            await create_product_api
+            return
         } 
+        await create_product_api(bodyFormData)
     }
 
     const onclick_action_button = async (type) => {
