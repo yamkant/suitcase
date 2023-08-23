@@ -1,6 +1,5 @@
 from celery import shared_task
 
-
 @shared_task
-def add(x, y):
+def upload_image_by_url(img_url):
     return x + y
