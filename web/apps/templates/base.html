@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Document</title>
+    <title>Suitcase</title>
 
     <!-- 3rd Party Modeules -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -18,11 +18,10 @@
 </head>
 <body class="bg-my-beige-500 flex justify-center">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.7.0/flowbite.min.js"></script>
-    <div class="screen-frame flex w-[1000px] border-2 mt-20">
-        <div class="container flex justify-center border-2 w-full">
-            {% block content %}
-            {% endblock %}
-        </div>
+    <div class="screen-frame flex flex-col w-screen max-w-screen-lg border-2">
+        {% include "navbar.html" %}
+        {% block content %}
+        {% endblock %}
     </div>
     {% block javascripts %}
     {% endblock %}
