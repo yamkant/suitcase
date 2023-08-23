@@ -13,7 +13,7 @@ from core.classes import S3ImageUploader
 from django.conf import settings
 
 from users.constants import UserLevelEnum
-from products.constants import PoductStatusEnum
+from products.constants import ProductStatusEnum
 
 from products.tasks import upload_image_by_image_url
 
@@ -56,4 +56,5 @@ class ProductViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
     
     def destroy(self, request, *args, **kwargs):
+        request.data.update({'is_deleted': ProductStatusEnum.DELETED.value})
         return super().update(request, *args, **kwargs)

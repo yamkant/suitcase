@@ -6,6 +6,6 @@ class CategoryEnum(Enum):
     TOPS        = 3
     SHOES       = 4
 
-class PoductStatusEnum(Enum):
-    DEELTED     = "Y"
+class ProductStatusEnum(Enum):
+    DELETED     = "Y"
     NOT_DELETED = "N"
