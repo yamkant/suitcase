@@ -142,7 +142,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
             "is_deleted": "Y",
         }
     
-    def test_success(self):
+    def test_success_update(self):
         client = self.request_tester_user.get_loggedin_user()
 
         endpoint = reverse_lazy('products:detail', args=[self.prod_data['id']])
@@ -155,16 +155,15 @@ class ProductViewSetDetailTest(ViewSetTestCase):
             name=self.update_data['name'],
             category=self.update_data['category'],
             is_active=self.update_data['is_active'],
-            is_deleted=self.update_data['is_deleted'],
         )
 
-        test_field_list = ['name', 'category', 'is_active', 'is_deleted']
+        test_field_list = ['name', 'category', 'is_active']
 
         for field in test_field_list:
             with self.subTest(field=field):
                 self.assertEqual(res.json()[field], self.update_data[field])
 
-    def test_failure_is_not_owner_user(self):
+    def test_failure_update__is_not_owner_user(self):
         client = self.request_tester_user.get_loggedin_user()
 
         endpoint = reverse_lazy('products:detail', args=[self.other_prod_data['id']])
@@ -177,5 +176,23 @@ class ProductViewSetDetailTest(ViewSetTestCase):
             name=self.update_data['name'],
             category=self.update_data['category'],
             is_active=self.update_data['is_active'],
+        )
+
+    def test_success_delete(self):
+        client = self.request_tester_user.get_loggedin_user()
+
+        endpoint = reverse_lazy('products:detail', args=[self.prod_data['id']])
+
+        res = self.generic_test(
+            url=endpoint,
+            method="delete",
+            expected_status_code=200,
+            client=client,
             is_deleted=self.update_data['is_deleted'],
         )
+
+        test_field_list = ['is_deleted',]
+
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(res.json()[field], self.update_data[field])

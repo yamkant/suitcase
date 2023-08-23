@@ -6,12 +6,14 @@ from products.serializers import (
     ProductSerializer,
     ProductCreateSerializer,
     ProductUpdateSerializer,
+    ProductDeleteSerializer,
 )
 from products.permissions import IsOwner
 from core.classes import S3ImageUploader
 from django.conf import settings
 
 from users.constants import UserLevelEnum
+from products.constants import PoductStatusEnum
 
 from products.tasks import upload_image_by_image_url
 
@@ -24,6 +26,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         'list': ProductSerializer,
         'create': ProductCreateSerializer,
         'retrieve': ProductUpdateSerializer,
+        'destroy': ProductDeleteSerializer,
     }
 
     def get_queryset(self):
@@ -49,6 +52,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         return super().create(request, *args, **kwargs)
 
-    # TODO: 해당 상품이 해당 유저의 상품인지 조회하는 알고리즘 추가
     def retrieve(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    def destroy(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)

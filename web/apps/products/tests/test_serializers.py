@@ -2,6 +2,7 @@ from core.tests import IntegrationSerializerTestCase
 from products.serializers import (
     ProductCreateSerializer,
     ProductUpdateSerializer,
+    ProductDeleteSerializer,
 )
 from rest_framework.exceptions import ValidationError
 from users.models import User
@@ -104,10 +105,50 @@ class ProductUpdateSerializerTestCase(IntegrationSerializerTestCase):
             name=self.update_data['name'],
             category=self.update_data['category'],
             is_active=self.update_data['is_active'],
+        )
+
+        test_field_list = ['name', 'category', 'is_active']
+
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(serializer.data[field], self.update_data[field])
+    
+class ProductDeleteSerializerTestCase(IntegrationSerializerTestCase):
+    serializer = ProductDeleteSerializer
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.test_user = User.objects.create_user(
+            email="test@example.com",
+            username="yamkim",
+            phone="01050175933",
+            password="5933",
+        )
+        cls.data = {
+            "name": "new_prod",
+            "image_url": "https://s3_bucket_address/test_image.png",
+            "user_id": cls.test_user.id,
+            "category": CategoryEnum.PANTS.value,
+        }
+        serializer = ProductCreateSerializer(data=cls.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        cls.prod_data = serializer.data
+
+        cls.update_data = {
+            "is_deleted": "Y",
+        }
+
+    def test_success(self):
+        prod = get_object_or_404(Product, id=self.prod_data['id'])
+
+        serializer = self.serializer_test(
+            expected_query_count=1,
+            instance=prod,
             is_deleted=self.update_data['is_deleted'],
         )
 
-        test_field_list = ['name', 'category', 'is_active', 'is_deleted']
+        test_field_list = ['is_deleted']
 
         for field in test_field_list:
             with self.subTest(field=field):
