@@ -42,6 +42,7 @@ class ProductCreateSerializer(CreateSerializer):
     def create(self, validated_data):
         return Product.objects.create(**validated_data)
 
+# NOTE: is_deleted는 따로 serializer를 생성하여 처리합니다.
 class ProductUpdateSerializer(UpdateSerializer):
     representation_serializer_class = ProductSerializer
 
@@ -51,6 +52,17 @@ class ProductUpdateSerializer(UpdateSerializer):
             "name",
             "category",
             "is_active",
+        )
+    
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
+
+class ProductDeleteSerializer(UpdateSerializer):
+    representation_serializer_class = ProductSerializer
+
+    class Meta:
+        model = Product
+        fields = (
             "is_deleted",
         )
     

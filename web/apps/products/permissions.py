@@ -1,7 +1,4 @@
 from rest_framework.permissions import BasePermission
-from core.permissions import GenericAPIException
-from users.constants import UserLevelEnum
-from products.models import Product
 
 class IsOwner(BasePermission):
     def has_permission(self, request, view):
