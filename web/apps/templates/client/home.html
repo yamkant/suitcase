@@ -410,7 +410,7 @@
     const filter_search_button = (obj) => {
         const filter_value = obj.closest('.search-bar-container').querySelector('input').value;
         const url = new URL(location.href)
-        location.href = `${url.origin}/?name=${filter_value}`
+        location.href = `${url.origin}/?search=${filter_value}`
     }
 
 </script>
