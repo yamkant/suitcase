@@ -35,10 +35,12 @@ class ProductTemplateViewSet(generics.ListAPIView):
             "SHOES": 4,
         }
 
+
         context = {
             'prod_list': page['results'],
-            'links': page['links'],
-            'count': page['count'],
+            'page_links': page['links'],
+            'page_count': page['num_pages'],
+            'page_num': page['num'],
             'cate_dict': cate_dict,
             'is_logged_in': request.user.is_authenticated,
             'username': request.user.username,

@@ -1,7 +1,7 @@
 from rest_framework.pagination import PageNumberPagination
 
 DEFAULT_PAGE = 1
-DEFAULT_PAGE_SIZE = 3
+DEFAULT_PAGE_SIZE = 4
 
 class ProductPagination(PageNumberPagination):
     page = DEFAULT_PAGE
@@ -17,7 +17,7 @@ class ProductPagination(PageNumberPagination):
                 'next': self.get_next_link(),
                 'previous': self.get_previous_link()
             },
-            'count': self.page.paginator.count,
+            'num_pages': [i for i in range(1, self.page.paginator.num_pages + 1)],
+            'num': self.page.number,
             'results': data
         }
-

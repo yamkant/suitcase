@@ -11,4 +11,4 @@
 - [x] [Page: Home] 선택상품들 제거기능 추가
 - [x] [Page: Home] 상품 추가할 수 있도록 수정
 - [x] [Page: Home] 검색 기능 추가
-- [ ] [Page: Home] 페이지네이션 추가
+- [x] [Page: Home] 페이지네이션 추가
