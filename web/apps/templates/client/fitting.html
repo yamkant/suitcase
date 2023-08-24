@@ -4,41 +4,143 @@
 {% block content %}
 
 <div class="flex flex-col">
-    <div class="flex flex-col items-center w-full">
-        <div class="background px-2 py-5 bg-white/50">
-            {% for key, value in cate_disp_dict.items %}
-            <div id="gallery" class="relative w-full" data-carousel="static">
-                <!-- Carousel wrapper -->
-                <div class="relative overflow-hidden rounded-lg w-48 h-52 md:w-60 md:h-72 right-0 left-0">
-                    {% for prod in prod_list %}
-                        {% if value == prod.category %}
-                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                <img src="{{prod.saved_image_url}}" class="absolute block max-w-full h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+    <div class="flex flex-col items-center w-full -space-y-16">
+        {% for key, value in cate_disp_dict.items %}
+        <div class="gallery-container flex space-x-5">
+            <div class="flex flex-col relative w-60 h-52 justify-center items-center background px-2 bg-white">
+                <div id="gallery" class="gallery relative w-32 h-36" data-carousel="static">
+                    <!-- Carousel wrapper -->
+                    <div class="flex flex-col justify-center items-center relative overflow-hidden rounded-lg w-full h-full right-0 left-0">
+                        {% for prod in prod_list %}
+                            {% if value == prod.category %}
+                                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                    <img src="{{prod.saved_image_url}}" class="absolute block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <!-- Slider controls -->
+                    <button
+                        type="button"
+                        class="hidden absolute top-0 -left-7 z-30 items-center justify-center h-full px-0 cursor-pointer group focus:outline-none" data-carousel-prev
+                        id="prev-btn-{{key}}"
+                    >
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                            <svg class="w-2 h-2 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                            </svg>
+                            <span class="sr-only">Previous</span>
+                        </span>
+                    </button>
+                    <button
+                        type="button"
+                        class="hidden absolute top-0 -right-7 z-30 items-center justify-center h-full px-0 cursor-pointer group focus:outline-none" data-carousel-next
+                        id="next-btn-{{key}}"
+                    >
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                            <svg class="w-2 h-2 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                            </svg>
+                            <span class="sr-only">Next</span>
+                        </span>
+                    </button>
                 </div>
+
                 <!-- Slider controls -->
-                <button type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-0 cursor-pointer group focus:outline-none" data-carousel-prev>
-                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                        <svg class="w-4 h-4 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <button
+                    type="button"
+                    class="absolute top-0 left-2 z-30 flex items-center justify-center h-full px-0 cursor-pointer group focus:outline-none" data-carousel-prev
+                    onclick="document.getElementById('prev-btn-{{key}}').click();"
+                >
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                        <svg class="w-2 h-2 text-gray-800 dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
                         </svg>
                         <span class="sr-only">Previous</span>
                     </span>
                 </button>
-                <button type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-0 cursor-pointer group focus:outline-none" data-carousel-next>
-                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                        <svg class="w-4 h-4 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <button
+                    type="button"
+                    class="absolute top-0 right-2 z-30 flex items-center justify-center h-full px-0 cursor-pointer group focus:outline-none" data-carousel-next
+                    onclick="document.getElementById('next-btn-{{key}}').click();"
+                >
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                        <svg class="w-2 h-2 text-gray-800 dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
                         <span class="sr-only">Next</span>
                     </span>
                 </button>
             </div>
-            {% endfor %}
+            <div class="btn-container flex flex-col justify-center space-y-8">
+                <button
+                    class="z-30 flex items-center justify-center cursor-pointer group focus:outline-none"
+                    onclick="sizeup(this)"
+                >
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                        <svg class="w-2 h-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7"/>
+                        </svg>
+                        <span class="sr-only">up</span>
+                    </span>
+                </button>
+                <button
+                    class="z-30 flex items-center justify-center cursor-pointer group focus:outline-none"
+                    onclick="sizedown(this)"
+                >
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                        <svg class="w-2 h-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+                        </svg>
+                        <span class="sr-only">down</span>
+                    </span>
+                </button>
+            </div>
         </div>
+        {% endfor %}
     </div>
 </div>
-
 {% endblock content %}
+
+{% block javascripts %}
+<script>
+    const get_class_object_by_prefix = (class_name_list, class_prefix, diff, limit) => {
+        const class_name = Array.from(class_name_list).find((elem) => elem.startsWith(`${class_prefix}-`))
+        const class_name_parts = class_name.split('-');
+        if (diff > 0 && parseInt(class_name_parts[1]) + diff >= limit) {
+            return {
+                'origin': class_name,
+                'new': class_name,
+            }
+        }
+        if (diff < 0 && parseInt(class_name_parts[1]) + diff <= limit) {
+            return {
+                'origin': class_name,
+                'new': class_name,
+            }
+        }
+        class_name_parts[1] = String(parseInt(class_name_parts[1]) + diff);
+        const new_class_name = class_name_parts.join('-');
+        return {
+            'origin': class_name,
+            'new': new_class_name,
+        }
+    }
+
+    const sizeup = (btn_obj) => {
+        const gallery_obj = btn_obj.closest('.gallery-container').querySelector('.gallery');
+        const class_object_width = get_class_object_by_prefix(gallery_obj.classList, 'w', 4, 44)
+        gallery_obj.classList.replace(class_object_width.origin, class_object_width.new)
+        const class_object_height = get_class_object_by_prefix(gallery_obj.classList, 'h', 4, 48)
+        gallery_obj.classList.replace(class_object_height.origin, class_object_height.new)
+    }
+    const sizedown = (btn_obj) => {
+        const gallery_obj = btn_obj.closest('.gallery-container').querySelector('.gallery');
+        const class_object_width = get_class_object_by_prefix(gallery_obj.classList, 'w', -4, 20)
+        gallery_obj.classList.replace(class_object_width.origin, class_object_width.new)
+        const class_object_height = get_class_object_by_prefix(gallery_obj.classList, 'h', -4, 24)
+        gallery_obj.classList.replace(class_object_height.origin, class_object_height.new)
+    }
+
+</script>
+{% endblock %}
