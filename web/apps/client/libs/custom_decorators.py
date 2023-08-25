@@ -15,7 +15,7 @@ logger.addHandler(logging.StreamHandler())
 def login_required(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        if not request.user.is_authenticated:
+        if not request.user.is_anonymous:
             return redirect('/accounts/login/')
         return func(request, *args, **kwargs)
     return wrapper

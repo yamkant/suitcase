@@ -573,3 +573,4 @@ dist
 # End of https://www.toptal.com/developers/gitignore/api/django,python
 *CACHE*
 .DS_Store
+data

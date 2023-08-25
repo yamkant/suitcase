@@ -1,23 +1,27 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from client.libs.custom_decorators import login_required
-from rest_framework import viewsets
 from products.serializers import ProductSerializer
 from client.pagination import ProductPagination
+from client.permissions import IsLoggedInUser
 
 from products.models import Product
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework import filters
-from rest_framework import generics
+from rest_framework.generics import ListAPIView
+from django.utils.decorators import method_decorator
 
-class ProductTemplateViewSet(generics.ListAPIView):
+from django.shortcuts import redirect
+
+@method_decorator(login_required, name="get")
+class ProductTemplateViewSet(ListAPIView):
     queryset = Product.objects.filter(is_deleted="N")
     serializer_class = ProductSerializer
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'client/home.html'
-
     pagination_class = ProductPagination
+    # permission_classes = [IsLoggedInUser, ]
 
     filter_backends = [filters.SearchFilter, ]
     search_fields = ['name', ]
@@ -26,6 +30,8 @@ class ProductTemplateViewSet(generics.ListAPIView):
         return self.queryset.filter(user_id=self.request.user.id)
 
     def get(self, request, *args, **kwargs):
+        if request.user.is_anonymous:
+            return redirect("/accounts/login/")
         queryset = self.filter_queryset(queryset=self.get_queryset())
         page = self.get_paginated_response(self.paginate_queryset(queryset))
         cate_dict = {
@@ -34,7 +40,6 @@ class ProductTemplateViewSet(generics.ListAPIView):
             "TOPS": 3,
             "SHOES": 4,
         }
-
 
         context = {
             'prod_list': page['results'],
@@ -76,3 +81,6 @@ def render_fitting(request):
     }
 
     return render(request, 'client/fitting.html', context)
+
+def e_handler401(request):
+    return redirect("/accounts/login/")

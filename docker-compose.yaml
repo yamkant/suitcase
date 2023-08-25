@@ -1,0 +1,56 @@
+version: "3"
+services:
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+
+  app:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.app
+    container_name: my_app
+    command: "/bin/bash /apps/entrypoint.app.sh"
+    env_file:
+      - ./web/.env
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+    
+    depends_on:
+      - redis
+      - db
+    
+  celery:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.celery
+    container_name: my_celery
+    command: "/bin/bash /apps/entrypoint.celery.sh"
+    env_file:
+      - ./web/.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+    depends_on:
+      - app
+      - redis
+      - db
+
+  redis:
+    container_name: my_redis
+    image: redis
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
