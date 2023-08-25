@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg-my-beige-100 {
+    @apply bg-[#C4A566]
+}
+.bg-my-beige-300 {
+    @apply bg-[#CFA36B]
+}
+.bg-my-beige-500 {
+    @apply bg-[#B78969]
+}
+.bg-my-beige-700 {
+    @apply bg-[#CF866B]
+}
+.bg-my-beige-900 {
+    @apply bg-[#C47266]
+}
+
+div.login-form-container {
+    @apply  border-2 w-[400px] h-[250px] p-10 m-auto
+}
+div.join-form-container {
+    @apply  border-2 w-[400px] h-[450px] p-10 m-auto
+}
+form.login-form {
+    @apply w-full
+}
+form.login-form > ul {
+    @apply flex flex-col space-y-5
+}
+.errorlist {
+    @apply text-orange-500
+}
+form.login-form > ul > li > label{
+    @apply hidden
+}
+form.login-form > ul > li > input {
+    @apply h-10 w-full px-3
+}
+
+.form-btn-container {
+    @apply w-full flex justify-between mt-5
+}
+.form-btn {
+    @apply w-20 border-2 h-10
+}
+
+.errorlist {
+    @apply text-black
+}
