@@ -30,8 +30,6 @@ class ProductTemplateViewSet(ListAPIView):
         return self.queryset.filter(user_id=self.request.user.id)
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_anonymous:
-            return redirect("/accounts/login/")
         queryset = self.filter_queryset(queryset=self.get_queryset())
         page = self.get_paginated_response(self.paginate_queryset(queryset))
         cate_dict = {

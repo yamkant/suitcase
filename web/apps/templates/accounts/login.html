@@ -2,21 +2,19 @@
 {% load static %}
 
 {% block content %}
-<div class="login-form-container">
+<div class="w-[400px] h-[400px] p-10 mt-20 m-auto">
     <form method="POST" action="{% url 'accounts:login' %}" class="login-form">
         {% csrf_token %}
         <ul>
             {{form.as_ul}}
         </ul>
-        <div class="form-btn-container">
+        <div class="mt-5">
             <button type="submit" class="form-btn bg-[#C47266]">
-                로그인
+                Sign in
             </button>
-            <button type="button" class="form-btn bg-[#C47266]"
-                onclick="location.href=`{% url 'accounts:join' %}`"
-            >
-                회원가입
-            </button>
+        </div>
+        <div class="sign-link-container">
+            <a href="{% url 'accounts:join' %}">New to Suitcase? Create an account.</a>
         </div>
     </form>
 </div>

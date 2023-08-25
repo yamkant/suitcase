@@ -6,8 +6,8 @@ from django.contrib.auth import authenticate, get_user_model, password_validatio
 from django.shortcuts import get_object_or_404
 
 class UserLoginForm(forms.ModelForm):
-    login_email = EmailFormField(label="이메일")
-    password = PasswordFormField(label="비밀번호", widget=forms.PasswordInput)
+    login_email = EmailFormField(label="email")
+    password = PasswordFormField(label="password", widget=forms.PasswordInput)
 
     def __init__(self, request=None, *args, **kwargs):
         self.request = request
