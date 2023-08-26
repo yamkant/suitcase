@@ -5,10 +5,10 @@
         <div class="flex items-center">
             <ul class="flex flex-row font-medium mt-0 mr-6 space-x-8 text-sm">
                 <li>
-                    <a href="{% url 'client:home' %}" class="text-gray-900 dark:text-white hover:underline" aria-current="page">Home</a>
+                    <a href="{% url 'client:home' %}" class="nav-anchor text-gray-900 dark:text-white hover:underline" aria-current="page">Home</a>
                 </li>
                 <li>
-                    <a href="{% url 'client:fitting' %}" class="text-gray-900 dark:text-white hover:underline">Fitting</a>
+                    <a href="{% url 'client:fitting' %}" class="nav-anchor text-gray-900 dark:text-white hover:underline">Fitting</a>
                 </li>
             </ul>
         </div>
@@ -34,3 +34,18 @@
         {% endif %}
     </div>
 </nav>
+
+<script>
+    const pathname = new URL(location.href).pathname
+    const nav_anchors = Array.from(document.querySelectorAll(".nav-anchor"))
+    nav_anchors.forEach((nav_anchor) => {
+        const nav_text = nav_anchor.innerText.toLowerCase();
+        if (`/${nav_text}/` === pathname) {
+            nav_anchor.classList.add("font-bold")
+        } else if (nav_text === "home" && pathname === "/") {
+            nav_anchor.classList.add("font-bold")
+        } else {
+            nav_anchor.classList.remove("font-bold")
+        }
+    })
+</script>
