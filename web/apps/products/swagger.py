@@ -36,3 +36,60 @@ PRODUCT_CREATE_EXAMPLES = [
         },
     ),
 ]
+
+
+PRODUCT_LIST_EXAMPLES = [
+    OpenApiExample(
+        request_only=True,
+        summary="[성공] 상품 등록 예시",
+        description="""
+            LEMARIE의 상의 상품을 등록하는 예시입니다.
+            - response 403: 로그인을 하지 않은 상태에서 유저가 상품을 등록하려고 할 때 반환되는 값입니다.
+        """,
+        name="success_example",
+        value={
+            "page": "1",
+            "page_size": 5,
+            "search_term": 's',
+        },
+    ),
+]
+
+PRODUCT_LIST_EXAMPLES = [
+    OpenApiParameter(
+        name="page",
+        type=int,
+        required=False,
+        description="페이지 번호를 입력하세요",
+        examples=[
+            OpenApiExample(
+                name="page number",
+                value=1,
+            ),
+        ]
+    ),
+    OpenApiParameter(
+        name="page_size",
+        type=int,
+        required=False,
+        description="페이지 크기를 입력하세요",
+        examples=[
+            OpenApiExample(
+                name="page size",
+                value=10,
+            ),
+        ]
+    ),
+    OpenApiParameter(
+        name="search",
+        type=str,
+        required=False,
+        description="검색어를 입력하세요",
+        examples=[
+            OpenApiExample(
+                name="search",
+                value='s',
+            ),
+        ]
+    ),
+]

@@ -16,7 +16,7 @@ from rest_framework import filters
 from client.pagination import ProductPagination
 from users.constants import UserLevelEnum
 from products.constants import ProductStatusEnum
-from products.swagger import PRODUCT_CREATE_EXAMPLES
+from products.swagger import PRODUCT_CREATE_EXAMPLES, PRODUCT_LIST_EXAMPLES
 
 from products.tasks import upload_image_by_image_url
 
@@ -49,6 +49,16 @@ class ProductViewSet(viewsets.ModelViewSet):
             return super().get_serializer_class
 
     # TODO: 테스터 추가 예정
+    @extend_schema(
+        request=ProductSerializer,
+        summary="상품 목록을 조회합니다.",
+        tags=['상품'],
+        parameters=PRODUCT_LIST_EXAMPLES,
+        responses={
+            status.HTTP_200_OK: ProductSerializer,
+            status.HTTP_403_FORBIDDEN: None
+        }
+    )
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(queryset=self.get_queryset())
         page = self.paginate_queryset(queryset)
@@ -58,10 +68,11 @@ class ProductViewSet(viewsets.ModelViewSet):
     @extend_schema(
         request=ProductCreateSerializer,
         summary="새로운 상품을 추가합니다.",
+        tags=['상품'],
         examples=PRODUCT_CREATE_EXAMPLES,
         responses={
-            201: ProductSerializer,
-            403: None
+            status.HTTP_201_CREATED: ProductSerializer,
+            status.HTTP_403_FORBIDDEN: None
         }
     )
     def create(self, request, *args, **kwargs):
