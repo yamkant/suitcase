@@ -48,6 +48,13 @@ class ProductViewSet(viewsets.ModelViewSet):
         except (KeyError, AttributeError):
             return super().get_serializer_class
 
+    # TODO: 테스터 추가 예정
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(queryset=self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return Response(serializer.data)
+    
     @extend_schema(
         request=ProductCreateSerializer,
         summary="새로운 상품을 추가합니다.",
