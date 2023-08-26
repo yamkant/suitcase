@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',
     'compressor',
     'storages',
+    'drf_spectacular',
 
     # custom apps
     'common',
@@ -179,5 +180,14 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 
 # Restframework setting
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Suitcase Project API',
+    'DESCRIPTION': 'Suitcase project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }
