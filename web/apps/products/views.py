@@ -11,16 +11,26 @@ from products.serializers import (
 from products.permissions import IsOwner
 from core.classes import S3ImageUploader
 from django.conf import settings
+from rest_framework import filters
 
+from client.pagination import ProductPagination
 from users.constants import UserLevelEnum
 from products.constants import ProductStatusEnum
+from products.swagger import PRODUCT_CREATE_EXAMPLES
 
 from products.tasks import upload_image_by_image_url
 
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.types import OpenApiTypes
+
 class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.filter(is_deleted="N")
     serializer_class = ProductSerializer
     permission_classes = [IsOwner]
     lookup_field = "id"
+    filter_backends = [filters.SearchFilter, ]
+    search_fields = ['name', ]
+    pagination_class = ProductPagination
 
     serializer_action_classes = {
         'list': ProductSerializer,
@@ -30,7 +40,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     }
 
     def get_queryset(self):
-        return Product.objects.filter(is_deleted="N")
+        return self.queryset.filter(user_id=self.request.user.id)
 
     def get_serializer_class(self):
         try:
@@ -38,9 +48,21 @@ class ProductViewSet(viewsets.ModelViewSet):
         except (KeyError, AttributeError):
             return super().get_serializer_class
 
+    @extend_schema(
+        request=ProductCreateSerializer,
+        summary="새로운 상품을 추가합니다.",
+        examples=PRODUCT_CREATE_EXAMPLES,
+        responses={
+            201: ProductSerializer,
+            403: None
+        }
+    )
     def create(self, request, *args, **kwargs):
         if request.user.level == UserLevelEnum.TESTER.value:
             return super().create(request, *args, **kwargs)
+        
+        if not request.data.get('image_url'):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # NOTE: Celery를 사용한 Image Upload 작업
         filename = S3ImageUploader.get_file_name(request.user.username)
