@@ -13,6 +13,7 @@ from rest_framework.generics import ListAPIView
 from django.utils.decorators import method_decorator
 
 from django.shortcuts import redirect
+import random
 
 @method_decorator(login_required, name="get")
 class ProductTemplateViewSet(ListAPIView):
@@ -48,6 +49,7 @@ class ProductTemplateViewSet(ListAPIView):
             'is_logged_in': request.user.is_authenticated,
             'username': request.user.username,
             'email': request.user.email,
+            'rand_svg_num': random.randint(1287, 1336),
         }
         return Response(context)
     
@@ -76,6 +78,7 @@ def render_fitting(request):
         'is_logged_in': request.user.is_authenticated,
         'username': request.user.username,
         'email': request.user.email,
+        'rand_svg_num': random.randint(1287, 1336),
     }
 
     return render(request, 'client/fitting.html', context)
