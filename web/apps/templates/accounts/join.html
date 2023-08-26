@@ -2,16 +2,19 @@
 {% load static %}
 
 {% block content %}
-<div class="join-form-container">
+<div class="max-w-[400px] px-5 mt-16 m-auto">
     <form method="POST" action="{% url 'accounts:join' %}" class="login-form">
         {% csrf_token %}
         <ul>
             {{form.as_ul}}
         </ul>
         <div class="form-btn-container">
-            <button type="submit" class="bg-[#C47266] form-btn">
-                신청하기
+            <button type="submit" class="form-btn bg-[#C47266]">
+                Sign up
             </button>
+        </div>
+        <div class="sign-link-container">
+            <a href="{% url 'accounts:login' %}">Already have an account? Sign in</a>
         </div>
     </form>
 </div>

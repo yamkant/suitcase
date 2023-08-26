@@ -13,14 +13,14 @@ class EmailFormField(forms.EmailField):
             **super().widget_attrs(widget),
             'autocapitalize': 'none',
             'autocomplete': 'email',
-            'placeholder': '이메일',
+            'placeholder': 'test@example.com',
         }
 
 class PasswordFormField(forms.CharField):
     def widget_attrs(self, widget: Widget) -> Any:
         return {
             'autocomplete': 'new-password',
-            'placeholder': "비밀번호",
+            'placeholder': "********",
             'strip': False,
             **super().widget_attrs(widget),
         }
@@ -31,7 +31,7 @@ class PhoneFormField(forms.CharField):
             **super().widget_attrs(widget),
             'autocomplete': 'new-password',
             'type': 'number',
-            'placeholder': '전화번호',
+            'placeholder': 'phone',
         }
 
 class UsernameFormField(forms.CharField):
@@ -43,5 +43,5 @@ class UsernameFormField(forms.CharField):
             **super().widget_attrs(widget),
             'autocapitalize': 'none',
             'autocomplete': 'username',
-            'placeholder': '이름',
+            'placeholder': 'username',
         }

@@ -145,7 +145,8 @@ STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login'
 
 # AWS Setting
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
