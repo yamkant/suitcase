@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="w-[400px] h-[400px] p-10 mt-20 m-auto">
+<div class="max-w-[400px] h-[400px] px-5 mt-16 m-auto">
     <form method="POST" action="{% url 'accounts:login' %}" class="login-form">
         {% csrf_token %}
         <ul>

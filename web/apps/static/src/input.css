@@ -45,3 +45,11 @@ form.login-form > ul > li > input {
 .sign-link-container {
     @apply text-center text-gray-600
 }
+
+.fitting-size-btn-container {
+    @apply flex flex-col justify-center space-y-8 py-10
+}
+
+.fitting-size-btn {
+    @apply w-16 h-full rounded-full
+}
