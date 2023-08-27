@@ -16,7 +16,11 @@ from rest_framework import filters
 from client.pagination import ProductPagination
 from users.constants import UserLevelEnum
 from products.constants import ProductStatusEnum
-from products.swagger import PRODUCT_CREATE_EXAMPLES, PRODUCT_LIST_EXAMPLES
+from products.swagger import (
+    PRODUCT_CREATE_EXAMPLES,
+    PRODUCT_LIST_EXAMPLES,
+    PRODUCT_UPDATE_EXAMPLES,
+)
 
 from products.tasks import upload_image_by_image_url
 
@@ -92,6 +96,16 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         return super().create(request, *args, **kwargs)
 
+    @extend_schema(
+        request=ProductCreateSerializer,
+        summary="상품을 활성화/비활성화 및 수정합니다.",
+        tags=['상품'],
+        examples=PRODUCT_UPDATE_EXAMPLES,
+        responses={
+            status.HTTP_200_OK: ProductSerializer,
+            status.HTTP_403_FORBIDDEN: None
+        }
+    )
     def update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return super().update(request, *args, **kwargs)
