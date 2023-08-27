@@ -56,6 +56,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     @extend_schema(
         request=ProductSerializer,
         summary="상품 목록을 조회합니다.",
+        description="""상품 목록을 페이지번호/페이지크기/검색결과에 따라 조회합니다.""",
         tags=['상품'],
         parameters=PRODUCT_LIST_EXAMPLES,
         responses={
@@ -72,6 +73,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     @extend_schema(
         request=ProductCreateSerializer,
         summary="새로운 상품을 추가합니다.",
+        description="""'Add product' modal에서 상품을 등록하는 예시입니다. 상품의 이미지 주소와 이름을 입력하면 비동기작업으로 업로드가 수행됩니다.""",
         tags=['상품'],
         examples=PRODUCT_CREATE_EXAMPLES,
         responses={
@@ -98,7 +100,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     @extend_schema(
         request=ProductCreateSerializer,
-        summary="상품을 활성화/비활성화 및 수정합니다.",
+        summary="상품을 활성화/비활성화 및 정보들을 수정합니다.",
+        description="""'Edit product' modal에서 상품의 이름, 카테고리와 같은 기본적인 정보를 수정합니다.<br>is_active 필드의 활성여부에 따라 Fitting 페이지에서 상품을 사용여부가 결정됩니다.""",
         tags=['상품'],
         examples=PRODUCT_UPDATE_EXAMPLES,
         responses={
@@ -110,6 +113,17 @@ class ProductViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
         return super().update(request, *args, **kwargs)
     
+    @extend_schema(
+        request=ProductCreateSerializer,
+        summary="상품을 제거(논리적 제거)합니다.",
+        tags=['상품'],
+        description="""상품테이블에서 is_deleted의 필드값을 'Y'로 수정하여, 유저에게는 제거된 것처럼 보이게 합니다.""",
+        examples=PRODUCT_UPDATE_EXAMPLES,
+        responses={
+            status.HTTP_200_OK: ProductSerializer,
+            status.HTTP_403_FORBIDDEN: None
+        }
+    )
     def destroy(self, request, *args, **kwargs):
         # NOTE: request.POST는 QueryDict 형태로, request.data는 Dict 형태로 반환합니다.
         request.POST._mutable = True
