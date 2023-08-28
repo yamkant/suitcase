@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from rest_framework.views import APIView
+from users.serializers import UserSerializer
 from users.forms.join_form import UserJoinForm
 from users.forms.login_form import UserLoginForm
 from rest_framework.views import Response
@@ -9,6 +10,7 @@ from django.contrib.auth.forms import AuthenticationForm
 class JoinAPIView(APIView):
     form_class = UserJoinForm
     template_name = 'accounts/join.html'
+    serializer_class = UserSerializer
 
     def get(self, request):
         context = {}
@@ -26,6 +28,7 @@ class JoinAPIView(APIView):
 class LoginAPIView(APIView):
     form_class = UserLoginForm
     template_name = 'accounts/login.html'
+    serializer_class = UserSerializer
 
     def get(self, request):
         context = {}
