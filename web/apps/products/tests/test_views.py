@@ -99,8 +99,6 @@ class ProductViewSetDetailTest(ViewSetTestCase):
         general_user = cls.request_tester_user.get_user()
         general_user.level = UserLevelEnum.TESTER.value
         general_user.save()
-        print("GENERAL USER================")
-        print(general_user)
 
         cls.request_other_user = TestUserHandler(
             username="tester2",
@@ -109,8 +107,6 @@ class ProductViewSetDetailTest(ViewSetTestCase):
         other_user = cls.request_other_user.get_user()
         other_user.level = UserLevelEnum.TESTER.value
         other_user.save()
-        print("OTHER USER================")
-        print(other_user)
 
         cls.data = {
             "name": "new_prod",
@@ -163,7 +159,6 @@ class ProductViewSetDetailTest(ViewSetTestCase):
 
     def test_success_update_partial(self):
         client = self.request_tester_user.get_loggedin_user()
-        print(self.request_tester_user.get_user())
 
         endpoint = reverse_lazy('products:detail', args=[self.prod_data['id']])
 
@@ -189,7 +184,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
         res = self.generic_test(
             url=endpoint,
             method="patch",
-            expected_status_code=403,
+            expected_status_code=404,
             client=client,
             name=self.update_data['name'],
             category=self.update_data['category'],

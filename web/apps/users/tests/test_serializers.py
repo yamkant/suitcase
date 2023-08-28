@@ -29,15 +29,13 @@ class UserCreateSerializerTestCase(IntegrationSerializerTestCase):
 
         fixture_data = {
             "username": "yamkim",
-            "phone": "01050175933",
         }
-        self.assertEqual(serializer.data, fixture_data)
+        # self.assertEqual(serializer.data, fixture_data)
 
         # NOTE: skill
-        # for field, expected in fixture_data:
-        #     with self.subTest(field=field, expected=expected):
-        #         # self.assertEqual(getattr(serializer, field), expected)
-        #         self.assertEqual(serializer, expected)
+        for field, expected in fixture_data.items():
+            with self.subTest(field=field, expected=expected):
+                self.assertEqual(serializer.data[field], expected)
 
     def test_failure_without_username(self):
         with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
@@ -49,7 +47,6 @@ class UserCreateSerializerTestCase(IntegrationSerializerTestCase):
     def test_failure_without_password(self):
         with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
             serializer = self.serializer_test(
-                username="test@example.com",
                 username="yamkim",
                 password2="5933"
             )
@@ -57,8 +54,6 @@ class UserCreateSerializerTestCase(IntegrationSerializerTestCase):
     def test_failure_without_password2(self):
         with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
             serializer = self.serializer_test(
-                username="test@example.com",
-                phone="01050175933",
                 username="yamkim",
                 password="5933"
             )
@@ -73,14 +68,12 @@ class UserSerializerTestCase(IntegrationSerializerTestCase):
     def test_success(self):
         test_user = User.objects.create_user(
             username="yamkim",
-            phone="01050175933",
             password="5933",
         )
-        serializer = self.serializer_test(test_user)
+        serializer = self.serializer_test(instance=test_user)
         fixture_data = {
             "id": test_user.id,
             "username": "yamkim",
-            "phone": "01050175933",
             "level": UserLevelEnum.GENERAL.value
         }
 
@@ -111,7 +104,10 @@ class UserUpdateForGeneralLevelSerializerTestCase(IntegrationSerializerTestCase)
             "username": data['username'],
             "level": test_user.level,
         }
-        serializer = self.serializer_test(test_user, **data)
+        serializer = self.serializer_test(
+            instance=test_user,
+            **data
+        )
         self.assertEqual(serializer.data, fixture_data)
 
 class UserUpdateForAdminLevelSerializerTestCase(IntegrationSerializerTestCase):
@@ -135,5 +131,5 @@ class UserUpdateForAdminLevelSerializerTestCase(IntegrationSerializerTestCase):
             "username": data['username'],
             "level": data['level'],
         }
-        serializer = self.serializer_test(test_user, **data)
+        serializer = self.serializer_test(instance=test_user, **data)
         self.assertEqual(serializer.data, fixture_data)

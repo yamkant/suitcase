@@ -11,9 +11,7 @@ class UserViewSetListTest(ViewSetTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.request_admin_user = TestUserHandler(
-            email="admin@example.com",
             username="admin",
-            phone="01050175933",
             password="5933"
         )
         admin_user = cls.request_admin_user.get_user()
@@ -21,9 +19,7 @@ class UserViewSetListTest(ViewSetTestCase):
         admin_user.save()
 
         cls.request_general_user = TestUserHandler(
-            email="general@example.com",
             username="general",
-            phone="01050175933",
             password="5933"
         )
         general_user = cls.request_general_user.get_user()
@@ -52,9 +48,7 @@ class UserViewSetListTest(ViewSetTestCase):
         - admin 권한이 없기 때문에 권한 제한 status code를 반환합니다.
         '''
         unauthorized_test_request_user = TestUserHandler(
-            email="user@example.com",
             username="unauthorized_tester",
-            phone="01050175933",
             password="5933"
         )
         client = unauthorized_test_request_user.get_loggedin_user()
@@ -72,9 +66,7 @@ class UserViewSetRetrieveTest(ViewSetTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.request_admin_user = TestUserHandler(
-            email="admin@example.com",
             username="tester",
-            phone="01050175933",
             password="5933"
         )
         admin_user = cls.request_admin_user.get_user()
@@ -82,9 +74,7 @@ class UserViewSetRetrieveTest(ViewSetTestCase):
         admin_user.save()
 
         cls.request_general_user = TestUserHandler(
-            email="general@example.com",
             username="general",
-            phone="01050175933",
             password="5933"
         )
         general_user = cls.request_general_user.get_user()
@@ -98,9 +88,7 @@ class UserViewSetRetrieveTest(ViewSetTestCase):
         client = self.request_admin_user.get_loggedin_user()
 
         new_user = User.objects.create_user(
-            email="new_user@example.com",
             username="new_user",
-            phone="01050175933",
             password="5933"
         )
 
@@ -121,8 +109,6 @@ class UserViewSetRetrieveTest(ViewSetTestCase):
         self.assertEqual(res.json(), {
             "id": new_user.id,
             "username": fixture_data['username'],
-            "email": new_user.email,
-            "phone": new_user.phone,
             "level": fixture_data['level'],
         })
 
@@ -133,9 +119,7 @@ class UserViewSetRetrieveTest(ViewSetTestCase):
         client = self.request_general_user.get_loggedin_user()
 
         new_user = User.objects.create_user(
-            email="new_user@example.com",
             username="new_user",
-            phone="01050175933",
             password="5933"
         )
 
@@ -161,9 +145,7 @@ class UserViewSetRetrieveTest(ViewSetTestCase):
         client = self.request_general_user.get_loggedin_user()
 
         new_user = User.objects.create_user(
-            email="new_user@example.com",
             username="new_user",
-            phone="01050175933",
             password="5933"
         )
 
@@ -182,7 +164,5 @@ class UserViewSetRetrieveTest(ViewSetTestCase):
         self.assertEqual(res.json(), {
             "id": new_user.id,
             "username": fixture_data['username'],
-            "email": new_user.email,
-            "phone": new_user.phone,
             "level": new_user.level,
         })
