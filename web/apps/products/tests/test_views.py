@@ -14,9 +14,7 @@ class ProductViewSetListTest(ViewSetTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.request_tester_user = TestUserHandler(
-            email="tester@example.com",
             username="tester",
-            phone="01050175933",
             password="5933"
         )
         general_user = cls.request_tester_user.get_user()
@@ -95,24 +93,24 @@ class ProductViewSetDetailTest(ViewSetTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.request_tester_user = TestUserHandler(
-            email="tester@example.com",
             username="tester",
-            phone="01050175933",
             password="5933"
         )
         general_user = cls.request_tester_user.get_user()
         general_user.level = UserLevelEnum.TESTER.value
         general_user.save()
+        print("GENERAL USER================")
+        print(general_user)
 
         cls.request_other_user = TestUserHandler(
-            email="other_tester@example.com",
             username="tester2",
-            phone="01050175933",
             password="5933"
         )
         other_user = cls.request_other_user.get_user()
         other_user.level = UserLevelEnum.TESTER.value
         other_user.save()
+        print("OTHER USER================")
+        print(other_user)
 
         cls.data = {
             "name": "new_prod",
@@ -165,6 +163,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
 
     def test_success_update_partial(self):
         client = self.request_tester_user.get_loggedin_user()
+        print(self.request_tester_user.get_user())
 
         endpoint = reverse_lazy('products:detail', args=[self.prod_data['id']])
 

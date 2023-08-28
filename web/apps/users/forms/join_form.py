@@ -8,31 +8,19 @@ from users.forms.fields import UsernameFormField, PasswordFormField, EmailFormFi
 from users.serializers import UserCreateSerializer
 
 class UserJoinForm(forms.ModelForm):
-    email = EmailFormField(label="email", validators=[
+    username = UsernameFormField(label="username", validators=[
         UniqueValidator,
-        RegexValidator(
-            regex=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-            message="숫자, 영어, _, @ 만을 이용해서 작성해주세요."
-        )
-    ])
+        MaxLengthValidator(50, message="50자 이내로 입력해주세요.")]
+    )
     password = PasswordFormField(label="password", widget=forms.PasswordInput)
     password2 = PasswordFormField(
         label="password check",
         widget=forms.PasswordInput()
     )
-    username = UsernameFormField(label="username", validators=[
-        MaxLengthValidator(50, message="50자 이내로 입력해주세요.")]
-    )
-    phone = PhoneFormField(label="phone", validators=[
-        RegexValidator(
-            regex=r'^[0-9]{9,11}$',
-            message="숫자만을 이용하여, 9-11자 이내로 입력해주세요."
-        )
-    ])
 
     class Meta:
         model = User
-        fields = ("email", "password", "password2", "username", "phone")
+        fields = ("username", "password", "password2")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -18,9 +18,7 @@ class ProductCreateSerializerTestCase(IntegrationSerializerTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.test_user = User.objects.create_user(
-            email="test@example.com",
             username="yamkim",
-            phone="01050175933",
             password="5933",
         )
         cls.data = {
@@ -73,9 +71,7 @@ class ProductUpdateSerializerTestCase(IntegrationSerializerTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.test_user = User.objects.create_user(
-            email="test@example.com",
             username="yamkim",
-            phone="01050175933",
             password="5933",
         )
         cls.data = {
@@ -119,9 +115,7 @@ class ProductDeleteSerializerTestCase(IntegrationSerializerTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.test_user = User.objects.create_user(
-            email="test@example.com",
             username="yamkim",
-            phone="01050175933",
             password="5933",
         )
         cls.data = {

@@ -9,8 +9,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "username",
-            "email",
-            "phone",
             "level",
         )
         read_only_fields = fields
@@ -23,8 +21,6 @@ class UserCreateSerializer(CreateSerializer):
         model = User
         fields = (
             "username",
-            "email",
-            "phone",
             "password",
             "password2",
         )
@@ -46,8 +42,6 @@ class UserUpdateForGeneralLevelSerializer(UpdateSerializer):
         model = User
         fields = (
             "username",
-            "email",
-            "phone",
         )
     
     def update(self, instance, validated_data):
@@ -60,8 +54,6 @@ class UserUpdateForAdminLevelSerializer(UpdateSerializer):
         model = User
         fields = (
             "username",
-            "email",
-            "phone",
             "level",
         )
     
