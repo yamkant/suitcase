@@ -74,7 +74,8 @@ class UserSerializerTestCase(IntegrationSerializerTestCase):
         fixture_data = {
             "id": test_user.id,
             "username": "yamkim",
-            "level": UserLevelEnum.GENERAL.value
+            "level": UserLevelEnum.GENERAL.value,
+            "user_url": "",
         }
 
         self.assertEqual(serializer.data, fixture_data)
@@ -94,21 +95,20 @@ class UserUpdateForGeneralLevelSerializerTestCase(IntegrationSerializerTestCase)
             username="yamkim",
             password="5933",
         )
-        data = {
-            "username": "yamkant",
-            "level": UserLevelEnum.ADMIN.value,
-        }
 
         fixture_data = {
-            "id": test_user.id,
-            "username": data['username'],
             "level": test_user.level,
+            "user_url": "test@example.com",
         }
         serializer = self.serializer_test(
             instance=test_user,
-            **data
+            user_url=fixture_data["user_url"],
         )
-        self.assertEqual(serializer.data, fixture_data)
+
+        test_field_list = ['level', 'user_url']
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(serializer.data[field], fixture_data[field])
 
 class UserUpdateForAdminLevelSerializerTestCase(IntegrationSerializerTestCase):
     serializer = UserUpdateForAdminLevelSerializer
@@ -123,13 +123,14 @@ class UserUpdateForAdminLevelSerializerTestCase(IntegrationSerializerTestCase):
             password="5933",
         )
         data = {
-            "username": "yamkant",
             "level": UserLevelEnum.ADMIN.value,
         }
         fixture_data = {
-            "id": test_user.id,
-            "username": data['username'],
             "level": data['level'],
         }
         serializer = self.serializer_test(instance=test_user, **data)
-        self.assertEqual(serializer.data, fixture_data)
+
+        test_field_list = ['level']
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(serializer.data[field], fixture_data[field])

@@ -22,6 +22,7 @@ class User(AbstractBaseUser):
     is_staff     = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     level        = models.IntegerField(unique=False, default=1)
+    user_url     = models.CharField(max_length=255, default="")
 
     objects = UserManager()
 

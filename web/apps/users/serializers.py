@@ -10,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
             "id",
             "username",
             "level",
+            "user_url",
         )
         read_only_fields = fields
 
@@ -41,7 +42,7 @@ class UserUpdateForGeneralLevelSerializer(UpdateSerializer):
     class Meta:
         model = User
         fields = (
-            "username",
+            "user_url",
         )
     
     def update(self, instance, validated_data):
@@ -53,7 +54,6 @@ class UserUpdateForAdminLevelSerializer(UpdateSerializer):
     class Meta:
         model = User
         fields = (
-            "username",
             "level",
         )
     

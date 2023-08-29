@@ -6,5 +6,5 @@ app_name = "users"
 
 urlpatterns = [
     path("", UserViewSet.as_view({"get": "list"}), name="list"),
-    path("<int:id>/", UserViewSet.as_view({"patch": "retrieve"}), name="retrieve"),
+    path("<int:id>/", UserViewSet.as_view({"patch": "update"}), name="detail"),
 ]
