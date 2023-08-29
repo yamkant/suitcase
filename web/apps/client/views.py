@@ -14,7 +14,11 @@ from django.utils.decorators import method_decorator
 
 from django.shortcuts import redirect
 import random
+from drf_spectacular.utils import extend_schema
 
+@extend_schema(
+    exclude=True
+)
 @method_decorator(login_required, name="get")
 class ProductTemplateViewSet(ListAPIView):
     queryset = Product.objects.filter(is_deleted="N")
