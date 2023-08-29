@@ -51,8 +51,7 @@ class ProductTemplateViewSet(ListAPIView):
             'page_num': page['num'],
             'cate_dict': cate_dict,
             'is_logged_in': request.user.is_authenticated,
-            'username': request.user.username,
-            'email': "",
+            'user': request.user,
             'rand_svg_num': random.randint(1287, 1336),
         }
         return Response(context)
@@ -80,8 +79,7 @@ def render_fitting(request):
         'cate_dict': cate_dict,
         'cate_disp_dict': cate_disp_dict,
         'is_logged_in': request.user.is_authenticated,
-        'username': request.user.username,
-        'email': "",
+        'user': request.user,
         'rand_svg_num': random.randint(1287, 1336),
     }
 
