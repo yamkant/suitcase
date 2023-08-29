@@ -3,10 +3,12 @@ from rest_framework.views import APIView
 from users.serializers import UserSerializer
 from users.forms.join_form import UserJoinForm
 from users.forms.login_form import UserLoginForm
-from rest_framework.views import Response
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login
+from drf_spectacular.utils import extend_schema
 
+@extend_schema(
+    exclude=True
+)
 class JoinAPIView(APIView):
     form_class = UserJoinForm
     template_name = 'accounts/join.html'
@@ -25,6 +27,9 @@ class JoinAPIView(APIView):
         context = {'form': form}
         return render(request, self.template_name, context)
 
+@extend_schema(
+    exclude=True
+)
 class LoginAPIView(APIView):
     form_class = UserLoginForm
     template_name = 'accounts/login.html'

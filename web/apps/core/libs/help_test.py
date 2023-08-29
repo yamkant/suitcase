@@ -17,7 +17,7 @@ class TestUserHandler():
     
     def get_loggedin_user(self):
         is_logined = self._client.login(
-            email=self._user.email,
+            username=self._user.username,
             password=self._data['password'], # login시 hashing 처리
         )
         return self._client

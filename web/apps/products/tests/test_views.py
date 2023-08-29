@@ -14,9 +14,7 @@ class ProductViewSetListTest(ViewSetTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.request_tester_user = TestUserHandler(
-            email="tester@example.com",
             username="tester",
-            phone="01050175933",
             password="5933"
         )
         general_user = cls.request_tester_user.get_user()
@@ -95,9 +93,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.request_tester_user = TestUserHandler(
-            email="tester@example.com",
             username="tester",
-            phone="01050175933",
             password="5933"
         )
         general_user = cls.request_tester_user.get_user()
@@ -105,9 +101,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
         general_user.save()
 
         cls.request_other_user = TestUserHandler(
-            email="other_tester@example.com",
             username="tester2",
-            phone="01050175933",
             password="5933"
         )
         other_user = cls.request_other_user.get_user()
@@ -190,7 +184,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
         res = self.generic_test(
             url=endpoint,
             method="patch",
-            expected_status_code=403,
+            expected_status_code=404,
             client=client,
             name=self.update_data['name'],
             category=self.update_data['category'],

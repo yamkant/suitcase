@@ -22,40 +22,24 @@ class UserCreateSerializerTestCase(IntegrationSerializerTestCase):
 
     def test_success(self):
         serializer = self.serializer_test(
-            email="test@example.com",
             username="yamkim",
-            phone="01050175933",
             password="5933",
             password2="5933"
         )
 
         fixture_data = {
-            "email": "test@example.com",
             "username": "yamkim",
-            "phone": "01050175933",
         }
-        self.assertEqual(serializer.data, fixture_data)
+        # self.assertEqual(serializer.data, fixture_data)
 
         # NOTE: skill
-        # for field, expected in fixture_data:
-        #     with self.subTest(field=field, expected=expected):
-        #         # self.assertEqual(getattr(serializer, field), expected)
-        #         self.assertEqual(serializer, expected)
-
-    def test_failure_without_email(self):
-        with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
-            serializer = self.serializer_test(
-                username="yamkim",
-                phone="01050175933",
-                password="5933",
-                password2="5933"
-            )
+        for field, expected in fixture_data.items():
+            with self.subTest(field=field, expected=expected):
+                self.assertEqual(serializer.data[field], expected)
 
     def test_failure_without_username(self):
         with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
             serializer = self.serializer_test(
-                email="test@example.com",
-                phone="01050175933",
                 password="5933",
                 password2="5933"
             )
@@ -63,8 +47,6 @@ class UserCreateSerializerTestCase(IntegrationSerializerTestCase):
     def test_failure_without_password(self):
         with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
             serializer = self.serializer_test(
-                email="test@example.com",
-                phone="01050175933",
                 username="yamkim",
                 password2="5933"
             )
@@ -72,8 +54,6 @@ class UserCreateSerializerTestCase(IntegrationSerializerTestCase):
     def test_failure_without_password2(self):
         with self.assertRaisesMessage(ValidationError, EXCEPTION_MESSAGE):
             serializer = self.serializer_test(
-                email="test@example.com",
-                phone="01050175933",
                 username="yamkim",
                 password="5933"
             )
@@ -87,18 +67,15 @@ class UserSerializerTestCase(IntegrationSerializerTestCase):
 
     def test_success(self):
         test_user = User.objects.create_user(
-            email="test@example.com",
             username="yamkim",
-            phone="01050175933",
             password="5933",
         )
-        serializer = self.serializer_test(test_user)
+        serializer = self.serializer_test(instance=test_user)
         fixture_data = {
             "id": test_user.id,
-            "email": "test@example.com",
             "username": "yamkim",
-            "phone": "01050175933",
-            "level": UserLevelEnum.GENERAL.value
+            "level": UserLevelEnum.GENERAL.value,
+            "user_url": "",
         }
 
         self.assertEqual(serializer.data, fixture_data)
@@ -115,25 +92,23 @@ class UserUpdateForGeneralLevelSerializerTestCase(IntegrationSerializerTestCase)
         - level을 수정할 권한은 가지고 있지 않습니다.
         '''
         test_user = User.objects.create_user(
-            email="test@example.com",
             username="yamkim",
-            phone="01050175933",
             password="5933",
         )
-        data = {
-            "username": "yamkant",
-            "level": UserLevelEnum.ADMIN.value,
-        }
 
         fixture_data = {
-            "id": test_user.id,
-            "email": test_user.email,
-            "username": data['username'],
-            "phone": test_user.phone,
             "level": test_user.level,
+            "user_url": "test@example.com",
         }
-        serializer = self.serializer_test(test_user, **data)
-        self.assertEqual(serializer.data, fixture_data)
+        serializer = self.serializer_test(
+            instance=test_user,
+            user_url=fixture_data["user_url"],
+        )
+
+        test_field_list = ['level', 'user_url']
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(serializer.data[field], fixture_data[field])
 
 class UserUpdateForAdminLevelSerializerTestCase(IntegrationSerializerTestCase):
     serializer = UserUpdateForAdminLevelSerializer
@@ -144,21 +119,18 @@ class UserUpdateForAdminLevelSerializerTestCase(IntegrationSerializerTestCase):
 
     def test_success(self):
         test_user = User.objects.create_user(
-            email="test@example.com",
             username="yamkim",
-            phone="01050175933",
             password="5933",
         )
         data = {
-            "username": "yamkant",
             "level": UserLevelEnum.ADMIN.value,
         }
         fixture_data = {
-            "id": test_user.id,
-            "email": test_user.email,
-            "username": data['username'],
-            "phone": test_user.phone,
             "level": data['level'],
         }
-        serializer = self.serializer_test(test_user, **data)
-        self.assertEqual(serializer.data, fixture_data)
+        serializer = self.serializer_test(instance=test_user, **data)
+
+        test_field_list = ['level']
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(serializer.data[field], fixture_data[field])

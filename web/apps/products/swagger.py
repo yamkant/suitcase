@@ -30,7 +30,6 @@ PRODUCT_CREATE_EXAMPLES = [
     ),
 ]
 
-
 PRODUCT_LIST_EXAMPLES = [
     OpenApiParameter(
         name="page",

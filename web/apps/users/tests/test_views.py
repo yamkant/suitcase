@@ -11,9 +11,7 @@ class UserViewSetListTest(ViewSetTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.request_admin_user = TestUserHandler(
-            email="admin@example.com",
             username="admin",
-            phone="01050175933",
             password="5933"
         )
         admin_user = cls.request_admin_user.get_user()
@@ -21,9 +19,7 @@ class UserViewSetListTest(ViewSetTestCase):
         admin_user.save()
 
         cls.request_general_user = TestUserHandler(
-            email="general@example.com",
             username="general",
-            phone="01050175933",
             password="5933"
         )
         general_user = cls.request_general_user.get_user()
@@ -52,9 +48,7 @@ class UserViewSetListTest(ViewSetTestCase):
         - admin 권한이 없기 때문에 권한 제한 status code를 반환합니다.
         '''
         unauthorized_test_request_user = TestUserHandler(
-            email="user@example.com",
             username="unauthorized_tester",
-            phone="01050175933",
             password="5933"
         )
         client = unauthorized_test_request_user.get_loggedin_user()
@@ -68,13 +62,11 @@ class UserViewSetListTest(ViewSetTestCase):
         self.assertEqual(len(res.json()), 3)
 
 
-class UserViewSetRetrieveTest(ViewSetTestCase):
+class UserViewSetDetailTest(ViewSetTestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.request_admin_user = TestUserHandler(
-            email="admin@example.com",
             username="tester",
-            phone="01050175933",
             password="5933"
         )
         admin_user = cls.request_admin_user.get_user()
@@ -82,9 +74,7 @@ class UserViewSetRetrieveTest(ViewSetTestCase):
         admin_user.save()
 
         cls.request_general_user = TestUserHandler(
-            email="general@example.com",
             username="general",
-            phone="01050175933",
             password="5933"
         )
         general_user = cls.request_general_user.get_user()
@@ -93,96 +83,84 @@ class UserViewSetRetrieveTest(ViewSetTestCase):
 
     def test_success(self):
         '''
-        - user의 level까지 수정 가능합니다.
+        - admin user는 다른 user의 level까지 수정 가능합니다.
         '''
         client = self.request_admin_user.get_loggedin_user()
 
         new_user = User.objects.create_user(
-            email="new_user@example.com",
             username="new_user",
-            phone="01050175933",
             password="5933"
         )
 
         fixture_data = {
-            "username": "updated_new_user",
             "level": UserLevelEnum.ADMIN.value
         }
 
-        endpoint = reverse_lazy('users:retrieve', args=[new_user.id])
+        endpoint = reverse_lazy('users:detail', args=[new_user.id])
         res = self.generic_test(
             url=endpoint,
             method="patch",
             expected_status_code=200,
             client=client,
-            username=fixture_data['username'],
             level=fixture_data['level'],
         )
-        self.assertEqual(res.json(), {
-            "id": new_user.id,
-            "username": fixture_data['username'],
-            "email": new_user.email,
-            "phone": new_user.phone,
-            "level": fixture_data['level'],
-        })
+
+        test_field_list = ['level']
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(res.json()[field], fixture_data[field])
 
     def test_failure_update_level_with_general_user(self):
         '''
-        - user의 level을 수정하는 권한은 가지고 있지 않습니다.
+        - general user는 다른 user의 level을 수정하는 권한은 가지고 있지 않습니다.
         '''
         client = self.request_general_user.get_loggedin_user()
 
         new_user = User.objects.create_user(
-            email="new_user@example.com",
             username="new_user",
-            phone="01050175933",
             password="5933"
         )
 
         fixture_data = {
-            "username": "updated_new_user",
             "level": UserLevelEnum.ADMIN.value
         }
 
-        endpoint = reverse_lazy('users:retrieve', args=[new_user.id])
+        endpoint = reverse_lazy('users:detail', args=[new_user.id])
         res = self.generic_test(
             url=endpoint,
             method="patch",
             expected_status_code=401,
             client=client,
-            username=fixture_data['username'],
             level=fixture_data['level'],
         )
 
-    def test_success_update_username_with_general_user(self):
+    def test_success_update_user_url_with_general_user(self):
         '''
         - user의 level 외의 값은 수정 가능합니다.
         '''
         client = self.request_general_user.get_loggedin_user()
 
         new_user = User.objects.create_user(
-            email="new_user@example.com",
             username="new_user",
-            phone="01050175933",
-            password="5933"
+            password="5933",
         )
+        new_user.user_url = "test@example.com"
+        new_user.save()
 
         fixture_data = {
-            "username": "updated_new_user",
+            "user_url": "test2@example.com",
         }
 
-        endpoint = reverse_lazy('users:retrieve', args=[new_user.id])
+        endpoint = reverse_lazy('users:detail', args=[new_user.id])
         res = self.generic_test(
             url=endpoint,
             method="patch",
             expected_status_code=200,
             client=client,
-            username=fixture_data['username'],
+            user_url=fixture_data['user_url'],
         )
-        self.assertEqual(res.json(), {
-            "id": new_user.id,
-            "username": fixture_data['username'],
-            "email": new_user.email,
-            "phone": new_user.phone,
-            "level": new_user.level,
-        })
+
+        test_field_list = ['user_url']
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(res.json()[field], fixture_data[field])

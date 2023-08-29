@@ -14,7 +14,11 @@ from django.utils.decorators import method_decorator
 
 from django.shortcuts import redirect
 import random
+from drf_spectacular.utils import extend_schema
 
+@extend_schema(
+    exclude=True
+)
 @method_decorator(login_required, name="get")
 class ProductTemplateViewSet(ListAPIView):
     queryset = Product.objects.filter(is_deleted="N")
@@ -48,7 +52,7 @@ class ProductTemplateViewSet(ListAPIView):
             'cate_dict': cate_dict,
             'is_logged_in': request.user.is_authenticated,
             'username': request.user.username,
-            'email': request.user.email,
+            'email': "",
             'rand_svg_num': random.randint(1287, 1336),
         }
         return Response(context)
@@ -77,7 +81,7 @@ def render_fitting(request):
         'cate_disp_dict': cate_disp_dict,
         'is_logged_in': request.user.is_authenticated,
         'username': request.user.username,
-        'email': request.user.email,
+        'email': "",
         'rand_svg_num': random.randint(1287, 1336),
     }
 
