@@ -1261,12 +1261,12 @@ input:checked + .toggle-bg {
   height: 1.5rem;
 }
 
-.h-8 {
-  height: 2rem;
+.h-72 {
+  height: 18rem;
 }
 
-.h-80 {
-  height: 20rem;
+.h-8 {
+  height: 2rem;
 }
 
 .h-9 {
@@ -1283,14 +1283,6 @@ input:checked + .toggle-bg {
 
 .h-full {
   height: 100%;
-}
-
-.h-20 {
-  height: 5rem;
-}
-
-.h-72 {
-  height: 18rem;
 }
 
 .h-screen {
@@ -1819,16 +1811,6 @@ input:checked + .toggle-bg {
   padding-bottom: 1rem;
 }
 
-.py-5 {
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
-}
-
-.py-10 {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
-}
-
 .pl-10 {
   padding-left: 2.5rem;
 }
@@ -1874,6 +1856,10 @@ input:checked + .toggle-bg {
   line-height: 1rem;
 }
 
+.font-bold {
+  font-weight: 700;
+}
+
 .font-medium {
   font-weight: 500;
 }
@@ -1884,10 +1870,6 @@ input:checked + .toggle-bg {
 
 .font-semibold {
   font-weight: 600;
-}
-
-.font-bold {
-  font-weight: 700;
 }
 
 .uppercase {

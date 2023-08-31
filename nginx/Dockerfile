@@ -4,9 +4,9 @@ RUN apt-get update
 RUN apt-get install -y openssl
 
 COPY ./entrypoint.sh /entrypoint.sh
-COPY ./code/default.conf.template /etc/nginx/templates
+COPY ./code/default.conf.template /etc/nginx/templates/
 
-COPY ./static /static
+COPY ./static /staticfiles
 
 ENV INITIAL_START 1
 

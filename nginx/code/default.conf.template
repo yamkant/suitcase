@@ -6,7 +6,7 @@ server {
     access_log  /var/log/nginx/logs/host.access.log  main;
 
     location / {
-        proxy_pass http://app:8000/;
+        proxy_pass http://my_app:8000/;
         proxy_redirect     off;
         proxy_set_header   Host $host;
         proxy_set_header   X-Real-IP $remote_addr;
