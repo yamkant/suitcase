@@ -42,7 +42,6 @@ class ProductCreateSerializer(CreateSerializer):
     def create(self, validated_data):
         return Product.objects.create(**validated_data)
 
-# NOTE: is_deleted는 따로 serializer를 생성하여 처리합니다.
 class ProductUpdateSerializer(UpdateSerializer):
     representation_serializer_class = ProductSerializer
 
