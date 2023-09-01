@@ -355,6 +355,38 @@
         });
     }
 
+    async function update_bulk_product_api(method, data) {
+        return axios({
+            method: method,
+            url: `/api/products/bulk/`,
+            headers: {
+                "Content-Type": "multipart/form-data",
+                'X-CSRFToken': '{{csrf_token}}'
+            },
+            data: data,
+        }).then((res) => {
+            return res;
+        }).catch(() => {
+            alert("ERROR")
+        });
+    }
+
+    async function delete_bulk_product_api(method, data) {
+        return axios({
+            method: method,
+            url: `/api/products/bulk/`,
+            headers: {
+                "Content-Type": "multipart/form-data",
+                'X-CSRFToken': '{{csrf_token}}'
+            },
+            data: data,
+        }).then((res) => {
+            return res;
+        }).catch(() => {
+            alert("ERROR")
+        });
+    }
+
     async function create_product_api(data) {
         return axios({
             url: `/api/products/`,
@@ -413,26 +445,30 @@
             return ;
         }
         const checkboxes = Array.from(document.querySelectorAll('.checkbox-action'));
-        const promisess = [];
+        const prod_id_list = [];
+        // const promisess = [];
         checkboxes.forEach((checkbox) => {
             if (checkbox.checked) {
                 const prod_id = checkbox.closest('.prod-row').dataset.value
-                if (type === 'DELETE') {
-                    promisess.push(
-                        update_product_api('delete', prod_id, {})
-                    )
-                } else if (type === 'ACTIVATE') {
-                    promisess.push(
-                        update_product_api('patch', prod_id, { is_active: 'Y' })
-                    )
-                } else if (type === 'DEACTIVATE') {
-                    promisess.push(
-                        update_product_api('patch', prod_id, { is_active: 'N' })
-                    )
-                }
+                prod_id_list.push(prod_id)
             }
         });
-        const res = await Promise.allSettled(promisess);
+        let data = {}
+        if (type === 'ACTIVATE') {
+            data.prod_list = prod_id_list;
+            data.is_active = 'Y';
+        } else if (type === 'DEACTIVATE') {
+            data.prod_list = prod_id_list;
+            data.is_active = 'N';
+        } else if (type === 'DELETE') {
+            data.prod_list = prod_id_list;
+        }
+
+        if (type === 'DELETE') {
+            await delete_bulk_product_api('delete', data)
+        } else {
+            await update_bulk_product_api('patch', data)
+        }
         location.reload();
     }
 

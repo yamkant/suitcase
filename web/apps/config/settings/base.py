@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'compressor',
     'storages',
     'drf_spectacular',
+    'django_celery_results',
 
     # custom apps
     'common',
@@ -168,11 +169,19 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Celery Configuration Options
 CELERY_BROKER_URL = 'redis://my_redis:6379'
-CELERY_RESULT_BACKEND = 'redis://my_redis:6379'
+# CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'defualt'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'redis://my_redis:6379',
+    }
+}
 
 CELERY_TIMEZONE = "Asia/Seoul"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_TASK_SERIALIZER = 'json'
 
 # Restframework setting
 REST_FRAMEWORK = {
