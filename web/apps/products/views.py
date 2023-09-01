@@ -22,10 +22,16 @@ from products.swagger import (
     PRODUCT_UPDATE_EXAMPLES,
 )
 
-from products.tasks import upload_image_by_image_url
-
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
+from django.shortcuts import get_list_or_404, get_object_or_404
+
+from products.tasks import (
+    upload_image_by_image_url,
+    async_bulk_update_product,
+    async_bulk_delete_product,
+)
+from celery import chain, group
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.filter(is_deleted="N")
@@ -99,7 +105,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
 
     @extend_schema(
-        request=ProductCreateSerializer,
+        request=ProductUpdateSerializer,
         summary="상품을 활성화/비활성화 및 정보들을 수정합니다.",
         description="""'Edit product' modal에서 상품의 이름, 카테고리와 같은 기본적인 정보를 수정합니다.<br>is_active 필드의 활성여부에 따라 Fitting 페이지에서 상품을 사용여부가 결정됩니다.""",
         tags=['상품'],
@@ -114,7 +120,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
     
     @extend_schema(
-        request=ProductCreateSerializer,
+        request=ProductUpdateSerializer,
         summary="상품을 제거(논리적 제거)합니다.",
         tags=['상품'],
         description="""상품테이블에서 is_deleted의 필드값을 'Y'로 수정하여, 유저에게는 제거된 것처럼 보이게 합니다.""",
@@ -129,3 +135,35 @@ class ProductViewSet(viewsets.ModelViewSet):
         request.POST._mutable = True
         request.data['is_deleted'] = ProductStatusEnum.DELETED.value
         return super().update(request, *args, **kwargs)
+
+class ProductBulkViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.filter(is_deleted="N")
+    serializer_class = ProductSerializer
+    permission_classes = [IsOwner]
+
+    def bulk_update(self, request, *args, **kwargs):
+        if 'prod_list[]' not in request.data:
+            return Response({})
+        prod_id_list = request.data.getlist('prod_list[]')
+        data = {
+            'is_active': request.data['is_active'],
+        }
+        for prod_id in prod_id_list:
+            async_bulk_update_product.delay(
+                data=data, 
+                id=prod_id,
+                user_id=request.user.id,
+            )
+        return Response({})
+
+    def bulk_delete(self, request, *args, **kwargs):
+        if 'prod_list[]' not in request.data:
+            return Response({})
+        # NOTE: user가 가지고있는 product가 맞는지 확인
+        prod_id_list = request.data.getlist('prod_list[]')
+        for prod_id in prod_id_list:
+            async_bulk_delete_product.delay(
+                id=prod_id,
+                user_id=request.user.id,
+            )
+        return Response({})
