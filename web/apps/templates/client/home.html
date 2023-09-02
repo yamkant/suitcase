@@ -105,8 +105,11 @@
                                 <label for="checkbox-all-search" class="sr-only">checkbox</label>
                             </div>
                         </th>
-                        <th scope="col" class="text-center px-2 md:px-4 py-2">
-                            Name
+                        <th scope="col" class="md:hidden text-center px-2 md:px-4 py-2">
+                            Image
+                        </th>
+                        <th scope="col" class="hidden md:block text-center px-2 md:px-4 py-2">
+                            Image(Name)
                         </th>
                         <th scope="col" class="text-center px-2 md:px-4 py-2">
                             Category
@@ -135,10 +138,10 @@
                             </div>
                         </td>
                         <td scope="row" class="flex items-center px-2 py-3 text-gray-900 whitespace-nowrap dark:text-white">
-                            <img class="w-40 rounded-full" src="{{prod.saved_image_url}}" alt="Uploading image...">
-                            <div class="pl-3 hidden md:block">
+                            <img class="image-box w-40" src="{{prod.saved_image_url}}" onerror="this.onerror=null; this.src='{{prod.image_url}}';" alt="Uploading">
+                            <div class="pl-3 hidden md:block w-80">
                                 <div class="prod-name font-semibold text-ellipsis">{{prod.name}}</div>
-                                <div class="font-normal text-gray-500">neil.sims@flowbite.com</div>
+                                <a class="font-normal text-gray-500 overflow-auto" href="{{prod.image_url}}" target="_blank">Click to move src image page</a>
                             </div>  
                         </td>
                         <td class="prod-category text-center px-2 md:px-4 py-4 items-center">

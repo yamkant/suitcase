@@ -15,7 +15,7 @@
                             <div class="flex flex-col justify-center items-center relative overflow-hidden rounded-lg w-full h-full right-0 left-0">
                                 {% for prod in prod_info.prod_list %}
                                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                        <img src="{{prod.saved_image_url}}" class="absolute block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
+                                        <img src="{{prod.saved_image_url}}" onerror="this.onerror=null; this.src='{{prod.image_url}}';" class="absolute block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
                                     </div>
                                 {% endfor %}
                             </div>
@@ -49,7 +49,7 @@
                         <div id="gallery" class="gallery relative w-48 h-52 bg-white">
                             <div class="flex flex-col justify-center items-center relative overflow-hidden rounded-lg w-full h-full right-0 left-0">
                                 {% for prod in prod_info.prod_list %}
-                                    <img src="{{prod.saved_image_url}}" class="absolute block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
+                                    <img src="{{prod.saved_image_url}}" onerror="this.onerror=null; this.src='{{prod.image_url}}';" class="absolute block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
                                 {% endfor %}
                             </div>
                         </div>

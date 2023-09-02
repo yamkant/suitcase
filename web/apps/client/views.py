@@ -61,29 +61,10 @@ class ProductTemplateViewSet(ListAPIView):
 @login_required
 def render_fitting(request):
     prod_list = list(Product.objects.filter(user_id=request.user.id, is_deleted="N", is_active="Y"))
-    # TODO: Enum to dictionary로 리팩토링
-    cate_dict = {
-        "UNDEFINED": 1,
-        "PANTS": 2,
-        "TOPS": 3,
-        "SHOES": 4,
-    }
-
-    cate_disp_dict = {
-        "TOPS": 3,
-        "PANTS": 2,
-        "SHOES": 4,
-    }
-
-
     # TODO: Serializer data로 반환하기
-
     tops_prod_list = list(filter(lambda x: x.category == CategoryEnum.TOPS.value, prod_list))
     pants_prod_list = list(filter(lambda x: x.category == CategoryEnum.PANTS.value, prod_list))
     shoes_prod_list = list(filter(lambda x: x.category == CategoryEnum.SHOES.value, prod_list))
-    print(tops_prod_list)
-    print(pants_prod_list)
-    print(shoes_prod_list)
 
     data = [
         {
@@ -97,18 +78,9 @@ def render_fitting(request):
             "prod_list": shoes_prod_list,
         }
     ]
-
-
-    # }
-    # pants_prod_list = prod_list.filter(category=2)
-    # tops_prod_list = prod_list.filter(category=3)
-    # shoes_prod_list = prod_list.filter(category=4)
-
     context = {
         'data': data,
         'prod_list': prod_list,
-        # 'cate_dict': cate_dict,
-        # 'cate_disp_dict': cate_disp_dict,
         'is_logged_in': request.user.is_authenticated,
         'user': request.user,
         'rand_svg_num': random.randint(1287, 1336),
