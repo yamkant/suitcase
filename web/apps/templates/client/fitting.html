@@ -8,9 +8,9 @@
         {% for prod_info in data %}
             {% if prod_info.prod_list %}
                 <div class="gallery-container flex space-x-5">
-                    <div class="flex flex-col relative w-72 h-72 justify-center items-center background px-2 bg-white">
+                    <div class="flex flex-col relative w-72 h-72 justify-center items-center">
                         {% if prod_info.prod_list|length  > 1 %}
-                        <div id="gallery" class="gallery relative w-48 h-52 bg-white" data-carousel="static">
+                        <div id="gallery" class="gallery relative w-48 h-52 bg-white/10" data-carousel="static">
                             <!-- Carousel wrapper -->
                             <div class="flex flex-col justify-center items-center relative overflow-hidden rounded-lg w-full h-full right-0 left-0">
                                 {% for prod in prod_info.prod_list %}
