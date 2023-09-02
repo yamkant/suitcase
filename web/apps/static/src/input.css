@@ -46,10 +46,18 @@ form.login-form > ul > li > input {
     @apply text-center text-gray-600
 }
 
-.fitting-size-btn-container {
-    @apply flex flex-col justify-center space-y-8 py-10
+.fitting-control-btn-container {
+    @apply grid grid-cols-2 gap-y-4
+}
+
+.fitting-choose-btn {
+    @apply h-full rounded-full
 }
 
 .fitting-size-btn {
-    @apply w-16 h-full rounded-full
+    @apply w-10 h-10 rounded-full
+}
+
+.fitting-pose-btn {
+    @apply w-10 h-10 rounded-full
 }
