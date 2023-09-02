@@ -5,98 +5,110 @@
 
 <div class="flex flex-col h-screen bg-white">
     <div class="flex flex-col items-center w-full -space-y-20">
-        {% for key, value in cate_disp_dict.items %}
-        <div class="gallery-container flex space-x-5">
-            <div class="flex flex-col relative w-72 h-72 justify-center items-center background px-2 bg-white">
-                <div id="gallery" class="gallery relative w-48 h-52 bg-white" data-carousel="static">
-                    <!-- Carousel wrapper -->
-                    <div class="flex flex-col justify-center items-center relative overflow-hidden rounded-lg w-full h-full right-0 left-0">
-                        {% for prod in prod_list %}
-                            {% if value == prod.category %}
-                                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                    <img src="{{prod.saved_image_url}}" class="absolute block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    <!-- Slider controls -->
-                    <button
-                        type="button"
-                        class="hidden absolute top-0 -left-7 z-30 items-center justify-center h-full px-0 cursor-pointer group focus:outline-none" data-carousel-prev
-                        id="prev-btn-{{key}}"
-                    >
-                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                            <svg class="w-4 h-4 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                            </svg>
-                            <span class="sr-only">Previous</span>
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        class="hidden absolute top-0 -right-7 z-30 items-center justify-center h-full px-0 cursor-pointer group focus:outline-none" data-carousel-next
-                        id="next-btn-{{key}}"
-                    >
-                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                            <svg class="w-4 h-4 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                            </svg>
-                            <span class="sr-only">Next</span>
-                        </span>
-                    </button>
-                </div>
+        {% for prod_info in data %}
+            {% if prod_info.prod_list %}
+                <div class="gallery-container flex space-x-5">
+                    <div class="flex flex-col relative w-72 h-72 justify-center items-center">
+                        {% if prod_info.prod_list|length  > 1 %}
+                        <div id="gallery" class="gallery relative w-48 h-52 bg-white/10" data-carousel="static">
+                            <!-- Carousel wrapper -->
+                            <div class="flex flex-col justify-center items-center relative overflow-hidden rounded-lg w-full h-full right-0 left-0">
+                                {% for prod in prod_info.prod_list %}
+                                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                        <img src="{{prod.saved_image_url}}" onerror="this.onerror=null; this.src='{{prod.image_url}}';" class="absolute block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <!-- Slider controls -->
+                            <button
+                                type="button"
+                                class="hidden absolute top-0 -left-7 z-30 items-center justify-center h-full px-0 cursor-pointer group focus:outline-none" data-carousel-prev
+                                id="prev-btn-{{prod_info.category}}"
+                            >
+                                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                    <svg class="w-4 h-4 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                    </svg>
+                                    <span class="sr-only">Previous</span>
+                                </span>
+                            </button>
+                            <button
+                                type="button"
+                                class="hidden absolute top-0 -right-7 z-30 items-center justify-center h-full px-0 cursor-pointer group focus:outline-none" data-carousel-next
+                                id="next-btn-{{prod_info.category}}"
+                            >
+                                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                    <svg class="w-4 h-4 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                    </svg>
+                                    <span class="sr-only">Next</span>
+                                </span>
+                            </button>
+                        </div>
+                        {% else %}
+                        <div id="gallery" class="gallery relative w-48 h-52 bg-white">
+                            <div class="flex flex-col justify-center items-center relative overflow-hidden rounded-lg w-full h-full right-0 left-0">
+                                {% for prod in prod_info.prod_list %}
+                                    <img src="{{prod.saved_image_url}}" onerror="this.onerror=null; this.src='{{prod.image_url}}';" class="absolute block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
 
-                <!-- Slider controls -->
-                <button
-                    type="button"
-                    class="fitting-size-btn absolute top-0 left-0 z-30 flex items-center justify-center px-0 cursor-pointer group focus:outline-none" data-carousel-prev
-                    onclick="document.getElementById('prev-btn-{{key}}').click();"
-                >
-                    <span class="inline-flex items-center justify-center bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                        <svg class="w-4 h-4 text-gray-800 dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                        </svg>
-                        <span class="sr-only">Previous</span>
-                    </span>
-                </button>
-                <button
-                    type="button"
-                    class="fitting-size-btn absolute top-0 right-0 z-30 flex items-center justify-center px-0 cursor-pointer group focus:outline-none" data-carousel-next
-                    onclick="document.getElementById('next-btn-{{key}}').click();"
-                >
-                    <span class="inline-flex items-center justify-center bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                        <svg class="w-4 h-4 text-gray-800 dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                        </svg>
-                        <span class="sr-only">Next</span>
-                    </span>
-                </button>
-            </div>
-            <div class="fitting-size-btn-container">
-                <button
-                    class="fitting-size-btn z-30 flex items-center justify-center cursor-pointer group focus:outline-none"
-                    onclick="sizeup(this)"
-                >
-                    <span class="inline-flex items-center justify-center bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                        <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7"/>
-                        </svg>
-                        <span class="sr-only">up</span>
-                    </span>
-                </button>
-                <button
-                    class="fitting-size-btn z-30 flex items-center justify-center cursor-pointer group focus:outline-none"
-                    onclick="sizedown(this)"
-                >
-                    <span class="inline-flex items-center justify-center bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                        <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
-                        </svg>
-                        <span class="sr-only">down</span>
-                    </span>
-                </button>
-            </div>
-        </div>
+                        {% if prod_info.prod_list|length  > 1 %}
+                        <!-- Slider controls -->
+                        <button
+                            type="button"
+                            class="fitting-size-btn absolute top-0 left-0 z-30 flex items-center justify-center px-0 cursor-pointer group focus:outline-none" data-carousel-prev
+                            onclick="document.getElementById('prev-btn-{{prod_info.category}}').click();"
+                        >
+                            <span class="inline-flex items-center justify-center bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                <svg class="w-4 h-4 text-gray-800 dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                </svg>
+                                <span class="sr-only">Previous</span>
+                            </span>
+                        </button>
+                        <button
+                            type="button"
+                            class="fitting-size-btn absolute top-0 right-0 z-30 flex items-center justify-center px-0 cursor-pointer group focus:outline-none" data-carousel-next
+                            onclick="document.getElementById('next-btn-{{prod_info.category}}').click();"
+                        >
+                            <span class="inline-flex items-center justify-center bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                <svg class="w-4 h-4 text-gray-800 dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                </svg>
+                                <span class="sr-only">Next</span>
+                            </span>
+                        </button>
+                        {% endif %}
+                    </div>
+                    <div class="fitting-size-btn-container">
+                        <button
+                            class="fitting-size-btn z-30 flex items-center justify-center cursor-pointer group focus:outline-none"
+                            onclick="sizeup(this)"
+                        >
+                            <span class="inline-flex items-center justify-center bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7"/>
+                                </svg>
+                                <span class="sr-only">up</span>
+                            </span>
+                        </button>
+                        <button
+                            class="fitting-size-btn z-30 flex items-center justify-center cursor-pointer group focus:outline-none"
+                            onclick="sizedown(this)"
+                        >
+                            <span class="inline-flex items-center justify-center bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-2 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+                                </svg>
+                                <span class="sr-only">down</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>

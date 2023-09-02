@@ -105,8 +105,11 @@
                                 <label for="checkbox-all-search" class="sr-only">checkbox</label>
                             </div>
                         </th>
-                        <th scope="col" class="text-center px-2 md:px-4 py-2">
-                            Name
+                        <th scope="col" class="md:hidden text-center px-2 md:px-4 py-2">
+                            Image
+                        </th>
+                        <th scope="col" class="hidden md:block text-center px-2 md:px-4 py-2">
+                            Image(Name)
                         </th>
                         <th scope="col" class="text-center px-2 md:px-4 py-2">
                             Category
@@ -135,10 +138,10 @@
                             </div>
                         </td>
                         <td scope="row" class="flex items-center px-2 py-3 text-gray-900 whitespace-nowrap dark:text-white">
-                            <img class="w-40 rounded-full" src="{{prod.saved_image_url}}" alt="Uploading image...">
-                            <div class="pl-3 hidden md:block">
+                            <img class="image-box w-40" src="{{prod.saved_image_url}}" onerror="this.onerror=null; this.src='{{prod.image_url}}';" alt="Uploading">
+                            <div class="pl-3 hidden md:block w-80">
                                 <div class="prod-name font-semibold text-ellipsis">{{prod.name}}</div>
-                                <div class="font-normal text-gray-500">neil.sims@flowbite.com</div>
+                                <a class="font-normal text-gray-500 overflow-auto" href="{{prod.image_url}}" target="_blank">Click to move src image page</a>
                             </div>  
                         </td>
                         <td class="prod-category text-center px-2 md:px-4 py-4 items-center">
@@ -300,7 +303,7 @@
                                 <path xmlns="http://www.w3.org/2000/svg" d="M16.6471 1.35334C15.778 0.486688 14.6006 0 13.3732 0C12.1457 0 10.9684 0.486688 10.0993 1.35334L9.37258 2.07894C9.27097 2.17258 9.18935 2.28578 9.13262 2.41176C9.0759 2.53774 9.04523 2.67389 9.04246 2.81202C9.0397 2.95015 9.0649 3.08742 9.11654 3.21556C9.16819 3.34371 9.24521 3.46009 9.34299 3.55772C9.44076 3.65534 9.55727 3.73219 9.68551 3.78365C9.81375 3.8351 9.95107 3.8601 10.0892 3.85714C10.2274 3.85418 10.3635 3.82333 10.4894 3.76643C10.6153 3.70953 10.7284 3.62776 10.8219 3.52604L11.5487 2.79941C12.0354 2.32877 12.6876 2.06822 13.3647 2.07393C14.0418 2.07964 14.6895 2.35115 15.1682 2.82993C15.6469 3.30871 15.9183 3.95641 15.9238 4.63339C15.9293 5.31037 15.6685 5.96241 15.1977 6.44893L11.5558 10.0913C11.064 10.5602 10.4105 10.8218 9.73082 10.8218C9.05119 10.8218 8.39764 10.5602 7.90579 10.0913C7.81124 9.99338 7.69813 9.91531 7.57308 9.8616C7.44802 9.80789 7.31352 9.77961 7.17742 9.77843C7.04132 9.77725 6.90635 9.80318 6.78038 9.85471C6.65441 9.90624 6.53997 9.98234 6.44373 10.0786C6.34749 10.1748 6.27138 10.2892 6.21984 10.4152C6.1683 10.5411 6.14236 10.6761 6.14355 10.8122C6.14473 10.9482 6.17301 11.0827 6.22673 11.2078C6.28045 11.3328 6.35853 11.4459 6.45643 11.5404C7.32489 12.4086 8.50271 12.8964 9.73082 12.8964C10.9589 12.8964 12.1367 12.4086 13.0052 11.5404L16.6471 7.89808C17.5135 7.02934 18 5.85255 18 4.62571C18 3.39887 17.5135 2.22208 16.6471 1.35334Z" fill="#2F2F38"/>
                             </svg>
                         </div>
-                        <input name="image_url" type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="제품 이미지 링크를 입력하세요" required>
+                        <input name="image_url" type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Paste the image link" required>
                     </div>
                     <div class="relative w-full">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -310,7 +313,7 @@
                                 <path d="M13.243 3.19999L7.359 9.08099C7.28938 9.15102 7.24206 9.2401 7.223 9.33699L6.51 12.9C6.49517 12.9726 6.49669 13.0477 6.51444 13.1197C6.53219 13.1917 6.56573 13.2588 6.61263 13.3163C6.65954 13.3737 6.71863 13.42 6.78562 13.4518C6.85262 13.4835 6.92585 13.5 7 13.5C7.0336 13.5003 7.06712 13.4969 7.1 13.49L10.666 12.777C10.7625 12.7577 10.8512 12.7104 10.921 12.641L16.8 6.75699L13.243 3.19999Z" fill="#2F2F38"/>
                             </svg>
                         </div>
-                        <input name="name" type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="상품 이름을 입력하세요" required>
+                        <input name="name" type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Put the product name" value="unnamed" required> 
                     </div>
 
                     <label
