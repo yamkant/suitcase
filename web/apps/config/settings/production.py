@@ -6,6 +6,16 @@ ALLOWED_HOSTS = ['*']
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+CELERY_BROKER_URL = 'redis://my_redis:6379'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'defualt'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cachedb',
+    }
+}
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 DATABASES = {

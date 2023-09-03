@@ -31,7 +31,6 @@ from products.tasks import (
     async_bulk_update_product,
     async_bulk_delete_product,
 )
-from celery import chain, group
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.filter(is_deleted="N")
@@ -149,7 +148,7 @@ class ProductBulkViewSet(viewsets.ModelViewSet):
             'is_active': request.data['is_active'],
         }
         for prod_id in prod_id_list:
-            async_bulk_update_product.delay(
+            task = async_bulk_update_product.delay(
                 data=data, 
                 id=prod_id,
                 user_id=request.user.id,
