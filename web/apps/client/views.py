@@ -4,6 +4,7 @@ from client.libs.custom_decorators import login_required
 from products.serializers import ProductSerializer
 from client.pagination import ProductPagination
 from client.permissions import IsLoggedInUser
+from client.libs.cache import cache_get_product_count
 
 from products.models import Product
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -45,6 +46,8 @@ class ProductTemplateViewSet(ListAPIView):
             "SHOES": 4,
         }
 
+        # NOTE: 임시 예시
+        count = cache_get_product_count(queryset, request.user.id)
         context = {
             'prod_list': page['results'],
             'page_links': page['links'],
@@ -54,6 +57,7 @@ class ProductTemplateViewSet(ListAPIView):
             'is_logged_in': request.user.is_authenticated,
             'user': request.user,
             'rand_svg_num': random.randint(1287, 1336),
+            'product_count': count,
         }
         return Response(context)
     
