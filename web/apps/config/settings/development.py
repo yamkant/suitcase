@@ -23,10 +23,14 @@ STATICFILES_DIRS = (
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_CACHE_BACKEND = 'defualt'
+CELERY_CACHE_BACKEND = 'default'
 CACHES = {
+    # 'default': {
+    #     'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+    #     'LOCATION': 'cachedb',
+    # },
     'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'cachedb',
-    }
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+    },
 }

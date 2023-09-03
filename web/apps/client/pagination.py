@@ -1,7 +1,7 @@
 from rest_framework.pagination import PageNumberPagination
 
 DEFAULT_PAGE = 1
-DEFAULT_PAGE_SIZE = 4
+DEFAULT_PAGE_SIZE = 5
 
 class ProductPagination(PageNumberPagination):
     page = DEFAULT_PAGE
