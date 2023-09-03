@@ -24,7 +24,8 @@ from products.swagger import (
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.core.cache import cache
+from client.libs.cache import get_cache_product_count_key
 
 from products.tasks import (
     upload_image_by_image_url,
@@ -101,6 +102,8 @@ class ProductViewSet(viewsets.ModelViewSet):
         request.data['saved_image_url'] = f'https://{getattr(settings, "AWS_S3_CUSTOM_DOMAIN", None)}/{filename}'
         request.data['user_id'] = request.user.id
 
+        cache.delete(get_cache_product_count_key(request.user.id))
+
         return super().create(request, *args, **kwargs)
 
     @extend_schema(
@@ -133,6 +136,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         # NOTE: request.POST는 QueryDict 형태로, request.data는 Dict 형태로 반환합니다.
         request.POST._mutable = True
         request.data['is_deleted'] = ProductStatusEnum.DELETED.value
+        cache.delete(get_cache_product_count_key(request.user.id))
         return super().update(request, *args, **kwargs)
 
 class ProductBulkViewSet(viewsets.ModelViewSet):
