@@ -15,6 +15,8 @@
 - 커뮤니티 기능을 위해 browse 페이지를 구성합니다.  
   (다른 유저가 등록한 대표 이미지 확인 가능, follow / like 가능)
 - 다양한 카테고리의 등록 방법을 모색합니다.
+- 자동 배포 전략 구성 및 보안정책(SSL) 추가
+- 트래픽 발생시에만 서버를 운용할 수 있도록 AWS 작업 수행
 
 
 ### 서비스 동작 예제
@@ -30,6 +32,10 @@
 - DB
   - development deploy - sqlite3
   - production deploy - postgresql
+
+### Demo page
+- service: http://3.39.194.11/ 
+- api docs: http://3.39.194.11/api/schema/swagger-ui/#/
 
 ### 구동방법
 - `web/.env`의 값들만 채운 후, 아래 명령어를 통해 실행 가능합니다.
