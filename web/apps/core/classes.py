@@ -3,10 +3,25 @@ from PIL import Image
 from io import BytesIO
 import boto3
 import uuid
+from rest_framework import status
 
 import requests
 from io import BytesIO
 from rembg import remove
+
+import urllib3
+from urllib3.exceptions import HTTPError
+
+from rest_framework.exceptions import APIException
+
+import logging
+
+logger = logging.getLogger("skeleton")
+logger.setLevel(logging.INFO)
+# logger.addHandler(logging.StreamHandler())
+
+class ImageRequestException(APIException):
+    status_code = 403
 
 class ImageHandler():
     def __init__(self, img_url) -> None:
@@ -14,7 +29,17 @@ class ImageHandler():
         self._image = self.get_image_object(img_url)
     
     def get_image_object(self, img_url):
-        response = requests.get(img_url)
+        try:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+            }
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            response = requests.get(img_url, headers=headers, verify=False)
+            response.raise_for_status()
+        except HTTPError:
+            raise ImageRequestException('Image request forbidden')
+        logger.info(f"Image request result: {response.request}")
+
         img_data = BytesIO(response.content)
         return Image.open(img_data)
     
