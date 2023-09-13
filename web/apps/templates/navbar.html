@@ -147,3 +147,20 @@
         url_input.value = "{{user.user_url}}";
     }
 </script>
+<script>
+    const ws_host = "{{default_config.websocket_host}}"
+    // let ws = new WebSocket(ws_host + "/chats/" + "{{user.username}}/");
+    let ws = new WebSocket(ws_host + "/chats/" + "test/");
+    ws.onopen = () => {
+        ws.send(JSON.stringify({
+            'message': "{{user.username}}" + ' 입장'
+        }))
+    }
+    ws.onerror = () => {
+        console.error("CONNECTION ERROR")
+    }
+    ws.onmessage = (e) => {
+        const recvData = JSON.parse(e.data);
+        console.log(recvData);
+    }
+</script>
