@@ -149,18 +149,36 @@
 </script>
 <script>
     const ws_host = "{{default_config.websocket_host}}"
-    // let ws = new WebSocket(ws_host + "/chats/" + "{{user.username}}/");
-    let ws = new WebSocket(ws_host + "/chats/" + "test/");
+    let ws = new WebSocket(ws_host + "/chats/" + "{{user.username}}/");
+    // let ws = new WebSocket(ws_host + "/chats/" + "test/");
     ws.onopen = () => {
         ws.send(JSON.stringify({
             'message': "{{user.username}}" + ' 입장'
         }))
     }
+
+    const check_status_interval = () => {
+        if (ws) {
+            console.log("소켓 연결");
+            ws.close();
+        } else {
+            console.log("소켓 종료됨, 인터벌 종료");
+        }
+    }
+
+    const interval_task = setInterval(check_status_interval, 5000);
+
+
+
     ws.onerror = () => {
         console.error("CONNECTION ERROR")
     }
     ws.onmessage = (e) => {
         const recvData = JSON.parse(e.data);
         console.log(recvData);
+    }
+    ws.onclose = (e) => {
+            console.log("소켓 종료됨, 인터벌 종료");
+        clearInterval(interval_task);
     }
 </script>
