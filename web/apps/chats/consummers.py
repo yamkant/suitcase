@@ -10,7 +10,7 @@ def sync_function(username):
         is_uploaded=ProductUploadedStatusEnum.NEED_ALARM.value
     )
     prod_list = [
-        prodQ.created_at for prodQ in prodQs
+        prodQ.created_at.strftime("%Y-%m-%d %H:%M") for prodQ in prodQs
     ]
     return prod_list
 
@@ -38,13 +38,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message
-            }
-        )
+        # if message = 
+        if message == "check_product_upload_status":
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
 
     async def chat_message(self, event):
         message = event['message']
@@ -53,5 +55,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         result = await async_function(username)
 
         await self.send(text_data=json.dumps({
-            'message': result
+            'type': 'uploaded',
+            'data': result
         }))
