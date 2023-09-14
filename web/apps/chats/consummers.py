@@ -10,7 +10,10 @@ def sync_function(username):
         is_uploaded=ProductUploadedStatusEnum.NEED_ALARM.value
     )
     prod_list = [
-        prodQ.created_at.strftime("%Y-%m-%d %H:%M") for prodQ in prodQs
+        {
+            "prod_id": prodQ.id,
+            "date": prodQ.created_at.strftime("%Y-%m-%d %H:%M"),
+        } for prodQ in prodQs
     ]
     return prod_list
 

@@ -103,25 +103,6 @@
 </div>
 
 <div class="push-noti-container flex justify-end">
-    <div id="toast-success" class="hidden flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
-        <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-            </svg>
-            <span class="sr-only">Check icon</span>
-        </div>
-        <div class="noti-text ml-3 text-sm font-normal">Item moved successfully.</div>
-        <button
-            type="button"
-            class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
-            onclick="close_push_noti_popup()"
-        >
-            <span class="sr-only">Close</span>
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-            </svg>
-        </button>
-    </div>
 </div>
 
 <script>
@@ -154,12 +135,12 @@
         });
     }
     const edit_user_url = async () => {
-        const form_object = document.getElementById('edit-url-form');
-        const bodyFormData = new FormData(form_object);
         if (!confirm('Are you sure you want to update?')) {
             return;
         } 
-        await update_user_url_api('patch', "{{user.id}}", bodyFormData);
+        await update_user_url_api('patch', "{{user.id}}", {
+            "is_uploaded": "Y",
+        });
         location.reload();
     }
 
@@ -170,23 +151,66 @@
     }
 </script>
 <script>
-
-    const activate_push_noti_popup = (noti_text) => {
-        const noti_container = document.querySelector('.push-noti-container');
-        const noti_obj = noti_container.querySelector('#toast-success');
-        noti_obj.classList.remove('hidden');
-        noti_obj.querySelector('.noti-text').innerHTML = noti_text;
-        // noti_container.innerHTML = "";
-        // noti_container.insertAdjacentHTML('beforeend',`
-        // `)
+    async function update_product_api(method, prod_id, data) {
+        return axios({
+            method: method,
+            url: `/api/products/${prod_id}/`,
+            headers: {
+                "Content-Type": "multipart/form-data",
+                'X-CSRFToken': '{{csrf_token}}'
+            },
+            data: data,
+        }).then((res) => {
+            return res;
+        }).catch(() => {
+            alert("ERROR")
+        });
     }
 
-    const close_push_noti_popup = () => {
-        const noti_container = document.querySelector('.push-noti-container');
-        const noti_obj = noti_container.querySelector('#toast-success');
-        noti_obj.classList.add('hidden');
+    const get_noti_popup_html = (prod_id) => {
+        return `
+        <div
+            id="toast-success"
+            class="noti-block flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+            data-value=${prod_id}
+            role="alert"
+        >
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                </svg>
+                <span class="sr-only">Check icon</span>
+            </div>
+            <div class="noti-text ml-3 text-sm font-normal">Item moved successfully.</div>
+            <button
+                type="button"
+                class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                onclick="close_push_noti_popup(this)"
+            >
+                <span class="sr-only">Close</span>
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+            </button>
+        </div>
+        `
     }
 
+    const activate_push_noti_popup = (noti_text, elem) => {
+        const noti_container = document.querySelector('.push-noti-container');
+        noti_container.insertAdjacentHTML('beforeend', get_noti_popup_html(elem.prod_id));
+    }
+
+    const close_push_noti_popup = async (target) => {
+        const noti_block = target.closest('.noti-block');
+        const prod_id = noti_block.dataset.value;
+        await update_product_api('patch', prod_id, {
+            "is_uploaded": "Y",
+        });
+        noti_block.remove();
+    }
+</script>
+<script>
     const ws_host = "{{default_config.websocket_host}}"
     let ws = new WebSocket(ws_host + "/chats/" + "{{user.username}}/");
     // let ws = new WebSocket(ws_host + "/chats/" + "test/");
@@ -208,24 +232,19 @@
 
     const interval_task = setInterval(check_status_interval, 5000);
 
-
-
     ws.onerror = () => {
         console.error("CONNECTION ERROR")
     }
 
     function notify_uploaded_status(data) {
         data.forEach((elem) => {
-            console.log(elem)
-            activate_push_noti_popup('Removed BG of product image.')
+            activate_push_noti_popup('Removed product background.', elem)
         })
     }
 
 
     ws.onmessage = (e) => {
         const recvData = JSON.parse(e.data);
-        console.log(recvData);
-
         switch (recvData.type) {
             case 'uploaded':
                 notify_uploaded_status(recvData.data);
