@@ -1,13 +1,13 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync, sync_to_async
-from products.constants import ProductUploadedStatusEnum
+from products.constants import ProductAlarmStatusEnum
 
-def sync_function(username):
+def sync_function(username, alarm_status):
     from products.models import Product
     prodQs = Product.objects.filter(
         user_id__username=username,
-        is_uploaded=ProductUploadedStatusEnum.NEED_ALARM.value
+        alarm_status=alarm_status
     )
     prod_list = [
         {
@@ -40,24 +40,43 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        print(text_data_json)
 
-        # if message = 
         if message == "check_product_upload_status":
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
-                    'type': 'chat_message',
+                    'type': 'upload_status',
+                    'message': message
+                }
+            )
+        if message == "check_product_edit_status":
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'edit_status',
                     'message': message
                 }
             )
 
-    async def chat_message(self, event):
+    async def upload_status(self, event):
         message = event['message']
 
         username = self.room_group_name[5:]
-        result = await async_function(username)
+        result = await async_function(username, ProductAlarmStatusEnum.UPLOADED.value)
 
         await self.send(text_data=json.dumps({
             'type': 'uploaded',
+            'data': result
+        }))
+
+    async def edit_status(self, event):
+        message = event['message']
+
+        username = self.room_group_name[5:]
+        result = await async_function(username, ProductAlarmStatusEnum.EDITTED.value)
+
+        await self.send(text_data=json.dumps({
+            'type': 'editted',
             'data': result
         }))

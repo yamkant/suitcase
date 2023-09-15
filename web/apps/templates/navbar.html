@@ -167,7 +167,7 @@
         });
     }
 
-    const get_noti_popup_html = (prod_id) => {
+    const get_noti_popup_html = (prod_id, noti_text) => {
         return `
         <div
             id="toast-success"
@@ -181,7 +181,7 @@
                 </svg>
                 <span class="sr-only">Check icon</span>
             </div>
-            <div class="noti-text ml-3 text-sm font-normal">Item moved successfully.</div>
+            <div class="noti-text ml-3 text-sm font-normal">${noti_text}</div>
             <button
                 type="button"
                 class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
@@ -196,64 +196,54 @@
         `
     }
 
-    const activate_push_noti_popup = (noti_text, elem) => {
+    const activate_push_noti_popup = (elem, noti_text) => {
+        // alert('hihi');
         const noti_container = document.querySelector('.push-noti-container');
-        noti_container.insertAdjacentHTML('beforeend', get_noti_popup_html(elem.prod_id));
+        noti_container.insertAdjacentHTML('beforeend', get_noti_popup_html(elem.prod_id, noti_text));
     }
 
     const close_push_noti_popup = async (target) => {
         const noti_block = target.closest('.noti-block');
         const prod_id = noti_block.dataset.value;
         await update_product_api('patch', prod_id, {
-            "is_uploaded": "Y",
+            "alarm_status": "Y",
         });
         noti_block.remove();
     }
 </script>
 <script>
-    const ws_host = "{{default_config.websocket_host}}"
-    let ws = new WebSocket(ws_host + "/chats/" + "{{user.username}}/");
-    // let ws = new WebSocket(ws_host + "/chats/" + "test/");
-    ws.onopen = () => {
-        ws.send(JSON.stringify({
-            'message': "{{user.username}}" + ' 입장'
-        }))
-    }
-
-    const check_status_interval = () => {
-        if (ws) {
-            ws.send(JSON.stringify({
-                'message': "check_product_upload_status"
-            }))
-        } else {
-            console.log("소켓 종료됨, 인터벌 종료");
-        }
-    }
-
-    const interval_task = setInterval(check_status_interval, 5000);
-
-    ws.onerror = () => {
-        console.error("CONNECTION ERROR")
-    }
+    const my_websocket = new MyWebSocket("{{default_config.websocket_host}}", '{{user.username}}');
+    const interval_task_upload = my_websocket.get_interval_send_message_task(5000, "check_product_upload_status");
+    setTimeout(interval_task_upload, 3000);
+    // const interval_task_edit = my_websocket.get_interval_send_message_task(5000, "check_product_edit_status");
+    // setTimeout(interval_task_edit, 3000);
 
     function notify_uploaded_status(data) {
         data.forEach((elem) => {
-            activate_push_noti_popup('Removed product background.', elem)
+            console.log(elem)
+            activate_push_noti_popup(elem, 'Removed product background.')
+        })
+    }
+    function notify_editted_status(data) {
+        data.forEach((elem) => {
+            console.log(elem)
+            activate_push_noti_popup(elem, 'Editted products.')
         })
     }
 
-
-    ws.onmessage = (e) => {
+    my_websocket.ws.onmessage = (e) => {
         const recvData = JSON.parse(e.data);
         switch (recvData.type) {
             case 'uploaded':
                 notify_uploaded_status(recvData.data);
-                // ws.close();
+                my_websocket.close(interval_task_upload);
+                break;
+            case 'editted':
+                notify_editted_status(recvData.data);
+                my_websocket.close(interval_task_edit);
                 break;
         }
     }
-    ws.onclose = (e) => {
-        console.log("소켓 종료됨, 인터벌 종료");
-        clearInterval(interval_task);
-    }
+
+
 </script>

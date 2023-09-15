@@ -10,8 +10,9 @@ class ProductStatusEnum(Enum):
     DELETED     = "Y"
     NOT_DELETED = "N"
 
-class ProductUploadedStatusEnum(Enum):
-    NEED_ALARM      = "A"
+class ProductAlarmStatusEnum(Enum):
+    UPLOADED        = "U"
+    EDITTED         = "E"
     COMPLETED       = "Y"
     ERROR           = "E"
     NOT_COMPLETED   = "N"

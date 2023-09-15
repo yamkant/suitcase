@@ -14,14 +14,14 @@ from json import dumps
 
 from config.serializers import TaskResultUpdateSerializer
 from celery import states
-from products.constants import ProductUploadedStatusEnum
+from products.constants import ProductAlarmStatusEnum
 
 # TODO: upload 문제 발생시 is_uploaded 값 'E'로 수정
 @shared_task(name='Update product status')
 def update_product_status(saved_img_url):
     instance = get_object_or_404(Product, saved_image_url=saved_img_url)
     serializer = ProductUpdateSerializer(instance, data={
-        'is_uploaded': ProductUploadedStatusEnum.NEED_ALARM.value,
+        'is_uploaded': ProductAlarmStatusEnum.UPLOADED.value,
     }, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
