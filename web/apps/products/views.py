@@ -100,7 +100,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         filename = S3ImageUploader.get_file_name(request.user.username)
 
         chain_task = chain(upload_image_by_image_url.s(request.data['image_url'], filename) | update_product_status.s())
-        print(chain_task.delay())
+        chain_task.delay()
 
         request.POST._mutable = True
         request.data['saved_image_url'] = f'https://{getattr(settings, "AWS_S3_CUSTOM_DOMAIN", None)}/{filename}'

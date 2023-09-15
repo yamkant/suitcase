@@ -2,7 +2,6 @@ class MyWebSocket {
     constructor(ws_host, room_name) {
         this.ws_host = ws_host;
         this.ws = new WebSocket(this.ws_host + "/chats/" + room_name + '/');
-        this.open(room_name)
     }
 
     open = (room_name) => {
@@ -17,11 +16,14 @@ class MyWebSocket {
         }
     }
 
-    close = (func) => {
+    clear_interval = (func) => {
         if (func) {
             console.log(clearInterval(func));
             console.log("인터벌 종료");
         }
+    }
+
+    close = () => {
         this.ws.close();
         console.log("소켓 종료");
     }

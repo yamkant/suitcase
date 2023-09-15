@@ -19,9 +19,10 @@ from products.constants import ProductAlarmStatusEnum
 # TODO: upload 문제 발생시 is_uploaded 값 'E'로 수정
 @shared_task(name='Update product status')
 def update_product_status(saved_img_url):
+    print("HIHI")
     instance = get_object_or_404(Product, saved_image_url=saved_img_url)
     serializer = ProductUpdateSerializer(instance, data={
-        'is_uploaded': ProductAlarmStatusEnum.UPLOADED.value,
+        'alarm_status': ProductAlarmStatusEnum.UPLOADED.value,
     }, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -61,6 +62,7 @@ def update_task_results(task_id, data):
 )
 def async_bulk_update_product(self, data, *args, **kwargs):
     instance = get_object_or_404(Product, id=kwargs['id'], user_id=kwargs['user_id'])
+    data['alarm_status'] = 'E'
     serializer = ProductUpdateSerializer(instance, data=data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -83,7 +85,10 @@ def async_bulk_update_product(self, data, *args, **kwargs):
 )
 def async_bulk_delete_product(self, *args, **kwargs):
     instance = get_object_or_404(Product, id=kwargs['id'], user_id=kwargs['user_id'])
-    serializer = ProductDeleteSerializer(instance, data={'is_deleted': 'Y'}, partial=True)
+    serializer = ProductDeleteSerializer(instance, data={
+        'is_deleted': 'Y',
+        'alarm_status': 'E',
+    }, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
 

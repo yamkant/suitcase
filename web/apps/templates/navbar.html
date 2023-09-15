@@ -102,7 +102,7 @@
     </div>
 </div>
 
-<div class="push-noti-container flex justify-end">
+<div class="push-noti-container flex flex-col items-end">
 </div>
 
 <script>
@@ -197,9 +197,9 @@
     }
 
     const activate_push_noti_popup = (elem, noti_text) => {
-        // alert('hihi');
         const noti_container = document.querySelector('.push-noti-container');
         noti_container.insertAdjacentHTML('beforeend', get_noti_popup_html(elem.prod_id, noti_text));
+        show_loading_indicator(false);
     }
 
     const close_push_noti_popup = async (target) => {
@@ -209,39 +209,48 @@
             "alarm_status": "Y",
         });
         noti_block.remove();
+        window.location.reload();
     }
 </script>
 <script>
     const my_websocket = new MyWebSocket("{{default_config.websocket_host}}", '{{user.username}}');
+    my_websocket.open();
     const interval_task_upload = my_websocket.get_interval_send_message_task(5000, "check_product_upload_status");
-    setTimeout(interval_task_upload, 3000);
-    // const interval_task_edit = my_websocket.get_interval_send_message_task(5000, "check_product_edit_status");
-    // setTimeout(interval_task_edit, 3000);
+    const interval_task_edit = my_websocket.get_interval_send_message_task(5000, "check_product_edit_status");
+    let upload_flag_monitor = false;
+    let edit_flag_monitor = false;
+
+    const start_upload_tracking = () => {
+        setTimeout(interval_task_upload, 3000);
+        upload_flag_monitor = true;
+    }
+
+    const start_edit_tracking = () => {
+        setTimeout(interval_task_edit, 3000);
+        edit_flag_monitor = true;
+    }
 
     function notify_uploaded_status(data) {
         data.forEach((elem) => {
-            console.log(elem)
             activate_push_noti_popup(elem, 'Removed product background.')
         })
     }
     function notify_editted_status(data) {
         data.forEach((elem) => {
-            console.log(elem)
             activate_push_noti_popup(elem, 'Editted products.')
         })
     }
 
     my_websocket.ws.onmessage = (e) => {
         const recvData = JSON.parse(e.data);
-        switch (recvData.type) {
-            case 'uploaded':
-                notify_uploaded_status(recvData.data);
-                my_websocket.close(interval_task_upload);
-                break;
-            case 'editted':
-                notify_editted_status(recvData.data);
-                my_websocket.close(interval_task_edit);
-                break;
+        if (upload_flag_monitor && recvData.type === "uploaded") {
+            notify_uploaded_status(recvData.data);
+            my_websocket.clear_interval(interval_task_upload);
+            upload_flag_monitor = false;
+        } else if (edit_flag_monitor && recvData.type === "editted") {
+            notify_editted_status(recvData.data);
+            my_websocket.clear_interval(interval_task_edit);
+            edit_flag_monitor = false;
         }
     }
 
