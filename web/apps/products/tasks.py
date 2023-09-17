@@ -14,6 +14,19 @@ from json import dumps
 
 from config.serializers import TaskResultUpdateSerializer
 from celery import states
+from products.constants import ProductAlarmStatusEnum
+
+# TODO: upload 문제 발생시 is_uploaded 값 'E'로 수정
+@shared_task(name='Update product status')
+def update_product_status(saved_img_url):
+    print("HIHI")
+    instance = get_object_or_404(Product, saved_image_url=saved_img_url)
+    serializer = ProductUpdateSerializer(instance, data={
+        'alarm_status': ProductAlarmStatusEnum.UPLOADED.value,
+    }, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return True
 
 
 @shared_task(name='Upload image from url to S3')
@@ -23,6 +36,7 @@ def upload_image_by_image_url(img_url, file_path):
 
     imgUploader = S3ImageUploader()
     saved_image_url = imgUploader.upload_pil(removed_bg_img, file_path)
+
     return saved_image_url
 
 @shared_task
@@ -48,6 +62,7 @@ def update_task_results(task_id, data):
 )
 def async_bulk_update_product(self, data, *args, **kwargs):
     instance = get_object_or_404(Product, id=kwargs['id'], user_id=kwargs['user_id'])
+    data['alarm_status'] = 'E'
     serializer = ProductUpdateSerializer(instance, data=data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -70,7 +85,10 @@ def async_bulk_update_product(self, data, *args, **kwargs):
 )
 def async_bulk_delete_product(self, *args, **kwargs):
     instance = get_object_or_404(Product, id=kwargs['id'], user_id=kwargs['user_id'])
-    serializer = ProductDeleteSerializer(instance, data={'is_deleted': 'Y'}, partial=True)
+    serializer = ProductDeleteSerializer(instance, data={
+        'is_deleted': 'Y',
+        'alarm_status': 'E',
+    }, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
 
@@ -82,3 +100,10 @@ def async_bulk_delete_product(self, *args, **kwargs):
         'status': states.SUCCESS
     })
     return serializer.data
+
+import time
+@shared_task()
+def test_task(self, *args, **kwargs):
+    time.sleep(5)
+    print("task finished")
+    return "hihi"

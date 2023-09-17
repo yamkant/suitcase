@@ -353,69 +353,7 @@
 
 {% block javascripts %}
 <script>
-    async function update_product_api(method, prod_id, data) {
-        return axios({
-            method: method,
-            url: `/api/products/${prod_id}/`,
-            headers: {
-                "Content-Type": "multipart/form-data",
-                'X-CSRFToken': '{{csrf_token}}'
-            },
-            data: data,
-        }).then((res) => {
-            return res;
-        }).catch(() => {
-            alert("ERROR")
-        });
-    }
-
-    async function update_bulk_product_api(method, data) {
-        return axios({
-            method: method,
-            url: `/api/products/bulk/`,
-            headers: {
-                "Content-Type": "multipart/form-data",
-                'X-CSRFToken': '{{csrf_token}}'
-            },
-            data: data,
-        }).then((res) => {
-            return res;
-        }).catch(() => {
-            alert("ERROR")
-        });
-    }
-
-    async function delete_bulk_product_api(method, data) {
-        return axios({
-            method: method,
-            url: `/api/products/bulk/`,
-            headers: {
-                "Content-Type": "multipart/form-data",
-                'X-CSRFToken': '{{csrf_token}}'
-            },
-            data: data,
-        }).then((res) => {
-            return res;
-        }).catch(() => {
-            alert("ERROR")
-        });
-    }
-
-    async function create_product_api(data) {
-        return axios({
-            url: `/api/products/`,
-            method: 'post',
-            headers: {
-                "Content-Type": "multipart/form-data",
-                'X-CSRFToken': '{{csrf_token}}'
-            },
-            data: data,
-        }).then((res) => {
-            return res;
-        }).catch(() => {
-            alert("ERROR")
-        });
-    }
+    const api_handler = new APIHandler("{{csrf_token}}");
 
     const on_submit_edit = async () => {
         const prod_id = location.hash.substring(1);
@@ -424,7 +362,7 @@
         if (!confirm('Are you sure you want to update?')) {
             return;
         } 
-        await update_product_api('patch', prod_id, bodyFormData);
+        await api_handler.update_product_api('patch', prod_id, bodyFormData);
     }
 
     const list = document.querySelectorAll('.edit-btn');
@@ -451,11 +389,9 @@
         if (!confirm('Are you sure you want to add?\n(take some time to upload the product.)')) {
             return
         } 
-        await create_product_api(bodyFormData)
-        show_loading_indicator();
-        await setTimeout(function() {
-            location.reload();
-        }, 3000);
+        await api_handler.create_product_api(bodyFormData)
+        start_upload_tracking();
+        show_loading_indicator(true);
     }
 
     const onclick_action_button = async (type) => {
@@ -486,19 +422,25 @@
         }
 
         if (type === 'DELETE') {
-            await delete_bulk_product_api('delete', data)
+            await api_handler.delete_bulk_product_api('delete', data)
         } else {
-            await update_bulk_product_api('patch', data)
+            await api_handler.update_bulk_product_api('patch', data)
         }
-        show_loading_indicator();
+        start_edit_tracking();
+        show_loading_indicator(true);
+        document.getElementById('dropdownActionButton').click();
         await setTimeout(function() {
             location.reload();
         }, 2000);
     }
 
-    const show_loading_indicator = () => {
+    const show_loading_indicator = (flag) => {
         const loading_indicator = document.getElementById('loading-indicator');
-        loading_indicator.classList.remove('hidden');
+        if (flag) {
+            loading_indicator.classList.remove('hidden');
+        } else {
+            loading_indicator.classList.add('hidden');
+        }
     }
 
     const onChange = () => {

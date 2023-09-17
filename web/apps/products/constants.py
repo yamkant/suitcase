@@ -9,3 +9,10 @@ class CategoryEnum(Enum):
 class ProductStatusEnum(Enum):
     DELETED     = "Y"
     NOT_DELETED = "N"
+
+class ProductAlarmStatusEnum(Enum):
+    UPLOADED        = "U"
+    EDITTED         = "E"
+    COMPLETED       = "Y"
+    ERROR           = "E"
+    NOT_COMPLETED   = "N"

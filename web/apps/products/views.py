@@ -27,8 +27,10 @@ from drf_spectacular.types import OpenApiTypes
 from django.core.cache import cache
 from client.libs.cache import get_cache_product_count_key
 
+from celery import chain
 from products.tasks import (
     upload_image_by_image_url,
+    update_product_status,
     async_bulk_update_product,
     async_bulk_delete_product,
 )
@@ -96,7 +98,9 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         # NOTE: Celery를 사용한 Image Upload 작업
         filename = S3ImageUploader.get_file_name(request.user.username)
-        upload_image_by_image_url.delay(request.data['image_url'], filename)
+
+        chain_task = chain(upload_image_by_image_url.s(request.data['image_url'], filename) | update_product_status.s())
+        chain_task.delay()
 
         request.POST._mutable = True
         request.data['saved_image_url'] = f'https://{getattr(settings, "AWS_S3_CUSTOM_DOMAIN", None)}/{filename}'

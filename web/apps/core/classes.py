@@ -13,6 +13,7 @@ import urllib3
 from urllib3.exceptions import HTTPError
 
 from rest_framework.exceptions import APIException
+from core.libs.custom_decorators import elapsed
 
 import logging
 
@@ -28,6 +29,7 @@ class ImageHandler():
         # TODO: Exception 추가
         self._image = self.get_image_object(img_url)
     
+    @elapsed
     def get_image_object(self, img_url):
         try:
             headers = {
@@ -43,6 +45,7 @@ class ImageHandler():
         img_data = BytesIO(response.content)
         return Image.open(img_data)
     
+    @elapsed
     def get_removed_background_image(self):
         return remove(self._image)
     

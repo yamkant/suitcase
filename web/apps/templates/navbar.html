@@ -102,6 +102,9 @@
     </div>
 </div>
 
+<div class="push-noti-container flex flex-col items-end">
+</div>
+
 <script>
     const pathname = new URL(location.href).pathname
     const nav_anchors = Array.from(document.querySelectorAll(".nav-anchor"))
@@ -132,12 +135,12 @@
         });
     }
     const edit_user_url = async () => {
-        const form_object = document.getElementById('edit-url-form');
-        const bodyFormData = new FormData(form_object);
         if (!confirm('Are you sure you want to update?')) {
             return;
         } 
-        await update_user_url_api('patch', "{{user.id}}", bodyFormData);
+        await update_user_url_api('patch', "{{user.id}}", {
+            "is_uploaded": "Y",
+        });
         location.reload();
     }
 
@@ -146,4 +149,110 @@
         const url_input = form_object.querySelector('input[name="user_url"]');
         url_input.value = "{{user.user_url}}";
     }
+</script>
+<script>
+    async function update_product_api(method, prod_id, data) {
+        return axios({
+            method: method,
+            url: `/api/products/${prod_id}/`,
+            headers: {
+                "Content-Type": "multipart/form-data",
+                'X-CSRFToken': '{{csrf_token}}'
+            },
+            data: data,
+        }).then((res) => {
+            return res;
+        }).catch(() => {
+            alert("ERROR")
+        });
+    }
+
+    const get_noti_popup_html = (prod_id, noti_text) => {
+        return `
+        <div
+            id="toast-success"
+            class="noti-block flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+            data-value=${prod_id}
+            role="alert"
+        >
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                </svg>
+                <span class="sr-only">Check icon</span>
+            </div>
+            <div class="noti-text ml-3 text-sm font-normal">${noti_text}</div>
+            <button
+                type="button"
+                class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                onclick="close_push_noti_popup(this)"
+            >
+                <span class="sr-only">Close</span>
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+            </button>
+        </div>
+        `
+    }
+
+    const activate_push_noti_popup = (elem, noti_text) => {
+        const noti_container = document.querySelector('.push-noti-container');
+        noti_container.insertAdjacentHTML('beforeend', get_noti_popup_html(elem.prod_id, noti_text));
+        show_loading_indicator(false);
+    }
+
+    const close_push_noti_popup = async (target) => {
+        const noti_block = target.closest('.noti-block');
+        const prod_id = noti_block.dataset.value;
+        await update_product_api('patch', prod_id, {
+            "alarm_status": "Y",
+        });
+        noti_block.remove();
+        window.location.reload();
+    }
+</script>
+<script>
+    const my_websocket = new MyWebSocket("{{default_config.websocket_host}}", '{{user.username}}');
+    my_websocket.open();
+    const interval_task_upload = my_websocket.get_interval_send_message_task(5000, "check_product_upload_status");
+    const interval_task_edit = my_websocket.get_interval_send_message_task(5000, "check_product_edit_status");
+    let upload_flag_monitor = false;
+    let edit_flag_monitor = false;
+
+    const start_upload_tracking = () => {
+        setTimeout(interval_task_upload, 3000);
+        upload_flag_monitor = true;
+    }
+
+    const start_edit_tracking = () => {
+        setTimeout(interval_task_edit, 3000);
+        edit_flag_monitor = true;
+    }
+
+    function notify_uploaded_status(data) {
+        data.forEach((elem) => {
+            activate_push_noti_popup(elem, 'Removed product background.')
+        })
+    }
+    function notify_editted_status(data) {
+        data.forEach((elem) => {
+            activate_push_noti_popup(elem, 'Editted products.')
+        })
+    }
+
+    my_websocket.ws.onmessage = (e) => {
+        const recvData = JSON.parse(e.data);
+        if (upload_flag_monitor && recvData.type === "uploaded") {
+            notify_uploaded_status(recvData.data);
+            my_websocket.clear_interval(interval_task_upload);
+            upload_flag_monitor = false;
+        } else if (edit_flag_monitor && recvData.type === "editted") {
+            notify_editted_status(recvData.data);
+            my_websocket.clear_interval(interval_task_edit);
+            edit_flag_monitor = false;
+        }
+    }
+
+
 </script>
