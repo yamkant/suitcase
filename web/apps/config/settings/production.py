@@ -5,9 +5,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 WSGI_APPLICATION = 'config.wsgi.application'
-ASGI_APPLICATION = 'config.asgi.application'
-
-WEBSOCKET_HOST = "ws\:\/\/127.0.0.1:8001"
 
 CELERY_BROKER_URL = 'redis://my_redis:6379'
 CELERY_RESULT_BACKEND = 'django-db'

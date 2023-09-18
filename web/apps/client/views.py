@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from client.libs.custom_decorators import login_required
 from products.serializers import ProductSerializer
@@ -18,10 +17,6 @@ from django.shortcuts import redirect
 import random
 from drf_spectacular.utils import extend_schema
 from products.constants import CategoryEnum
-
-DEFAULT_CONFIG = {
-    "websocket_host": settings.WEBSOCKET_HOST,
-}
 
 @extend_schema(
     exclude=True
@@ -63,7 +58,6 @@ class ProductTemplateViewSet(ListAPIView):
             'user': request.user,
             'rand_svg_num': random.randint(1287, 1336),
             'product_count': count,
-            'default_config': DEFAULT_CONFIG,
         }
         return Response(context)
     
@@ -94,7 +88,6 @@ def render_fitting(request):
         'is_logged_in': request.user.is_authenticated,
         'user': request.user,
         'rand_svg_num': random.randint(1287, 1336),
-        'default_config': DEFAULT_CONFIG,
     }
 
     return render(request, 'client/fitting.html', context)
