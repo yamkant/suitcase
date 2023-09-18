@@ -5,9 +5,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 WSGI_APPLICATION = 'config.wsgi.application'
-ASGI_APPLICATION = 'config.asgi.application'
-
-WEBSOCKET_HOST = "ws\:\/\/127.0.0.1:8001"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

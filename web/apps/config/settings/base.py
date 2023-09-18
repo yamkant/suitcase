@@ -46,8 +46,6 @@ INSTALLED_APPS = [
     'storages',
     'drf_spectacular',
     'django_celery_results',
-    'channels',
-    'chats',
 
     # custom apps
     'common',
@@ -222,12 +220,4 @@ SPECTACULAR_SETTINGS = {
     # https://www.npmjs.com/package/swagger-ui-dist 해당 링크에서 최신버전을 확인후 취향에 따라 version을 수정해서 사용하세요.
     'SWAGGER_UI_DIST': '//unpkg.com/swagger-ui-dist@3.38.0',  # Swagger UI 버전을 조절할수 있습니다.
     
-}
-
-# SOCKET SETTINGS
-ASGI_APPLICATION = 'config.asgi.application'
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
 }

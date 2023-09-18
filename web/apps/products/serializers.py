@@ -34,7 +34,6 @@ class ProductCreateSerializer(CreateSerializer):
             "saved_image_url",
             "category",
             "user_id",
-            "alarm_status",
         )
     
     def validate(self, data):
@@ -52,7 +51,6 @@ class ProductUpdateSerializer(UpdateSerializer):
             "name",
             "category",
             "is_active",
-            "alarm_status",
         )
     
     def update(self, instance, validated_data):
