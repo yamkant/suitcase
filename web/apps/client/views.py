@@ -18,6 +18,8 @@ import random
 from drf_spectacular.utils import extend_schema
 from products.constants import CategoryEnum
 
+from django_eventstream import send_event
+
 @extend_schema(
     exclude=True
 )
@@ -59,6 +61,8 @@ class ProductTemplateViewSet(ListAPIView):
             'rand_svg_num': random.randint(1287, 1336),
             'product_count': count,
         }
+        
+        send_event('testchannel', 'message', {"msg": "HIHI"})
         return Response(context)
     
 @require_http_methods(['GET'])

@@ -11,6 +11,8 @@
 
     <!-- 3rd Party Modeules -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{% static 'django_eventstream/eventsource.min.js' %}"></script>
+    <script src="{% static 'django_eventstream/reconnecting-eventsource.js' %}"></script>
 
     {% compress css %}
     <link rel="stylesheet" href="{% static 'src/output.css' %}">
@@ -27,5 +29,18 @@
     </div>
     {% block javascripts %}
     {% endblock %}
+
+    <script>
+        var es = new ReconnectingEventSource('/events/');
+
+        es.addEventListener('message', function (e) {
+            console.log(e.data);
+        }, false);
+
+        es.addEventListener('stream-reset', function (e) {
+            // ... client fell behind, reinitialize ...
+        }, false);
+
+    </script>
 </body>
 </html>
