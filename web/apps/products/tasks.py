@@ -16,13 +16,28 @@ from config.serializers import TaskResultUpdateSerializer
 from celery import states
 
 
-@shared_task(name='Upload image from url to S3')
-def upload_image_by_image_url(img_url, file_path):
+@shared_task(
+    name='Upload image from url to S3',
+    bind=True,
+    max_retries=5,
+    ignore_result=True
+)
+def upload_image_by_image_url(self, data, *args, **kwargs):
+    img_url = data['img_url']
+    file_path = data['file_path']
     image_handler = ImageHandler(img_url)
     removed_bg_img = image_handler.get_removed_background_image()
 
     imgUploader = S3ImageUploader()
     saved_image_url = imgUploader.upload_pil(removed_bg_img, file_path)
+
+    update_task_results(task_id=self.request.id, data={
+        'task_name': self.request.task,
+        'task_args': dumps(args),
+        'task_kwargs': dumps(kwargs),
+        'worker': self.request.hostname,
+        'status': states.SUCCESS
+    })
     return saved_image_url
 
 @shared_task

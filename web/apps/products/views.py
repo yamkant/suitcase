@@ -96,7 +96,11 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         # NOTE: Celery를 사용한 Image Upload 작업
         filename = S3ImageUploader.get_file_name(request.user.username)
-        upload_image_by_image_url.delay(request.data['image_url'], filename)
+        data = {
+            'img_url': request.data['image_url'],
+            'file_path': filename,
+        }
+        upload_image_by_image_url.delay(data=data)
 
         request.POST._mutable = True
         request.data['saved_image_url'] = f'https://{getattr(settings, "AWS_S3_CUSTOM_DOMAIN", None)}/{filename}'

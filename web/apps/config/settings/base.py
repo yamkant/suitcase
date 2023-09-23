@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'users',
     'client',
     'products',
-    'alarm',
+    'config',
+    'alarms',
 ]
 
 MIDDLEWARE = [
@@ -172,6 +173,8 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'defualt'
+
+CELERY_APP='config.celery'
 
 # Restframework setting
 REST_FRAMEWORK = {
