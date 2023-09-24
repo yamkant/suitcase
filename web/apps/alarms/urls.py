@@ -22,8 +22,9 @@ class TaskAPIView(RetrieveAPIView):
         return Response({})
 
 urlpatterns = [
-    path('events/', include(django_eventstream.urls), {
-        'channels': ['testchannel']
-    }),
+    # path('events/', include(django_eventstream.urls), {
+    #     'channels': ['testchannel']
+    # }),
+    path('events/<channel>/', include(django_eventstream.urls)),
     path("tasks/<int:id>/", TaskAPIView.as_view(), name="task-detail"),
 ]

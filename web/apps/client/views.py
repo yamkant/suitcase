@@ -62,7 +62,7 @@ class ProductTemplateViewSet(ListAPIView):
             'product_count': count,
         }
         
-        send_event('testchannel', 'message', {"msg": "HIHI"})
+        send_event(request.user.username, 'message', {"msg": "HIHI"})
         return Response(context)
     
 @require_http_methods(['GET'])

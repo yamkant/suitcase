@@ -31,7 +31,7 @@
     {% endblock %}
 
     <script>
-        var es = new ReconnectingEventSource('/events/');
+        var es = new ReconnectingEventSource('/events/{{user.username}}/');
 
         es.addEventListener('message', function (e) {
             console.log(e.data);
