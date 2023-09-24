@@ -15,7 +15,6 @@ from json import dumps
 from config.serializers import TaskResultUpdateSerializer
 from celery import states
 
-
 @shared_task(
     name='Upload image from url to S3',
     bind=True,

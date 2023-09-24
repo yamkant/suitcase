@@ -100,7 +100,10 @@ class ProductViewSet(viewsets.ModelViewSet):
             'img_url': request.data['image_url'],
             'file_path': filename,
         }
-        upload_image_by_image_url.delay(data=data)
+        upload_image_by_image_url.delay(
+            data=data,
+            user_id=request.user.id,
+        )
 
         request.POST._mutable = True
         request.data['saved_image_url'] = f'https://{getattr(settings, "AWS_S3_CUSTOM_DOMAIN", None)}/{filename}'

@@ -61,8 +61,6 @@ class ProductTemplateViewSet(ListAPIView):
             'rand_svg_num': random.randint(1287, 1336),
             'product_count': count,
         }
-        
-        send_event(request.user.username, 'message', {"msg": "HIHI"})
         return Response(context)
     
 @require_http_methods(['GET'])
