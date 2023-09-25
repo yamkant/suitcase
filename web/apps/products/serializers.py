@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 from core.serializers import CreateSerializer, UpdateSerializer
 
@@ -7,6 +6,7 @@ from users.models import User
 from django.shortcuts import get_object_or_404
 
 class ProductSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Product
         fields = (
@@ -24,6 +24,7 @@ class ProductSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 class ProductCreateSerializer(CreateSerializer):
+    user_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
     representation_serializer_class = ProductSerializer
 
     class Meta:

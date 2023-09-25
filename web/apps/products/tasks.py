@@ -15,15 +15,23 @@ from json import dumps
 from config.serializers import TaskResultUpdateSerializer
 from celery import states
 
+def update_task_results(task_id, data):
+    task = TaskResult.objects.get_task(task_id)
+    task_serializer = TaskResultUpdateSerializer(task, data=data, partial=True)
+    task_serializer.is_valid(raise_exception=True)
+    task_serializer.save()
+    return task_serializer.data
+
 @shared_task(
     name='Upload image from url to S3',
     bind=True,
     max_retries=5,
     ignore_result=True
 )
-def upload_image_by_image_url(self, data, *args, **kwargs):
-    img_url = data['img_url']
-    file_path = data['file_path']
+def upload_image_by_image_url(self, *args, **kwargs):
+    print(kwargs)
+    img_url = kwargs.get('img_url')
+    file_path = kwargs.get('file_path')
     image_handler = ImageHandler(img_url)
     removed_bg_img = image_handler.get_removed_background_image()
 
@@ -45,13 +53,6 @@ def async_create_product( data, *args, **kwargs):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return serializer.data
-
-def update_task_results(task_id, data):
-    task = TaskResult.objects.get_task(task_id)
-    task_serializer = TaskResultUpdateSerializer(task, data=data, partial=True)
-    task_serializer.is_valid(raise_exception=True)
-    task_serializer.save()
-    return task_serializer.data
 
 # NOTE: ignore_result=True 옵션 @shared_task에 추가시 동작 저장 안됨
 @shared_task(
