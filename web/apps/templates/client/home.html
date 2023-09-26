@@ -33,11 +33,11 @@
                         </div>
                     </button>
                 </div>
-                <div class="flex justify-between h-10">
+                <div class="action-button-container flex justify-between h-10">
                     <button
                         id="dropdownActionButton"
                         data-dropdown-toggle="dropdownAction"
-                        class="inline-flex h-full items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-3 py-2 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button"
+                        class="action-button inline-flex h-full items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-3 py-2 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button"
                     >
                         <span class="sr-only">Action button</span>
                         Action
@@ -51,21 +51,21 @@
                             <li>
                                 <button
                                     class="w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    onclick="onclick_action_button('ACTIVATE')"
+                                    onclick="onclick_action_button(this, 'ACTIVATE')"
                                 >Activate products
                                 </button>
                             </li>
                             <li>
                                 <button
                                     class="w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    onclick="onclick_action_button('DEACTIVATE')"
+                                    onclick="onclick_action_button(this, 'DEACTIVATE')"
                                 >Deactivate products
                                 </button>
                             </li>
                             <li>
                                 <button
                                     class="w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    onclick="onclick_action_button('DELETE')"
+                                    onclick="onclick_action_button(this, 'DELETE')"
                                 >Delete products
                                 </button>
                             </li>
@@ -458,7 +458,7 @@
         }, 3000);
     }
 
-    const onclick_action_button = async (type) => {
+    const onclick_action_button = async (target, type) => {
         const checkboxes = Array.from(document.querySelectorAll('.checkbox-action'));
         const prod_id_list = [];
         checkboxes.forEach((checkbox) => {
@@ -491,9 +491,7 @@
             await update_bulk_product_api('patch', data)
         }
         show_loading_indicator();
-        await setTimeout(function() {
-            // location.reload();
-        }, 2000);
+        target.closest('.action-button-container').querySelector('.action-button').click();
     }
 
     const show_loading_indicator = () => {

@@ -30,6 +30,7 @@ from client.libs.cache import get_cache_product_count_key
 from products.tasks import (
     upload_image_by_image_url,
 )
+from django_eventstream import send_event
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.filter(is_deleted="N")
@@ -156,6 +157,7 @@ class ProductBulkViewSet(viewsets.ModelViewSet):
         ]:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         Product.objects.filter(id__in=prod_id_list).update(is_active=request.data.get('is_active'))
+        send_event(request.user.username, 'message', {"type": f"edit"})
         return Response({})
 
     def bulk_delete(self, request, *args, **kwargs):
@@ -164,4 +166,5 @@ class ProductBulkViewSet(viewsets.ModelViewSet):
         # FIXME: user가 가지고있는 product가 맞는지 확인
         prod_id_list = request.data.getlist('prod_list[]')
         Product.objects.filter(id__in=prod_id_list).update(is_deleted=ProductDeleteEnum.DELETED.value)
+        send_event(request.user.username, 'message', {"type": f"edit"})
         return Response({})

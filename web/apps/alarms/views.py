@@ -16,5 +16,5 @@ class TaskRetrieveAPIView(RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         instance = get_object_or_404(TaskResult, id=kwargs['id'])
         task_kwargs = json.loads(instance.task_kwargs)
-        send_event(task_kwargs['channel_name'], 'message', {"msg": f"{instance.task_id} Task Finished"})
+        send_event(task_kwargs['channel_name'], 'message', {"type": "create"})
         return Response({})
