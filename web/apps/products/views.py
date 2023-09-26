@@ -15,7 +15,7 @@ from rest_framework import filters
 
 from client.pagination import ProductPagination
 from users.constants import UserLevelEnum
-from products.constants import ProductStatusEnum
+from products.constants import ProductStatusEnum, ProductDeleteEnum
 from products.swagger import (
     PRODUCT_CREATE_EXAMPLES,
     PRODUCT_LIST_EXAMPLES,
@@ -29,8 +29,6 @@ from client.libs.cache import get_cache_product_count_key
 
 from products.tasks import (
     upload_image_by_image_url,
-    async_bulk_update_product,
-    async_bulk_delete_product,
 )
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -138,7 +136,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         # NOTE: request.POST는 QueryDict 형태로, request.data는 Dict 형태로 반환합니다.
         request.POST._mutable = True
-        request.data['is_deleted'] = ProductStatusEnum.DELETED.value
+        request.data['is_deleted'] = ProductDeleteEnum.DELETED.value
         cache.delete(get_cache_product_count_key(request.user.id))
         return super().update(request, *args, **kwargs)
 
@@ -150,26 +148,20 @@ class ProductBulkViewSet(viewsets.ModelViewSet):
     def bulk_update(self, request, *args, **kwargs):
         if 'prod_list[]' not in request.data:
             return Response({})
+        # FIXME: user가 가지고있는 product가 맞는지 확인
         prod_id_list = request.data.getlist('prod_list[]')
-        data = {
-            'is_active': request.data['is_active'],
-        }
-        for prod_id in prod_id_list:
-            task = async_bulk_update_product.delay(
-                data=data, 
-                id=prod_id,
-                user_id=request.user.id,
-            )
+        if request.data.get('is_active') not in [
+            ProductStatusEnum.ACTIVE.value,
+            ProductStatusEnum.DEACTIVE.value,
+        ]:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        Product.objects.filter(id__in=prod_id_list).update(is_active=request.data.get('is_active'))
         return Response({})
 
     def bulk_delete(self, request, *args, **kwargs):
         if 'prod_list[]' not in request.data:
             return Response({})
-        # NOTE: user가 가지고있는 product가 맞는지 확인
+        # FIXME: user가 가지고있는 product가 맞는지 확인
         prod_id_list = request.data.getlist('prod_list[]')
-        for prod_id in prod_id_list:
-            async_bulk_delete_product.delay(
-                id=prod_id,
-                user_id=request.user.id,
-            )
+        Product.objects.filter(id__in=prod_id_list).update(is_deleted=ProductDeleteEnum.DELETED.value)
         return Response({})
