@@ -46,15 +46,20 @@ INSTALLED_APPS = [
     'storages',
     'drf_spectacular',
     'django_celery_results',
+    'channels',
+    'django_eventstream',
 
     # custom apps
     'common',
     'users',
     'client',
     'products',
+    'config',
+    'alarms',
 ]
 
 MIDDLEWARE = [
+    'django_grip.GripMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -169,6 +174,8 @@ CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'defualt'
 
+CELERY_APP='config.celery'
+
 # Restframework setting
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
@@ -220,4 +227,12 @@ SPECTACULAR_SETTINGS = {
     # https://www.npmjs.com/package/swagger-ui-dist 해당 링크에서 최신버전을 확인후 취향에 따라 version을 수정해서 사용하세요.
     'SWAGGER_UI_DIST': '//unpkg.com/swagger-ui-dist@3.38.0',  # Swagger UI 버전을 조절할수 있습니다.
     
+}
+
+# EVENT STREAM SETTINGS
+ASGI_APPLICATION = 'config.asgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
 }

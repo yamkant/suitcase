@@ -18,6 +18,8 @@ import random
 from drf_spectacular.utils import extend_schema
 from products.constants import CategoryEnum
 
+from django_eventstream import send_event
+
 @extend_schema(
     exclude=True
 )
@@ -34,7 +36,7 @@ class ProductTemplateViewSet(ListAPIView):
     search_fields = ['name', ]
 
     def get_queryset(self):
-        return self.queryset.filter(user_id=self.request.user.id)
+        return self.queryset.filter(user_id=self.request.user.id).order_by('-id')
 
     def get(self, request, *args, **kwargs):
         queryset = self.filter_queryset(queryset=self.get_queryset())

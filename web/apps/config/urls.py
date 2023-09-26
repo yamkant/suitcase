@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/users/', include('users.urls.users')),
     path('api/products/', include('products.urls')),
     path('accounts/', include('users.urls.accounts')),
+    path('alarms/', include('alarms.urls')),
 ]
 
 urlpatterns += [

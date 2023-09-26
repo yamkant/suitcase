@@ -7,5 +7,9 @@ class CategoryEnum(Enum):
     SHOES       = 4
 
 class ProductStatusEnum(Enum):
+    ACTIVE     = "Y"
+    DEACTIVE = "N"
+
+class ProductDeleteEnum(Enum):
     DELETED     = "Y"
     NOT_DELETED = "N"
