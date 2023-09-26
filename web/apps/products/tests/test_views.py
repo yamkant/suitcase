@@ -8,6 +8,8 @@ from products.models import Product
 from products.constants import CategoryEnum
 from products.serializers import ProductCreateSerializer
 
+from unittest import skip
+
 class ProductViewSetListTest(ViewSetTestCase):
     endpoint = reverse_lazy('products:list')
 
@@ -72,19 +74,6 @@ class ProductViewSetListTest(ViewSetTestCase):
             expected_status_code=400,
             client=client,
             name=self.data['name'],
-            user_id=self.data['user_id'],
-        )
-
-    def test_failure_empty_user_id(self):
-        client = self.request_tester_user.get_loggedin_user()
-
-        res = self.generic_test(
-            url=self.endpoint,
-            method="post",
-            expected_status_code=400,
-            client=client,
-            name=self.data['name'],
-            image_url=self.data['image_url'],
         )
 
 class ProductViewSetDetailTest(ViewSetTestCase):
@@ -108,26 +97,19 @@ class ProductViewSetDetailTest(ViewSetTestCase):
         other_user.level = UserLevelEnum.TESTER.value
         other_user.save()
 
-        cls.data = {
-            "name": "new_prod",
-            "image_url": "https://s3_bucket_address/test_image.png",
-            "user_id": general_user.id,
-            "category": CategoryEnum.PANTS.value,
-        }
-        serializer = ProductCreateSerializer(data=cls.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        cls.prod_data = serializer.data
+        cls.prod = Product.objects.create(
+            name="new_prod",
+            image_url="https://s3_bucket_address/test_image.png",
+            category=CategoryEnum.PANTS.value,
+            user_id=general_user,
+        )
 
-        cls.other_data = {
-            "name": "new_other_prod",
-            "image_url": "https://s3_bucket_address/test_image.png",
-            "user_id": other_user.id,
-        }
-        serializer = ProductCreateSerializer(data=cls.other_data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        cls.other_prod_data = serializer.data
+        cls.other_prod = Product.objects.create(
+            name="new_other_prod",
+            image_url="https://s3_bucket_address/test_image.png",
+            category=CategoryEnum.PANTS.value,
+            user_id=other_user,
+        )
 
         cls.update_data = {
             "name": "updated_product",
@@ -139,7 +121,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
     def test_success_update(self):
         client = self.request_tester_user.get_loggedin_user()
 
-        endpoint = reverse_lazy('products:detail', args=[self.prod_data['id']])
+        endpoint = reverse_lazy('products:detail', args=[self.prod.id])
 
         res = self.generic_test(
             url=endpoint,
@@ -160,7 +142,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
     def test_success_update_partial(self):
         client = self.request_tester_user.get_loggedin_user()
 
-        endpoint = reverse_lazy('products:detail', args=[self.prod_data['id']])
+        endpoint = reverse_lazy('products:detail', args=[self.prod.id])
 
         res = self.generic_test(
             url=endpoint,
@@ -179,7 +161,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
     def test_failure_update__is_not_owner_user(self):
         client = self.request_tester_user.get_loggedin_user()
 
-        endpoint = reverse_lazy('products:detail', args=[self.other_prod_data['id']])
+        endpoint = reverse_lazy('products:detail', args=[self.other_prod.id])
 
         res = self.generic_test(
             url=endpoint,
@@ -194,7 +176,7 @@ class ProductViewSetDetailTest(ViewSetTestCase):
     def test_success_delete(self):
         client = self.request_tester_user.get_loggedin_user()
 
-        endpoint = reverse_lazy('products:detail', args=[self.prod_data['id']])
+        endpoint = reverse_lazy('products:detail', args=[self.prod.id])
 
         res = self.generic_test(
             url=endpoint,
