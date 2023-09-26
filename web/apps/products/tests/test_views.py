@@ -1,193 +1,176 @@
 from django.urls import reverse_lazy
-from core.tests import ViewSetTestCase
-from core.libs.help_test import TestUserHandler
 
-from users.constants import UserLevelEnum
-
+from users.models import User
 from products.models import Product
+from users.constants import UserLevelEnum
 from products.constants import CategoryEnum
-from products.serializers import ProductCreateSerializer
+from products.constants import ProductStatusEnum, ProductDeleteEnum
+
+from django.test import TestCase
 
 from unittest import skip
+from rest_framework import status
 
-class ProductViewSetListTest(ViewSetTestCase):
+class ProductViewSetListTest(TestCase):
     endpoint = reverse_lazy('products:list')
 
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.request_tester_user = TestUserHandler(
-            username="tester",
-            password="5933"
-        )
-        general_user = cls.request_tester_user.get_user()
-        general_user.level = UserLevelEnum.TESTER.value
-        general_user.save()
-
-        cls.data = {
-            "name": "new_product",
-            "image_url": "https://us.lemaire.fr/cdn/shop/files/PA326_LD1001_BR495_PS1_2000x.jpeg?v=1690202108",
-            "saved_image_url": "https://s3_bucket_address/test_image.png",
-            "category": CategoryEnum.PANTS.value,
-            "user_id": general_user.id
-        }
+        cls.유저_1 = User.objects.create(username="tester1", password="5933", level=UserLevelEnum.TESTER.value)
     
-    def test_success(self):
-        client = self.request_tester_user.get_loggedin_user()
+    def test_로그인_이후_상품을_생성한다(self):
+        self.client.force_login(user=self.유저_1)
 
-        res = self.generic_test(
-            url=self.endpoint,
-            method="post",
-            expected_status_code=201,
-            client=client,
-            name=self.data['name'],
-            image_url=self.data['image_url'],
-            saved_image_url=self.data['saved_image_url'],
-            category=self.data['category'],
-            user_id=self.data['user_id'],
-        )
+        request_data = {
+            'name': '상품_1',
+            'image_url': 'http://example.com',
+            'category': CategoryEnum.UNDEFINED.value,
+        }
 
-        test_field_list = ['name', 'image_url', 'saved_image_url', 'category', 'user_id']
+        response = self.client.post(path=self.endpoint, data=request_data, content_type='application/json')
 
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        test_field_list = ['name', 'image_url', 'category']
         for field in test_field_list:
             with self.subTest(field=field):
-                self.assertEqual(res.json()[field], self.data[field])
-    
-    def test_failure_empty_name(self):
-        client = self.request_tester_user.get_loggedin_user()
+                self.assertEqual(response.data[field], request_data[field])
 
-        res = self.generic_test(
-            url=self.endpoint,
-            method="post",
-            expected_status_code=400,
-            client=client,
-            image_url=self.data['image_url'],
-            saved_image_url=self.data['saved_image_url'],
-            user_id=self.data['user_id'],
-        )
+    def test_로그인하지_않으면_상품을_생성할_수_없다(self):
+        request_data = {
+            'name': '상품_1',
+            'image_url': 'http://example.com',
+            'category': CategoryEnum.UNDEFINED.value,
+        }
 
-    def test_failure_empty_image_url(self):
-        client = self.request_tester_user.get_loggedin_user()
+        response = self.client.post(path=self.endpoint, data=request_data, content_type='application/json')
 
-        res = self.generic_test(
-            url=self.endpoint,
-            method="post",
-            expected_status_code=400,
-            client=client,
-            name=self.data['name'],
-        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-class ProductViewSetDetailTest(ViewSetTestCase):
+    def test_상품이름을_입력하지_않으면_생성되지_않는다(self):
+        self.client.force_login(user=self.유저_1)
+
+        request_data = {
+            'image_url': 'http://example.com',
+            'category': CategoryEnum.UNDEFINED.value,
+        }
+
+        response = self.client.post(path=self.endpoint, data=request_data, content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_상품의_이미지를_입력하지_않으면_생성되지_않는다(self):
+        self.client.force_login(user=self.유저_1)
+
+        request_data = {
+            'name': '상품_1',
+            'category': CategoryEnum.UNDEFINED.value,
+        }
+
+        response = self.client.post(path=self.endpoint, data=request_data, content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_상품의_카테고리를_입력하지_않으면_UNDIFINED로_설정된다(self):
+        self.client.force_login(user=self.유저_1)
+
+        request_data = {
+            'name': '상품_1',
+            'image_url': 'http://example.com',
+        }
+
+        response = self.client.post(path=self.endpoint, data=request_data, content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        test_field_list = ['name', 'image_url', 'category']
+        request_data['category'] = CategoryEnum.UNDEFINED.value
+        for field in test_field_list:
+            with self.subTest(field=field):
+                self.assertEqual(response.data[field], request_data[field])
+
+class ProductViewSetDetailTest(TestCase):
     endpoint = reverse_lazy('products:list')
 
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.request_tester_user = TestUserHandler(
-            username="tester",
-            password="5933"
-        )
-        general_user = cls.request_tester_user.get_user()
-        general_user.level = UserLevelEnum.TESTER.value
-        general_user.save()
-
-        cls.request_other_user = TestUserHandler(
-            username="tester2",
-            password="5933"
-        )
-        other_user = cls.request_other_user.get_user()
-        other_user.level = UserLevelEnum.TESTER.value
-        other_user.save()
+        cls.유저_1 = User.objects.create_user(username="tester1", password="5933")
+        cls.유저_2 = User.objects.create_user(username="tester2", password="5933")
 
         cls.prod = Product.objects.create(
             name="new_prod",
             image_url="https://s3_bucket_address/test_image.png",
             category=CategoryEnum.PANTS.value,
-            user_id=general_user,
+            user_id=cls.유저_1,
         )
 
         cls.other_prod = Product.objects.create(
             name="new_other_prod",
             image_url="https://s3_bucket_address/test_image.png",
             category=CategoryEnum.PANTS.value,
-            user_id=other_user,
+            user_id=cls.유저_2,
         )
-
-        cls.update_data = {
-            "name": "updated_product",
-            "category": CategoryEnum.TOPS.value,
-            "is_active": "N",
-            "is_deleted": "Y",
-        }
     
-    def test_success_update(self):
-        client = self.request_tester_user.get_loggedin_user()
-
+    def test_상품의_이름을_수정한다(self):
+        self.client.force_login(user=self.유저_1)
         endpoint = reverse_lazy('products:detail', args=[self.prod.id])
 
-        res = self.generic_test(
-            url=endpoint,
-            method="patch",
-            expected_status_code=200,
-            client=client,
-            name=self.update_data['name'],
-            category=self.update_data['category'],
-            is_active=self.update_data['is_active'],
-        )
+        request_data = {
+            "name": "수정된 이름",
+        }
 
-        test_field_list = ['name', 'category', 'is_active']
+        response = self.client.patch(path=endpoint, data=request_data, content_type='application/json')
+        self.prod.refresh_from_db()
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], request_data['name'])
 
-        for field in test_field_list:
-            with self.subTest(field=field):
-                self.assertEqual(res.json()[field], self.update_data[field])
 
-    def test_success_update_partial(self):
-        client = self.request_tester_user.get_loggedin_user()
-
+    def test_상품_활성화_상태를_수정한다(self):
+        self.client.force_login(user=self.유저_1)
         endpoint = reverse_lazy('products:detail', args=[self.prod.id])
 
-        res = self.generic_test(
-            url=endpoint,
-            method="patch",
-            expected_status_code=200,
-            client=client,
-            is_active=self.update_data['is_active'],
-        )
+        request_data = {
+            "is_active": ProductStatusEnum.ACTIVE.value,
+        }
 
-        test_field_list = ['is_active']
+        response = self.client.patch(path=endpoint, data=request_data, content_type='application/json')
+        self.prod.refresh_from_db()
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['is_active'], request_data['is_active'])
+    
+    def test_상품을_논리적_삭제한다(self):
+        self.client.force_login(user=self.유저_1)
+        endpoint = reverse_lazy('products:detail', args=[self.prod.id])
 
-        for field in test_field_list:
-            with self.subTest(field=field):
-                self.assertEqual(res.json()[field], self.update_data[field])
+        request_data = {
+        }
 
-    def test_failure_update__is_not_owner_user(self):
-        client = self.request_tester_user.get_loggedin_user()
+        response = self.client.delete(path=endpoint, data=request_data, content_type='application/json')
+        self.prod.refresh_from_db()
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['is_deleted'], ProductDeleteEnum.DELETED.value)
+
+    def test_타인의_상품을_수정할_수_없다(self):
+        self.client.force_login(user=self.유저_1)
 
         endpoint = reverse_lazy('products:detail', args=[self.other_prod.id])
 
-        res = self.generic_test(
-            url=endpoint,
-            method="patch",
-            expected_status_code=404,
-            client=client,
-            name=self.update_data['name'],
-            category=self.update_data['category'],
-            is_active=self.update_data['is_active'],
-        )
+        request_data = {
+            'name': '수정된 이름'
+        }
 
-    def test_success_delete(self):
-        client = self.request_tester_user.get_loggedin_user()
+        response = self.client.patch(path=endpoint, data=request_data, content_type='application/json')
+        self.prod.refresh_from_db()
+        
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-        endpoint = reverse_lazy('products:detail', args=[self.prod.id])
+    def test_타인의_상품을_삭제할_수_없다(self):
+        self.client.force_login(user=self.유저_1)
 
-        res = self.generic_test(
-            url=endpoint,
-            method="delete",
-            expected_status_code=200,
-            client=client,
-            is_deleted=self.update_data['is_deleted'],
-        )
+        endpoint = reverse_lazy('products:detail', args=[self.other_prod.id])
 
-        test_field_list = ['is_deleted',]
+        request_data = {
+        }
 
-        for field in test_field_list:
-            with self.subTest(field=field):
-                self.assertEqual(res.json()[field], self.update_data[field])
+        response = self.client.delete(path=endpoint, data=request_data, content_type='application/json')
+        self.prod.refresh_from_db()
+        
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
