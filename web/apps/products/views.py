@@ -13,7 +13,7 @@ from core.classes import S3ImageUploader
 from django.conf import settings
 from rest_framework import filters
 
-from client.pagination import ProductPagination
+from products.pagination import ProductPagination
 from users.constants import UserLevelEnum
 from products.constants import ProductStatusEnum, ProductDeleteEnum
 from products.swagger import (
@@ -33,7 +33,7 @@ from products.tasks import (
 from django_eventstream import send_event
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.filter(is_deleted="N")
+    queryset = Product.objects.filter(is_deleted="N").order_by('-id')
     serializer_class = ProductSerializer
     permission_classes = [IsOwner]
     lookup_field = "id"
@@ -70,10 +70,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         }
     )
     def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(queryset=self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        serializer = self.get_serializer(page, many=True)
-        return Response(serializer.data)
+        return super().list(request, *args, **kwargs)
     
     @extend_schema(
         request=ProductCreateSerializer,

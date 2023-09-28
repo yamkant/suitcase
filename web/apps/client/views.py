@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from client.libs.custom_decorators import login_required
 from products.serializers import ProductSerializer
-from client.pagination import ProductPagination
+from client.pagination import ClientViewProductPagination
 from client.permissions import IsLoggedInUser
 from client.libs.cache import cache_get_product_count
 
@@ -29,7 +29,7 @@ class ProductTemplateViewSet(ListAPIView):
     serializer_class = ProductSerializer
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'client/home.html'
-    pagination_class = ProductPagination
+    pagination_class = ClientViewProductPagination
     # permission_classes = [IsLoggedInUser, ]
 
     filter_backends = [filters.SearchFilter, ]
