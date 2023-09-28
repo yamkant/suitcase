@@ -2,6 +2,7 @@ from rest_framework import serializers
 from core.serializers import CreateSerializer, UpdateSerializer
 
 from products.models import Product
+from products.constants import ProductStatusEnum, ProductDeleteEnum
 from users.models import User
 from django.shortcuts import get_object_or_404
 
@@ -67,4 +68,5 @@ class ProductDeleteSerializer(UpdateSerializer):
         )
     
     def update(self, instance, validated_data):
+        instance.is_deleted = ProductDeleteEnum.DELETED.value
         return super().update(instance, validated_data)

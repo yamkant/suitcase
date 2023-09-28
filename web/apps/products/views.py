@@ -133,9 +133,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         }
     )
     def destroy(self, request, *args, **kwargs):
-        # NOTE: request.POST는 QueryDict 형태로, request.data는 Dict 형태로 반환합니다.
-        request.POST._mutable = True
-        request.data['is_deleted'] = ProductDeleteEnum.DELETED.value
         cache.delete(get_cache_product_count_key(request.user.id))
         return super().update(request, *args, **kwargs)
 
