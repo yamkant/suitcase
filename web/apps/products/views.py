@@ -86,6 +86,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         if not request.data.get('image_url'):
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        if request.user.level != UserLevelEnum.TESTER.value:
+            upload_image_by_image_url.delay(**data)
 
         # NOTE: Celery를 사용한 Image Upload 작업
         filename = S3ImageUploader.get_file_name(request.user.username)
@@ -94,13 +96,10 @@ class ProductViewSet(viewsets.ModelViewSet):
             'file_path': filename,
             'channel_name': request.user.username,
         }
-        if request.user.level != UserLevelEnum.TESTER.value:
-            upload_image_by_image_url.delay(**data)
         request.POST._mutable = True
         request.data['saved_image_url'] = f'https://{getattr(settings, "AWS_S3_CUSTOM_DOMAIN", None)}/{filename}'
 
         cache.delete(get_cache_product_count_key(request.user.id))
-
         return super().create(request, *args, **kwargs)
 
     @extend_schema(

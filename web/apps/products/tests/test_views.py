@@ -18,6 +18,7 @@ class ProductViewSetListTest(TestCase):
     def setUpTestData(cls) -> None:
         cls.user_1 = User.objects.create(username="tester1", password="5933", level=UserLevelEnum.TESTER.value)
     
+    # NOTE: 사품 조회 관련
     def test_로그인_이후_상품을_조회한다(self):
         self.client.force_login(user=self.user_1)
 
@@ -45,7 +46,7 @@ class ProductViewSetListTest(TestCase):
 
     def test_페이지_정보와_함께_상품을_조회한다(self):
         self.client.force_login(user=self.user_1)
-        
+
         endpoint = self.endpoint + '?page=2&page_size=1'
 
         self.prod_1 = Product.objects.create(name="new_prod_1", user_id=self.user_1)
@@ -75,6 +76,7 @@ class ProductViewSetListTest(TestCase):
             with self.subTest(field=field):
                 self.assertEqual(response.data[field], request_data[field])
 
+    # NOTE: 상품 생성 관련
     def test_로그인하지_않으면_상품을_생성할_수_없다(self):
         request_data = {
             'name': '상품_1',
@@ -146,6 +148,7 @@ class ProductViewSetDetailTest(TestCase):
             user_id=cls.user_2,
         )
     
+    # NOTE: 상품 개별 수정 관련
     def test_상품의_이름을_수정한다(self):
         self.client.force_login(user=self.user_1)
         endpoint = reverse_lazy('products:detail', args=[self.prod.id])
@@ -202,6 +205,7 @@ class ProductViewSetDetailTest(TestCase):
         
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    # NOTE: 상품 개별 삭제 관련
     def test_타인의_상품을_삭제할_수_없다(self):
         self.client.force_login(user=self.user_1)
 
