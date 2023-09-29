@@ -1099,8 +1099,16 @@ input:checked + .toggle-bg {
   left: 50%;
 }
 
+.left-5 {
+  left: 1.25rem;
+}
+
 .right-0 {
   right: 0px;
+}
+
+.right-5 {
+  right: 1.25rem;
 }
 
 .top-0 {
@@ -1305,6 +1313,10 @@ input:checked + .toggle-bg {
   width: 0.625rem;
 }
 
+.w-20 {
+  width: 5rem;
+}
+
 .w-3 {
   width: 0.75rem;
 }
@@ -1339,6 +1351,10 @@ input:checked + .toggle-bg {
 
 .w-8 {
   width: 2rem;
+}
+
+.w-80 {
+  width: 20rem;
 }
 
 .w-full {
@@ -1388,6 +1404,11 @@ input:checked + .toggle-bg {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.-translate-y-6 {
+  --tw-translate-y: -1.5rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .-translate-y-full {
   --tw-translate-y: -100%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -1419,6 +1440,16 @@ input:checked + .toggle-bg {
 
 .transform-none {
   transform: none;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: .5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .cursor-default {
@@ -1511,12 +1542,6 @@ input:checked + .toggle-bg {
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
-.space-x-5 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(1.25rem * var(--tw-space-x-reverse));
-  margin-left: calc(1.25rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
 .space-x-8 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(2rem * var(--tw-space-x-reverse));
@@ -1556,6 +1581,10 @@ input:checked + .toggle-bg {
 .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-opacity: 1;
   border-color: rgb(243 244 246 / var(--tw-divide-opacity));
+}
+
+.overflow-auto {
+  overflow: auto;
 }
 
 .overflow-hidden {
@@ -1665,6 +1694,11 @@ input:checked + .toggle-bg {
 .bg-\[\#C47266\] {
   --tw-bg-opacity: 1;
   background-color: rgb(196 114 102 / var(--tw-bg-opacity));
+}
+
+.bg-blue-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(195 221 253 / var(--tw-bg-opacity));
 }
 
 .bg-blue-50 {
@@ -1884,6 +1918,10 @@ input:checked + .toggle-bg {
   line-height: 2.25rem;
 }
 
+.leading-none {
+  line-height: 1;
+}
+
 .leading-tight {
   line-height: 1.25;
 }
@@ -1891,6 +1929,11 @@ input:checked + .toggle-bg {
 .text-blue-600 {
   --tw-text-opacity: 1;
   color: rgb(28 100 242 / var(--tw-text-opacity));
+}
+
+.text-blue-800 {
+  --tw-text-opacity: 1;
+  color: rgb(30 66 159 / var(--tw-text-opacity));
 }
 
 .text-gray-400 {
@@ -1966,6 +2009,12 @@ input:checked + .toggle-bg {
 
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.backdrop-opacity-0 {
+  --tw-backdrop-opacity: opacity(0);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+          backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
 }
 
 .transition {
@@ -2180,26 +2229,26 @@ form.login-form > ul > li > input:focus {
   color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
-.fitting-size-btn-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.fitting-control-btn-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  row-gap: 1rem;
 }
 
-.fitting-size-btn-container > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(2rem * var(--tw-space-y-reverse));
-}
-
-.fitting-size-btn-container {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
+.fitting-choose-btn {
+  height: 100%;
+  border-radius: 9999px;
 }
 
 .fitting-size-btn {
-  height: 100%;
-  width: 4rem;
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 9999px;
+}
+
+.fitting-pose-btn {
+  height: 2.5rem;
+  width: 2.5rem;
   border-radius: 9999px;
 }
 
@@ -2377,6 +2426,11 @@ form.login-form > ul > li > input:focus {
   background-color: rgb(28 100 242 / var(--tw-bg-opacity));
 }
 
+:is(.dark .dark\:bg-blue-900) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(35 56 118 / var(--tw-bg-opacity));
+}
+
 :is(.dark .dark\:bg-gray-600) {
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
@@ -2402,6 +2456,11 @@ form.login-form > ul > li > input:focus {
 
 :is(.dark .dark\:bg-opacity-80) {
   --tw-bg-opacity: 0.8;
+}
+
+:is(.dark .dark\:text-blue-200) {
+  --tw-text-opacity: 1;
+  color: rgb(195 221 253 / var(--tw-text-opacity));
 }
 
 :is(.dark .dark\:text-blue-500) {
@@ -2555,6 +2614,10 @@ form.login-form > ul > li > input:focus {
 
   .md\:block {
     display: block;
+  }
+
+  .md\:hidden {
+    display: none;
   }
 
   .md\:p-5 {

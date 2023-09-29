@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from client.libs.custom_decorators import login_required
-from client.pagination import ProductPagination
+from products.serializers import ProductSerializer
+from client.pagination import ClientViewProductPagination
 from client.permissions import IsLoggedInUser
 from client.libs.cache import cache_get_product_count
 
@@ -22,6 +23,8 @@ from django.shortcuts import redirect
 import random
 from drf_spectacular.utils import extend_schema
 
+from django_eventstream import send_event
+
 @extend_schema(
     exclude=True
 )
@@ -31,14 +34,14 @@ class ProductTemplateViewSet(ListAPIView):
     serializer_class = ProductSerializer
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'client/home.html'
-    pagination_class = ProductPagination
+    pagination_class = ClientViewProductPagination
     # permission_classes = [IsLoggedInUser, ]
 
     filter_backends = [filters.SearchFilter, ]
     search_fields = ['name', ]
 
     def get_queryset(self):
-        return self.queryset.filter(user_id=self.request.user.id)
+        return self.queryset.filter(user_id=self.request.user.id).order_by('-id')
 
     def get(self, request, *args, **kwargs):
         queryset = self.filter_queryset(queryset=self.get_queryset())

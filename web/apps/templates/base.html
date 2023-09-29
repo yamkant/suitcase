@@ -11,6 +11,13 @@
 
     <!-- 3rd Party Modeules -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{% static 'django_eventstream/eventsource.min.js' %}"></script>
+    <script src="{% static 'django_eventstream/reconnecting-eventsource.js' %}"></script>
+    <script type="module">
+        import("/static/js/index.js").then(module => {
+            module.start("{{user.username}}");
+        });
+    </script>
 
     {% compress css %}
     <link rel="stylesheet" href="{% static 'src/output.css' %}">
@@ -22,10 +29,20 @@
         {% if is_logged_in %}
             {% include "navbar.html" %}
         {% endif %}
+        <div class="push-notification-container fixed right-0 z-30">
+
+        </div>
         {% block content %}
         {% endblock %}
     </div>
     {% block javascripts %}
     {% endblock %}
+    <script>
+        const closePushNotification = (target) => {
+            const pushNoti = target.closest('.push-notification');
+            console.log(pushNoti)
+            pushNoti.classList.add('hidden');
+        }
+    </script>
 </body>
 </html>

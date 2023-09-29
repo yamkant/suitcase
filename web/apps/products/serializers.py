@@ -1,12 +1,13 @@
-
 from rest_framework import serializers
 from core.serializers import CreateSerializer, UpdateSerializer
 
 from products.models import Product
+from products.constants import ProductStatusEnum, ProductDeleteEnum
 from users.models import User
 from django.shortcuts import get_object_or_404
 
 class ProductSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Product
         fields = (
@@ -24,6 +25,7 @@ class ProductSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 class ProductCreateSerializer(CreateSerializer):
+    user_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
     representation_serializer_class = ProductSerializer
 
     class Meta:
@@ -66,4 +68,5 @@ class ProductDeleteSerializer(UpdateSerializer):
         )
     
     def update(self, instance, validated_data):
+        instance.is_deleted = ProductDeleteEnum.DELETED.value
         return super().update(instance, validated_data)
