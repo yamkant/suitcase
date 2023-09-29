@@ -13,7 +13,7 @@ from core.classes import S3ImageUploader
 from django.conf import settings
 from rest_framework import filters
 
-from client.pagination import ProductPagination
+from products.pagination import ProductPagination
 from users.constants import UserLevelEnum
 from products.constants import ProductStatusEnum, ProductDeleteEnum
 from products.swagger import (
@@ -33,7 +33,7 @@ from products.tasks import (
 from django_eventstream import send_event
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.filter(is_deleted="N")
+    queryset = Product.objects.filter(is_deleted="N").order_by('-id')
     serializer_class = ProductSerializer
     permission_classes = [IsOwner]
     lookup_field = "id"
@@ -70,10 +70,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         }
     )
     def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(queryset=self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        serializer = self.get_serializer(page, many=True)
-        return Response(serializer.data)
+        return super().list(request, *args, **kwargs)
     
     @extend_schema(
         request=ProductCreateSerializer,
@@ -87,11 +84,10 @@ class ProductViewSet(viewsets.ModelViewSet):
         }
     )
     def create(self, request, *args, **kwargs):
-        if request.user.level == UserLevelEnum.TESTER.value:
-            return super().create(request, *args, **kwargs)
-        
         if not request.data.get('image_url'):
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        if request.user.level != UserLevelEnum.TESTER.value:
+            upload_image_by_image_url.delay(**data)
 
         # NOTE: Celery를 사용한 Image Upload 작업
         filename = S3ImageUploader.get_file_name(request.user.username)
@@ -100,12 +96,10 @@ class ProductViewSet(viewsets.ModelViewSet):
             'file_path': filename,
             'channel_name': request.user.username,
         }
-        upload_image_by_image_url.delay(**data)
         request.POST._mutable = True
         request.data['saved_image_url'] = f'https://{getattr(settings, "AWS_S3_CUSTOM_DOMAIN", None)}/{filename}'
 
         cache.delete(get_cache_product_count_key(request.user.id))
-
         return super().create(request, *args, **kwargs)
 
     @extend_schema(
@@ -135,9 +129,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         }
     )
     def destroy(self, request, *args, **kwargs):
-        # NOTE: request.POST는 QueryDict 형태로, request.data는 Dict 형태로 반환합니다.
-        request.POST._mutable = True
-        request.data['is_deleted'] = ProductDeleteEnum.DELETED.value
         cache.delete(get_cache_product_count_key(request.user.id))
         return super().update(request, *args, **kwargs)
 
