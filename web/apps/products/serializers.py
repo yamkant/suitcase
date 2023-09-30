@@ -5,6 +5,8 @@ from products.models import Product
 from products.constants import ProductStatusEnum, ProductDeleteEnum
 from users.models import User
 from django.shortcuts import get_object_or_404
+from rest_framework.validators import UniqueTogetherValidator
+
 
 class ProductSerializer(serializers.ModelSerializer):
 
@@ -16,11 +18,8 @@ class ProductSerializer(serializers.ModelSerializer):
             "category",
             "image_url",
             "saved_image_url",
-            "is_favorite",
-            "is_profile",
             "is_active",
             "is_deleted",
-            "user_id",
         )
         read_only_fields = fields
 
@@ -45,6 +44,7 @@ class ProductCreateSerializer(CreateSerializer):
         return Product.objects.create(**validated_data)
 
 class ProductUpdateSerializer(UpdateSerializer):
+    user_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
     representation_serializer_class = ProductSerializer
 
     class Meta:
@@ -53,6 +53,7 @@ class ProductUpdateSerializer(UpdateSerializer):
             "name",
             "category",
             "is_active",
+            "user_id",
         )
     
     def update(self, instance, validated_data):

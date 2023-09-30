@@ -4,7 +4,10 @@ from users.models import User
 from products.models import Product
 from users.constants import UserLevelEnum
 from products.constants import CategoryEnum
-from products.constants import ProductStatusEnum, ProductDeleteEnum
+from products.constants import (
+    ProductStatusEnum, 
+    ProductDeleteEnum,
+)
 
 from django.test import TestCase
 
@@ -174,7 +177,6 @@ class ProductViewSetDetailTest(TestCase):
 
         response = self.client.patch(path=endpoint, data=request_data, content_type='application/json')
         self.prod.refresh_from_db()
-        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_active'], request_data['is_active'])
     
