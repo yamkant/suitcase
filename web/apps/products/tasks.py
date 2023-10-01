@@ -1,6 +1,6 @@
 from celery import shared_task
 from core.classes import ImageHandler, S3ImageUploader
-from products.serializers import (
+from products.serializers.products import (
     ProductCreateSerializer,
 )
 from products.models import Product

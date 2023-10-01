@@ -1,5 +1,5 @@
 from core.tests import IntegrationSerializerTestCase
-from products.serializers import (
+from products.serializers.products import (
     ProductCreateSerializer,
     ProductUpdateSerializer,
     ProductDeleteSerializer,

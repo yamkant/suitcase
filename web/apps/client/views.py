@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from client.libs.custom_decorators import login_required
-from products.serializers import ProductSerializer
+from products.serializers.products import ProductSerializer
 from client.pagination import ClientViewProductPagination
 from client.permissions import IsLoggedInUser
 from client.libs.cache import cache_get_product_count
 
 from products.models import Product
 from products.constants import CategoryEnum
-from products.serializers import ProductSerializer
+from products.serializers.products import ProductSerializer
 
 from users.models import User
 from users.serializers import UserSerializer
