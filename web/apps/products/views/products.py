@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from products.models import Product
-from products.serializers import (
+from products.serializers.products import (
     ProductSerializer,
     ProductCreateSerializer,
     ProductUpdateSerializer,
