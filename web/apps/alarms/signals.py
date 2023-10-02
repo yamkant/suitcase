@@ -7,7 +7,7 @@ import requests
 @receiver(post_save, sender=TaskResult)
 def process_celery_task_result(sender, instance, **kwargs):
     if instance.status == 'SUCCESS':
-        requests.get(f'http://127.0.0.1:8000/alarms/tasks/{instance.id}/')
+        requests.get(f'http://my_app:8000/alarms/tasks/{instance.id}/')
 
 # NOTE: KEEP CODE
 # @receiver(pre_save, sender=Product)

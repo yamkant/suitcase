@@ -4,7 +4,6 @@ export async function start(username) {
     const es = common.setEventSource(username)
     es.addEventListener('message', function (e) {
         const data = JSON.parse(e.data);
-        console.log(data.type);
         if (['create', 'edit', 'delete'].includes(data.type)) {
             setPushNotification(data.type);
         }
