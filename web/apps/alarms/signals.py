@@ -2,12 +2,13 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_celery_results.models import TaskResult
 import requests
+from django.conf import settings
 
 # NOTE: Signal after celery work -> to wsgi server 
 @receiver(post_save, sender=TaskResult)
 def process_celery_task_result(sender, instance, **kwargs):
     if instance.status == 'SUCCESS':
-        requests.get(f'http://my_app:8000/alarms/tasks/{instance.id}/')
+        requests.get(f'{settings.CURRENT_SERVICE_HOST}/alarms/tasks/{instance.id}/')
 
 # NOTE: KEEP CODE
 # @receiver(pre_save, sender=Product)
