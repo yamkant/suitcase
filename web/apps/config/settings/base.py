@@ -236,3 +236,4 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
+CURRENT_SERVICE_HOST = os.environ.get('CURRENT_SERVICE_HOST')
