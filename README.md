@@ -33,10 +33,6 @@
   - development deploy - sqlite3
   - production deploy - postgresql
 
-### Demo page
-- service: http://3.39.194.11/ 
-- api docs: http://3.39.194.11/api/schema/swagger-ui/#/
-
 ### 구동방법
 - `web/.env`의 값들만 채운 후, 아래 명령어를 통해 실행 가능합니다.
 - 업로드되는 이미지는 등록한 s3에 저장되므로 s3관련 설정이 필수적입니다.
