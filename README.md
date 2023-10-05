@@ -7,6 +7,8 @@
 ### 기술 소개
 - 상품이 등록될 때, 이미지 url을 통해 받은 이미지를 파일로 관리하는 PIL 모듈과 이미지의 배경을 제거하는 rembg라는 모듈을 사용합니다.  
 (해당 내용이 더 궁금하다면, `web/apps/common/management/commands/img_url_to_file.py`를 참고하세요.)
+- 상품의 배경이미지는 시간이 소요되므로, 비동기 작업 이후 작업이 완료되었을 때 푸시 알람을 통해 작업 완료를 고객에게 알립니다.
+- 상품 상태를 수정하거나 상품 제거 시에도 푸시 알림을 사용합니다.
 - 이미지 생성 및 다수 상품들을 동시에 업데이트(활성화/비활성화/제거)하는 경우, celery를 이용한 비동기 처리를 수행합니다. 
 - 따라서, 의류 등록시, ***비동기 처리가 진행(생성된 이미지의 배경 제거)되는 동안 원본 이미지를 사용***하시게 됩니다.
 - 전체 상품 수가 수정되는 경우, 새로운 상품이 추가되거나 제거되는 경우 Home 페이지의 전체 상품 수를 count할 때 Cache를 사용합니다.
@@ -20,13 +22,13 @@
 
 
 ### 서비스 동작 예제
-![suitcase-demo](docs/images/suitcase-app-demo.png)
+![suitcase-demo](docs/images/suitcase-app-demo-push.png)
 ![suitcase-demo](docs/images/suitcase-swagger-demo.png)
 ![suitcase-demo](docs/images/suitcase-system-architecture.png)
 
 
 ### 기술스택
-- API Server: Django DRF, django-spectacular(Swagger), django-query-counter
+- API Server: Django DRF, django-spectacular(Swagger), django-eventstream, django-query-counter
 - Async task: Celery(Distributed Task Queue), Redis(Broker)
 - Template: Django MTV, tailwind css
 - DB
@@ -34,8 +36,8 @@
   - production deploy - postgresql
 
 ### Demo page
-- service: http://3.39.194.11/ 
-- api docs: http://3.39.194.11/api/schema/swagger-ui/#/
+- service: [서비스 페이지](http://13.125.225.205/)
+- api docs: [swagger ui 페이지](http://13.125.225.205/api/schema/swagger-ui/)
 
 ### 구동방법
 - `web/.env`의 값들만 채운 후, 아래 명령어를 통해 실행 가능합니다.
