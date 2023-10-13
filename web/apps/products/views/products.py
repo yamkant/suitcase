@@ -139,24 +139,22 @@ class ProductBulkViewSet(viewsets.ModelViewSet):
     permission_classes = [IsOwner]
 
     def bulk_update(self, request, *args, **kwargs):
-        if 'prod_list[]' not in request.data:
+        if 'prod_list' not in request.data:
             return Response({})
-        # FIXME: user가 가지고있는 product가 맞는지 확인
-        prod_id_list = request.data.getlist('prod_list[]')
+        prod_id_list = request.data.get('prod_list')
         if request.data.get('is_active') not in [
             ProductStatusEnum.ACTIVE.value,
             ProductStatusEnum.DEACTIVE.value,
         ]:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
-        Product.objects.filter(id__in=prod_id_list).update(is_active=request.data.get('is_active'))
+        Product.objects.filter(id__in=prod_id_list, user_id=request.user.id).update(is_active=request.data.get('is_active'))
         send_event(request.user.username, 'message', {"type": f"edit"})
         return Response({})
 
     def bulk_delete(self, request, *args, **kwargs):
-        if 'prod_list[]' not in request.data:
+        if 'prod_list' not in request.data:
             return Response({})
-        # FIXME: user가 가지고있는 product가 맞는지 확인
-        prod_id_list = request.data.getlist('prod_list[]')
-        Product.objects.filter(id__in=prod_id_list).update(is_deleted=ProductDeleteEnum.DELETED.value)
+        prod_id_list = request.data.get('prod_list')
+        Product.objects.filter(id__in=prod_id_list, user_id=request.user.id).update(is_deleted=ProductDeleteEnum.DELETED.value)
         send_event(request.user.username, 'message', {"type": f"edit"})
         return Response({})
