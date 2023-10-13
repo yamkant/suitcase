@@ -36,8 +36,8 @@
   - production deploy - postgresql
 
 ### Demo page
-- service: [서비스 페이지](http://13.125.225.205/)
-- api docs: [swagger ui 페이지](http://13.125.225.205/api/schema/swagger-ui/)
+- service: [서비스 페이지](http://www.devyam.net/)
+- api docs: [swagger ui 페이지](http://www.devyam.net/api/schema/swagger-ui/)
 
 ### 구동방법
 - `web/.env`의 값들만 채운 후, 아래 명령어를 통해 실행 가능합니다.
