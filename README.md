@@ -24,7 +24,7 @@
 ### 서비스 동작 예제
 ![suitcase-demo](docs/images/suitcase-app-demo-push.png)
 ![suitcase-demo](docs/images/suitcase-swagger-demo.png)
-![suitcase-demo](docs/images/suitcase-system-architecture.png)
+![suitcase-demo](docs/images/suitcase-system-architecture-asgi.png)
 
 
 ### 기술스택
