@@ -374,7 +374,7 @@
             method: method,
             url: `/api/products/bulk/`,
             headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": "application/json",
                 'X-CSRFToken': '{{csrf_token}}'
             },
             data: data,
@@ -390,7 +390,7 @@
             method: method,
             url: `/api/products/bulk/`,
             headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": "application/json",
                 'X-CSRFToken': '{{csrf_token}}'
             },
             data: data,

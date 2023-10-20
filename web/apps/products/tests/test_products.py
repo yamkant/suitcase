@@ -220,3 +220,108 @@ class ProductViewSetDetailTest(TestCase):
         self.prod.refresh_from_db()
         
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+class ProductBulkViewTest(TestCase):
+    endpoint = reverse_lazy('products:bulk')
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.user_1 = User.objects.create(username="tester1", password="5933", level=UserLevelEnum.TESTER.value)
+        cls.user_2 = User.objects.create(username="tester2", password="5933", level=UserLevelEnum.TESTER.value)
+        cls.prod_1 = Product.objects.create(
+            name="new_prod_1",
+            image_url="https://s3_bucket_address/test_image.png",
+            category=CategoryEnum.PANTS.value,
+            user_id=cls.user_1,
+        )
+        cls.prod_2 = Product.objects.create(
+            name="new_prod_2",
+            image_url="https://s3_bucket_address/test_image.png",
+            category=CategoryEnum.PANTS.value,
+            user_id=cls.user_1,
+        )
+        cls.prod_3 = Product.objects.create(
+            name="new_prod_3",
+            image_url="https://s3_bucket_address/test_image.png",
+            category=CategoryEnum.PANTS.value,
+            user_id=cls.user_2,
+        )
+
+    def test_상품을_다량_수정한다(self):
+        self.client.force_login(user=self.user_1)
+
+        prod_list = [self.prod_1.id, self.prod_2.id]
+        request_data = {
+            "prod_list": prod_list,
+            "is_active": ProductStatusEnum.DEACTIVE.value,
+        }
+
+        response = self.client.patch(path=self.endpoint, data=request_data, content_type='application/json')
+        self.prod_1.refresh_from_db()
+        self.prod_2.refresh_from_db()
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for prod_id in request_data['prod_list']:
+            with self.subTest(prod_id=prod_id):
+                prod_query = Product.objects.get(id=prod_id)
+                self.assertEqual(prod_query.is_active, ProductStatusEnum.DEACTIVE.value)
+    
+    def test_등록하지_않은_상품은_다량_수정에서_제외된다(self):
+        self.client.force_login(user=self.user_1)
+
+        unregistered_prod_id = 999
+        prod_list = [self.prod_1.id, self.prod_2.id, unregistered_prod_id]
+        request_data = {
+            "prod_list": prod_list,
+            "is_active": ProductStatusEnum.DEACTIVE.value,
+        }
+
+        response = self.client.patch(path=self.endpoint, data=request_data, content_type='application/json')
+        self.prod_1.refresh_from_db()
+        self.prod_2.refresh_from_db()
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for prod_id in request_data['prod_list']:
+            with self.subTest(prod_id=prod_id):
+                try:
+                    prod_query = Product.objects.get(id=prod_id)
+                    self.assertEqual(prod_query.is_active, ProductStatusEnum.DEACTIVE.value)
+                except Product.DoesNotExist as e:
+                    self.assertEqual(prod_id, unregistered_prod_id)
+
+    def test_다른_사람의_상품은_대량_수정_리스트에서_제외된다(self):
+        self.client.force_login(user=self.user_1)
+
+        other_user_prod_id = self.prod_3.id
+        prod_list = [self.prod_1.id, self.prod_2.id, other_user_prod_id]
+        request_data = {
+            "prod_list": prod_list,
+            "is_active": ProductStatusEnum.DEACTIVE.value,
+        }
+
+        response = self.client.patch(path=self.endpoint, data=request_data, content_type='application/json')
+        self.prod_1.refresh_from_db()
+        self.prod_2.refresh_from_db()
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for prod_id in request_data['prod_list']:
+            with self.subTest(prod_id=prod_id):
+                try:
+                    prod_query = Product.objects.get(id=prod_id, user_id=self.user_1.id)
+                    self.assertEqual(prod_query.is_active, ProductStatusEnum.DEACTIVE.value)
+                except Product.DoesNotExist as e:
+                    self.assertEqual(prod_id, other_user_prod_id)
+    
+    def test_요청한_상품의_상태가_없는_경우_수정하지_않는다(self):
+        self.client.force_login(user=self.user_1)
+
+        prod_list = [self.prod_1.id, self.prod_2.id]
+        request_data = {
+            "prod_list": prod_list,
+            "is_active": "H",
+        }
+
+        response = self.client.patch(path=self.endpoint, data=request_data, content_type='application/json')
+        self.prod_1.refresh_from_db()
+        self.prod_2.refresh_from_db()
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
