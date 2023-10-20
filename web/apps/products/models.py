@@ -2,6 +2,13 @@ from django.db import models
 from core.models import BaseModel
 from users.models import User
 
+class ActiveProductManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_deleted="N")
+
+    def get_in_list(self, prod_id_list):
+        return self.get_queryset().filter(id__in=prod_id_list)
+
 class Product(BaseModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=False)
@@ -13,6 +20,9 @@ class Product(BaseModel):
     is_deleted = models.CharField(default="N", max_length=1)
 
     user_id = models.ForeignKey(User, db_column="user_id", on_delete=models.CASCADE)
+
+    objects = models.Manager()
+    active_objects = ActiveProductManager()
 
     class Meta:
         managed = True

@@ -33,7 +33,7 @@ from products.tasks import (
 from django_eventstream import send_event
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.filter(is_deleted="N").order_by('-id')
+    queryset = Product.active_objects.order_by('-created_at')
     serializer_class = ProductSerializer
     permission_classes = [IsOwner]
     lookup_field = "id"
@@ -134,7 +134,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
 class ProductBulkViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.filter(is_deleted="N")
+    queryset = Product.active_objects
     serializer_class = ProductSerializer
     permission_classes = [IsOwner]
 
@@ -147,7 +147,7 @@ class ProductBulkViewSet(viewsets.ModelViewSet):
             ProductStatusEnum.DEACTIVE.value,
         ]:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
-        Product.objects.filter(id__in=prod_id_list, user_id=request.user.id).update(is_active=request.data.get('is_active'))
+        Product.active_objects.get_in_list(prod_id_list).filter(user_id=request.user.id).update(is_active=request.data.get('is_active'))
         send_event(request.user.username, 'message', {"type": f"edit"})
         return Response({})
 
@@ -155,6 +155,6 @@ class ProductBulkViewSet(viewsets.ModelViewSet):
         if 'prod_list' not in request.data:
             return Response({})
         prod_id_list = request.data.get('prod_list')
-        Product.objects.filter(id__in=prod_id_list, user_id=request.user.id).update(is_deleted=ProductDeleteEnum.DELETED.value)
+        Product.active_objects.get_in_list(prod_id_list).filter(user_id=request.user.id).update(is_deleted=ProductDeleteEnum.DELETED.value)
         send_event(request.user.username, 'message', {"type": f"edit"})
         return Response({})
