@@ -1,8 +1,11 @@
-from rest_framework import serializers
-from core.serializers import CreateSerializer, UpdateSerializer
+from rest_framework.serializers import (
+    ModelSerializer
+)
+
+from core.serializers import ReperesntationSerializerMixin
 from products.models import ProductProfile
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(ModelSerializer):
 
     class Meta:
         model = ProductProfile
@@ -13,7 +16,7 @@ class ProductSerializer(serializers.ModelSerializer):
         )
         read_only_fields = fields
 
-class ProductProfileCreateSerializer(CreateSerializer):
+class ProductProfileCreateSerializer(ReperesntationSerializerMixin, ModelSerializer):
     representation_serializer_class = ProductSerializer
 
     class Meta:
