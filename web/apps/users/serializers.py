@@ -1,9 +1,13 @@
-from rest_framework import serializers
-from core.serializers import CreateSerializer, UpdateSerializer
+from rest_framework.serializers import (
+    ModelSerializer,
+    CharField,
+    ValidationError,
+)
+from core.serializers import ReperesntationSerializerMixin
 
 from users.models import User
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = (
@@ -14,9 +18,9 @@ class UserSerializer(serializers.ModelSerializer):
         )
         read_only_fields = fields
 
-class UserCreateSerializer(CreateSerializer):
+class UserCreateSerializer(ReperesntationSerializerMixin, ModelSerializer):
     representation_serializer_class = UserSerializer
-    password2 = serializers.CharField(required=True)
+    password2 = CharField(required=True)
 
     class Meta:
         model = User
@@ -28,7 +32,7 @@ class UserCreateSerializer(CreateSerializer):
     
     def validate(self, data):
         if data['password'] != data['password2']:
-            raise serializers.ValidationError({"password2": "비밀번호가 다릅니다."})
+            raise ValidationError({"password2": "비밀번호가 다릅니다."})
         return data
     
     def create(self, validated_data):
@@ -36,7 +40,7 @@ class UserCreateSerializer(CreateSerializer):
         return User.objects.create_user(**validated_data)
 
 # NOTE: Full Account / Basic Account인지 
-class UserUpdateForGeneralLevelSerializer(UpdateSerializer):
+class UserUpdateForGeneralLevelSerializer(ReperesntationSerializerMixin, ModelSerializer):
     representation_serializer_class = UserSerializer
 
     class Meta:
@@ -48,7 +52,7 @@ class UserUpdateForGeneralLevelSerializer(UpdateSerializer):
     def update(self, instance, validated_data):
         return super().update(instance, validated_data)
 
-class UserUpdateForAdminLevelSerializer(UpdateSerializer):
+class UserUpdateForAdminLevelSerializer(ReperesntationSerializerMixin, ModelSerializer):
     representation_serializer_class = UserSerializer
 
     class Meta:
