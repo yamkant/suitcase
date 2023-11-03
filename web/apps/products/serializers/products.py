@@ -1,13 +1,16 @@
-from rest_framework import serializers
-from core.serializers import CreateSerializer, UpdateSerializer
+from rest_framework.serializers import (
+    ModelSerializer,
+    HiddenField,
+    CurrentUserDefault
+)
+from core.serializers import ReperesntationSerializerMixin
 
 from products.models import Product
-from products.constants import ProductStatusEnum, ProductDeleteEnum
-from users.models import User
+from products.constants import ProductDeleteEnum
 from django.shortcuts import get_object_or_404
 from rest_framework.validators import UniqueTogetherValidator
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(ModelSerializer):
 
     class Meta:
         model = Product
@@ -22,8 +25,8 @@ class ProductSerializer(serializers.ModelSerializer):
         )
         read_only_fields = fields
 
-class ProductCreateSerializer(CreateSerializer):
-    user_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
+class ProductCreateSerializer(ReperesntationSerializerMixin, ModelSerializer):
+    user_id = HiddenField(default=CurrentUserDefault())
     representation_serializer_class = ProductSerializer
 
     class Meta:
@@ -35,15 +38,9 @@ class ProductCreateSerializer(CreateSerializer):
             "category",
             "user_id",
         )
-    
-    def validate(self, data):
-        return data
-    
-    def create(self, validated_data):
-        return Product.objects.create(**validated_data)
 
-class ProductUpdateSerializer(UpdateSerializer):
-    user_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
+class ProductUpdateSerializer(ReperesntationSerializerMixin, ModelSerializer):
+    user_id = HiddenField(default=CurrentUserDefault())
     representation_serializer_class = ProductSerializer
 
     class Meta:
@@ -54,11 +51,8 @@ class ProductUpdateSerializer(UpdateSerializer):
             "is_active",
             "user_id",
         )
-    
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
 
-class ProductDeleteSerializer(UpdateSerializer):
+class ProductDeleteSerializer(ReperesntationSerializerMixin, ModelSerializer):
     representation_serializer_class = ProductSerializer
 
     class Meta:
