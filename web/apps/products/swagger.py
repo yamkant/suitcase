@@ -3,8 +3,6 @@ from drf_spectacular.utils import (
     OpenApiParameter,
     extend_schema_view
 )
-from products.serializers.products import ProductSerializer
-
 PRODUCT_CREATE_EXAMPLES = [
     OpenApiExample(
         request_only=True,

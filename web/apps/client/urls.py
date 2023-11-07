@@ -1,5 +1,5 @@
 from django.urls import path
-from client.views import ProductTemplateViewSet, render_fitting, UserTemplateViewSet
+from apps.client.views import ProductTemplateViewSet, render_fitting, UserTemplateViewSet
 
 app_name = "client"
 

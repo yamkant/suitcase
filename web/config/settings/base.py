@@ -51,12 +51,12 @@ INSTALLED_APPS = [
     'django_eventstream',
 
     # custom apps
-    'common',
-    'users',
-    'client',
-    'products',
-    'config',
-    'alarms',
+    'apps.core',
+    'apps.common',
+    'apps.users',
+    'apps.client',
+    'apps.products',
+    'apps.alarms',
 ]
 
 MIDDLEWARE = [

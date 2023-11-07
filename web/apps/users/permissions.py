@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
-from core.permissions import GenericAPIException
-from users.constants import UserLevelEnum
+from apps.core.permissions import GenericAPIException
+from apps.users.constants import UserLevelEnum
 
 SAFE_METHODS = ('GET', 'PATCH', 'HEAD', 'OPTIONS')
 

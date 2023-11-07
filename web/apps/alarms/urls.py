@@ -1,8 +1,8 @@
 from django.urls import path
 from django.conf.urls import include
 import django_eventstream
-from alarms.views import TaskRetrieveAPIView
-from core.types import UrlCompositePatternsType
+from apps.alarms.views import TaskRetrieveAPIView
+from apps.core.types import UrlCompositePatternsType
 
 urlpatterns: UrlCompositePatternsType = [
     path('events/<channel>/', include(django_eventstream.urls)),

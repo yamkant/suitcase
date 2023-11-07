@@ -1,15 +1,14 @@
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-from django.urls import URLPattern
-from core.types import APIUrlPatternsType, UrlCompositePatternsType, UrlPatternsType
+from apps.core.types import APIUrlPatternsType, UrlCompositePatternsType, UrlPatternsType
 
 api_urlpatterns: UrlPatternsType = [
     # path('admin/', admin.site.urls),
-    path('', include('client.urls')),
-    path('api/users/', include('users.urls.users')),
-    path('api/products/', include('products.urls')),
-    path('accounts/', include('users.urls.accounts')),
-    path('alarms/', include('alarms.urls')),
+    path('', include('apps.client.urls')),
+    path('api/users/', include('apps.users.urls.users')),
+    path('api/products/', include('apps.products.urls')),
+    path('accounts/', include('apps.users.urls.accounts')),
+    path('alarms/', include('apps.alarms.urls')),
 ]
 
 swagger_urlpatterns: APIUrlPatternsType = [

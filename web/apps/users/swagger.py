@@ -3,7 +3,7 @@ from drf_spectacular.utils import (
     OpenApiParameter,
     extend_schema_view
 )
-from users.constants import UserLevelEnum
+from apps.users.constants import UserLevelEnum
 
 USER_UPDATE_EXAMPLES = [
     OpenApiExample(

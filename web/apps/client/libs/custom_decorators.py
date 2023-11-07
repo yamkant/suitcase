@@ -1,9 +1,8 @@
 from django.shortcuts import get_object_or_404, get_list_or_404
 
 from functools import wraps
-from core.permissions import GenericAPIException
+from apps.core.permissions import GenericAPIException
 
-import os
 from django.shortcuts import redirect
 
 import logging
