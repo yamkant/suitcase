@@ -5,7 +5,7 @@ FROM python:3.10
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-COPY . /web/
+COPY ./ /web/
 WORKDIR /web
 
 RUN pip3 install poetry
@@ -13,5 +13,5 @@ RUN poetry install
 
 EXPOSE 8000/tcp
 
-RUN chmod +x ./apps/entrypoint.celery.sh
-CMD ./apps/entrypoint.celery.sh
+RUN chmod +x ./entrypoint.celery.sh
+CMD ./entrypoint.celery.sh
