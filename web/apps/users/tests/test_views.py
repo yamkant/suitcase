@@ -1,6 +1,5 @@
 from django.urls import reverse_lazy
 from django.test import TestCase
-from core.libs.help_test import TestUserHandler
 from users.constants import UserLevelEnum
 from rest_framework import status
 from unittest import skip
