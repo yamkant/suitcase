@@ -3,10 +3,10 @@ from rest_framework.serializers import (
     HiddenField,
     CurrentUserDefault
 )
-from core.serializers import ReperesntationSerializerMixin
+from apps.core.serializers import ReperesntationSerializerMixin
 
-from products.models import Product
-from products.constants import ProductDeleteEnum
+from apps.products.models import Product
+from apps.products.constants import ProductDeleteEnum
 
 class ProductSerializer(ModelSerializer):
 

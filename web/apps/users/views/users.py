@@ -3,13 +3,14 @@ from rest_framework.viewsets import (
 )
 from rest_framework.response import Response
 from rest_framework import status
-from users.models import User
-from users.serializers import UserSerializer, UserUpdateForAdminLevelSerializer, UserUpdateForGeneralLevelSerializer
-from users.permissions import IsAdminLevel
-from users.constants import UserLevelEnum
 from drf_spectacular.utils import extend_schema
-from users.swagger import USER_UPDATE_EXAMPLES
 from rest_framework.parsers import JSONParser
+
+from apps.users.models import User
+from apps.users.serializers import UserSerializer, UserUpdateForAdminLevelSerializer, UserUpdateForGeneralLevelSerializer
+from apps.users.permissions import IsAdminLevel
+from apps.users.constants import UserLevelEnum
+from apps.users.swagger import USER_UPDATE_EXAMPLES
 
 class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer

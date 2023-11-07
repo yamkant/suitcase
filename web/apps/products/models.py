@@ -7,8 +7,8 @@ from django.db.models import (
     ForeignKey,
     CASCADE,
 )
-from core.models import BaseModel
-from users.models import User
+from apps.core.models import BaseModel
+from apps.users.models import User
 
 class ActiveProductManager(Manager):
     def get_queryset(self):

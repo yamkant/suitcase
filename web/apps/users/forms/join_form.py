@@ -1,12 +1,13 @@
 from django import forms
-from users.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.auth import  password_validation
 from django.core.validators import MaxLengthValidator
 from rest_framework.validators import UniqueValidator
-from users.forms.fields import UsernameFormField, PasswordFormField, EmailFormField, PhoneFormField
-from users.serializers import UserCreateSerializer
 from typing import List, Callable, Any
+
+from apps.users.models import User
+from apps.users.forms.fields import UsernameFormField, PasswordFormField
+from apps.users.serializers import UserCreateSerializer
 
 username_validators: List[Callable[[Any], None]] =  [
     UniqueValidator,

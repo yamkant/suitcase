@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from rest_framework.views import APIView
-from users.serializers import UserSerializer
-from users.forms.join_form import UserJoinForm
-from users.forms.login_form import UserLoginForm
 from django.contrib.auth import login
 from drf_spectacular.utils import extend_schema
+
+from apps.users.serializers import UserSerializer
+from apps.users.forms.join_form import UserJoinForm
+from apps.users.forms.login_form import UserLoginForm
 
 @extend_schema(
     exclude=True

@@ -1,6 +1,5 @@
 from django.urls import path
-from users.views.users import UserViewSet
-from django.contrib.auth import views as auth_views
+from apps.users.views.users import UserViewSet
 
 app_name = "users"
 

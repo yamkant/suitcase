@@ -1,17 +1,14 @@
 from celery import shared_task
-from core.classes import ImageHandler, S3ImageUploader
-from products.serializers.products import (
-    ProductCreateSerializer,
-)
-from products.models import Product
-from django.shortcuts import get_object_or_404
-from celery import chain, group
 from django_celery_results.models import TaskResult
-from celery.result import AsyncResult
 from json import dumps
 
 from config.serializers import TaskResultUpdateSerializer
 from celery import states
+
+from apps.core.classes import ImageHandler, S3ImageUploader
+from apps.products.serializers.products import (
+    ProductCreateSerializer,
+)
 
 def update_task_results(task_id, data):
     task = TaskResult.objects.get_task(task_id)

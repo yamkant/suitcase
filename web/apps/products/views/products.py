@@ -4,32 +4,33 @@ from rest_framework.generics import (
 )
 from rest_framework.response import Response
 from rest_framework import status
-from products.models import Product
-from products.serializers.products import (
+from django.conf import settings
+from rest_framework import filters
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from django.core.cache import cache
+
+from apps.core.classes import S3ImageUploader
+
+from apps.users.constants import UserLevelEnum
+from apps.products.pagination import ProductPagination
+from apps.products.constants import ProductStatusEnum, ProductDeleteEnum
+from apps.products.swagger import (
+    PRODUCT_CREATE_EXAMPLES,
+    PRODUCT_LIST_EXAMPLES,
+    PRODUCT_UPDATE_EXAMPLES,
+)
+from apps.products.permissions import IsOwner
+
+from apps.products.models import Product
+from apps.products.serializers.products import (
     ProductSerializer,
     ProductCreateSerializer,
     ProductUpdateSerializer,
     ProductDeleteSerializer,
 )
-from products.permissions import IsOwner
-from core.classes import S3ImageUploader
-from django.conf import settings
-from rest_framework import filters
 
-from products.pagination import ProductPagination
-from users.constants import UserLevelEnum
-from products.constants import ProductStatusEnum, ProductDeleteEnum
-from products.swagger import (
-    PRODUCT_CREATE_EXAMPLES,
-    PRODUCT_LIST_EXAMPLES,
-    PRODUCT_UPDATE_EXAMPLES,
-)
-
-from drf_spectacular.utils import extend_schema, extend_schema_view
-from django.core.cache import cache
-from client.libs.cache import get_cache_product_count_key
-
-from products.tasks import (
+from apps.client.libs.cache import get_cache_product_count_key
+from apps.products.tasks import (
     upload_image_by_image_url,
 )
 from django_eventstream import send_event

@@ -1,6 +1,6 @@
-from products.models import ProductProfile
 from rest_framework import viewsets
-from products.serializers.profiles import ProductProfileCreateSerializer
+from apps.products.serializers.profiles import ProductProfileCreateSerializer
+from apps.products.models import ProductProfile
 
 class ProductProfileViewSet(viewsets.ModelViewSet):
     queryset = ProductProfile.objects.filter()

@@ -2,8 +2,8 @@ from rest_framework.serializers import (
     ModelSerializer
 )
 
-from core.serializers import ReperesntationSerializerMixin
-from products.models import ProductProfile
+from apps.core.serializers import ReperesntationSerializerMixin
+from apps.products.models import ProductProfile
 
 class ProductSerializer(ModelSerializer):
 

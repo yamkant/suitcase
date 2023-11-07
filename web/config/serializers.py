@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from django_celery_results.models import TaskResult
-from core.serializers import UpdateSerializer
+from apps.core.serializers import UpdateSerializer
 
 class TaskResultSerializer(ModelSerializer):
     class Meta:

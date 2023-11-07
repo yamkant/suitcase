@@ -1,9 +1,10 @@
 from django import forms
-from users.forms.fields import EmailFormField, PasswordFormField, UsernameFormField
-from users.models import User
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import authenticate, get_user_model, password_validation
 from django.shortcuts import get_object_or_404
+
+from apps.users.forms.fields import PasswordFormField, UsernameFormField
+from apps.users.models import User
 
 class UserLoginForm(forms.ModelForm):
     login_username = UsernameFormField(label="username",)

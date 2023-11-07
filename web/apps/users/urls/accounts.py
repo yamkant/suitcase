@@ -1,6 +1,7 @@
 from django.urls import path
-from users.views.accounts import JoinAPIView, LoginAPIView
 from django.contrib.auth import views as auth_views
+
+from apps.users.views.accounts import JoinAPIView, LoginAPIView
 
 app_name = "accounts"
 

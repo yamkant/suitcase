@@ -1,8 +1,7 @@
 from django.urls import path
-from products.views.products import ProductBulkViewSet, ProductListView, ProductDetailView
-from products.views.profiles import ProductProfileViewSet
-from django.contrib.auth import views as auth_views
-from core.types import APIUrlPatternsType
+from apps.core.types import APIUrlPatternsType
+from apps.products.views.products import ProductBulkViewSet, ProductListView, ProductDetailView
+from apps.products.views.profiles import ProductProfileViewSet
 
 app_name = "products"
 

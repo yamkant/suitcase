@@ -3,9 +3,9 @@ from rest_framework.serializers import (
     CharField,
     ValidationError,
 )
-from core.serializers import ReperesntationSerializerMixin
+from apps.core.serializers import ReperesntationSerializerMixin
 
-from users.models import User
+from apps.users.models import User
 
 class UserSerializer(ModelSerializer):
     class Meta:
