@@ -10,6 +10,9 @@ from users.models import User
 class UserViewSetListTest(TestCase):
     endpoint = reverse_lazy('users:list')
 
+    관리자_1: User
+    일반_1: User
+
     @classmethod
     def setUpTestData(cls) -> None:
         cls.관리자_1 = User.objects.create(username="tester1", password="5933", level=UserLevelEnum.ADMIN.value)
@@ -28,6 +31,10 @@ class UserViewSetListTest(TestCase):
         self.assertEqual(len(response.data), 2)
 
 class UserViewSetDetailTest(TestCase):
+
+    관리자_1: User
+    일반_1: User
+
     @classmethod
     def setUpTestData(cls) -> None:
         cls.관리자_1 = User.objects.create(username="tester1", password="5933", level=UserLevelEnum.ADMIN.value)

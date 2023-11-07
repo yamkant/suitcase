@@ -19,7 +19,7 @@ class UserSerializer(ModelSerializer):
         read_only_fields = fields
 
 class UserCreateSerializer(ReperesntationSerializerMixin, ModelSerializer):
-    representation_serializer_class = UserSerializer
+    representation_serializer_class: UserSerializer = UserSerializer
     password2 = CharField(required=True)
 
     class Meta:
@@ -41,7 +41,7 @@ class UserCreateSerializer(ReperesntationSerializerMixin, ModelSerializer):
 
 # NOTE: Full Account / Basic Account인지 
 class UserUpdateForGeneralLevelSerializer(ReperesntationSerializerMixin, ModelSerializer):
-    representation_serializer_class = UserSerializer
+    representation_serializer_class: UserSerializer = UserSerializer
 
     class Meta:
         model = User
@@ -53,7 +53,7 @@ class UserUpdateForGeneralLevelSerializer(ReperesntationSerializerMixin, ModelSe
         return super().update(instance, validated_data)
 
 class UserUpdateForAdminLevelSerializer(ReperesntationSerializerMixin, ModelSerializer):
-    representation_serializer_class = UserSerializer
+    representation_serializer_class: UserSerializer = UserSerializer
 
     class Meta:
         model = User

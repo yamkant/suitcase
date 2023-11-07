@@ -25,18 +25,3 @@ USER_UPDATE_EXAMPLES = [
         },
     ),
 ]
-
-USER_LIST_EXAMPLES = [
-    # OpenApiParameter(
-    #     name="page",
-    #     type=int,
-    #     required=False,
-    #     description="페이지 번호를 입력하세요",
-    #     examples=[
-    #         OpenApiExample(
-    #             name="page number",
-    #             value=1,
-    #         ),
-    #     ]
-    # ),
-]

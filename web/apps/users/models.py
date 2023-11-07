@@ -1,4 +1,9 @@
-from django.db import models
+from django.db.models import (
+    CharField,
+    DateTimeField,
+    BooleanField,
+    IntegerField
+)
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class UserManager(BaseUserManager):
@@ -14,15 +19,15 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser):
-    username     = models.CharField(max_length=30, unique=True)
-    created_at   = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
-    last_login   = models.DateTimeField(verbose_name='last login', auto_now=True)
-    is_admin     = models.BooleanField(default=False)
-    is_active    = models.BooleanField(default=True)
-    is_staff     = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-    level        = models.IntegerField(unique=False, default=1)
-    user_url     = models.CharField(max_length=255, default="")
+    username: CharField         = CharField(max_length=30, unique=True)
+    created_at: DateTimeField   = DateTimeField(verbose_name='date joined', auto_now_add=True)
+    last_login: DateTimeField   = DateTimeField(verbose_name='last login', auto_now=True)
+    is_admin: BooleanField      = BooleanField(default=False)
+    is_active: BooleanField     = BooleanField(default=True)
+    is_staff: BooleanField      = BooleanField(default=False)
+    is_superuser:BooleanField   = BooleanField(default=False)
+    level: IntegerField         = IntegerField(unique=False, default=1)
+    user_url: CharField         = CharField(max_length=255, default="")
 
     objects = UserManager()
 

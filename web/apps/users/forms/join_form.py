@@ -2,16 +2,19 @@ from django import forms
 from users.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.auth import  password_validation
-from django.core.validators import MaxLengthValidator, RegexValidator
+from django.core.validators import MaxLengthValidator
 from rest_framework.validators import UniqueValidator
 from users.forms.fields import UsernameFormField, PasswordFormField, EmailFormField, PhoneFormField
 from users.serializers import UserCreateSerializer
+from typing import List, Callable, Any
+
+username_validators: List[Callable[[Any], None]] =  [
+    UniqueValidator,
+    MaxLengthValidator(50, message="50자 이내로 입력해주세요.")
+]
 
 class UserJoinForm(forms.ModelForm):
-    username = UsernameFormField(label="username", validators=[
-        UniqueValidator,
-        MaxLengthValidator(50, message="50자 이내로 입력해주세요.")]
-    )
+    username = UsernameFormField(label="username", validators=username_validators)
     password = PasswordFormField(label="password", widget=forms.PasswordInput)
     password2 = PasswordFormField(
         label="password check",

@@ -7,8 +7,6 @@ from core.serializers import ReperesntationSerializerMixin
 
 from products.models import Product
 from products.constants import ProductDeleteEnum
-from django.shortcuts import get_object_or_404
-from rest_framework.validators import UniqueTogetherValidator
 
 class ProductSerializer(ModelSerializer):
 

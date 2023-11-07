@@ -27,14 +27,14 @@ class ProductViewSetListTest(TestCase):
     def test_로그인_이후_상품을_조회한다(self):
         self.client.force_login(user=self.유저_1)
 
-        self.prod_1 = Product.objects.create(
+        self.상품_1 = Product.objects.create(
             name="new_prod_1",
             image_url="https://s3_bucket_address/test_image.png",
             category=CategoryEnum.PANTS.value,
             user_id=self.유저_1,
         )
 
-        self.prod_2 = Product.objects.create(
+        self.상품_2 = Product.objects.create(
             name="new_prod_2",
             image_url="https://s3_bucket_address/test_image.png",
             category=CategoryEnum.PANTS.value,
@@ -54,15 +54,15 @@ class ProductViewSetListTest(TestCase):
 
         endpoint = self.endpoint + '?page=2&page_size=1'
 
-        self.prod_1 = Product.objects.create(name="new_prod_1", user_id=self.유저_1)
-        self.prod_2 = Product.objects.create(name="new_prod_2", user_id=self.유저_1)
-        self.prod_3 = Product.objects.create(name="new_prod_2", user_id=self.유저_1)
+        self.상품_1 = Product.objects.create(name="new_prod_1", user_id=self.유저_1)
+        self.상품_2 = Product.objects.create(name="new_prod_2", user_id=self.유저_1)
+        self.상품_3 = Product.objects.create(name="new_prod_2", user_id=self.유저_1)
         
         response = self.client.get(path=endpoint, content_type='application/json')
         res_data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(res_data['count'], 3)
-        self.assertEqual(res_data['results'][0]['id'], self.prod_2.id)
+        self.assertEqual(res_data['results'][0]['id'], self.상품_2.id)
 
     def test_로그인_이후_상품을_생성한다(self):
         self.client.force_login(user=self.유저_1)
@@ -136,6 +136,8 @@ class ProductViewSetDetailTest(TestCase):
 
     유저_1: User
     유저_2: User
+    상품_1: Product
+    상품_2: Product
 
     @classmethod
     def setUpTestData(cls) -> None:
@@ -149,7 +151,7 @@ class ProductViewSetDetailTest(TestCase):
             user_id=cls.유저_1,
         )
 
-        cls.other_prod = Product.objects.create(
+        cls.상품_2 = Product.objects.create(
             name="new_other_prod",
             image_url="https://s3_bucket_address/test_image.png",
             category=CategoryEnum.PANTS.value,
@@ -201,7 +203,7 @@ class ProductViewSetDetailTest(TestCase):
     def test_타인의_상품을_수정할_수_없다(self):
         self.client.force_login(user=self.유저_1)
 
-        endpoint = reverse_lazy('products:detail', args=[self.other_prod.id])
+        endpoint = reverse_lazy('products:detail', args=[self.상품_2.id])
 
         request_data = {
             'name': '수정된 이름'
@@ -216,7 +218,7 @@ class ProductViewSetDetailTest(TestCase):
     def test_타인의_상품을_삭제할_수_없다(self):
         self.client.force_login(user=self.유저_1)
 
-        endpoint = reverse_lazy('products:detail', args=[self.other_prod.id])
+        endpoint = reverse_lazy('products:detail', args=[self.상품_2.id])
 
         request_data = {
         }
@@ -228,23 +230,30 @@ class ProductViewSetDetailTest(TestCase):
 
 class ProductBulkViewTest(TestCase):
     endpoint = reverse_lazy('products:bulk')
+
+    유저_1: User
+    유저_2: User
+    상품_1: Product
+    상품_2: Product
+    상품_3: Product
+
     @classmethod
     def setUpTestData(cls) -> None:
         cls.유저_1 = User.objects.create(username="tester1", password="5933", level=UserLevelEnum.TESTER.value)
         cls.유저_2 = User.objects.create(username="tester2", password="5933", level=UserLevelEnum.TESTER.value)
-        cls.prod_1 = Product.objects.create(
+        cls.상품_1 = Product.objects.create(
             name="new_prod_1",
             image_url="https://s3_bucket_address/test_image.png",
             category=CategoryEnum.PANTS.value,
             user_id=cls.유저_1,
         )
-        cls.prod_2 = Product.objects.create(
+        cls.상품_2 = Product.objects.create(
             name="new_prod_2",
             image_url="https://s3_bucket_address/test_image.png",
             category=CategoryEnum.PANTS.value,
             user_id=cls.유저_1,
         )
-        cls.prod_3 = Product.objects.create(
+        cls.상품_3 = Product.objects.create(
             name="new_prod_3",
             image_url="https://s3_bucket_address/test_image.png",
             category=CategoryEnum.PANTS.value,
@@ -254,15 +263,15 @@ class ProductBulkViewTest(TestCase):
     def test_상품을_다량_수정한다(self):
         self.client.force_login(user=self.유저_1)
 
-        prod_list = [self.prod_1.id, self.prod_2.id]
+        prod_list = [self.상품_1.id, self.상품_2.id]
         request_data = {
             "prod_list": prod_list,
             "is_active": ProductStatusEnum.DEACTIVE.value,
         }
 
         response = self.client.patch(path=self.endpoint, data=request_data, content_type='application/json')
-        self.prod_1.refresh_from_db()
-        self.prod_2.refresh_from_db()
+        self.상품_1.refresh_from_db()
+        self.상품_2.refresh_from_db()
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         for prod_id in request_data['prod_list']:
@@ -274,15 +283,15 @@ class ProductBulkViewTest(TestCase):
         self.client.force_login(user=self.유저_1)
 
         unregistered_prod_id = 999
-        prod_list = [self.prod_1.id, self.prod_2.id, unregistered_prod_id]
+        prod_list = [self.상품_1.id, self.상품_2.id, unregistered_prod_id]
         request_data = {
             "prod_list": prod_list,
             "is_active": ProductStatusEnum.DEACTIVE.value,
         }
 
         response = self.client.patch(path=self.endpoint, data=request_data, content_type='application/json')
-        self.prod_1.refresh_from_db()
-        self.prod_2.refresh_from_db()
+        self.상품_1.refresh_from_db()
+        self.상품_2.refresh_from_db()
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         for prod_id in request_data['prod_list']:
@@ -296,16 +305,16 @@ class ProductBulkViewTest(TestCase):
     def test_다른_사람의_상품은_대량_수정_리스트에서_제외된다(self):
         self.client.force_login(user=self.유저_1)
 
-        other_user_prod_id = self.prod_3.id
-        prod_list = [self.prod_1.id, self.prod_2.id, other_user_prod_id]
+        other_user_prod_id = self.상품_3.id
+        prod_list = [self.상품_1.id, self.상품_2.id, other_user_prod_id]
         request_data = {
             "prod_list": prod_list,
             "is_active": ProductStatusEnum.DEACTIVE.value,
         }
 
         response = self.client.patch(path=self.endpoint, data=request_data, content_type='application/json')
-        self.prod_1.refresh_from_db()
-        self.prod_2.refresh_from_db()
+        self.상품_1.refresh_from_db()
+        self.상품_2.refresh_from_db()
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         for prod_id in request_data['prod_list']:
@@ -319,14 +328,14 @@ class ProductBulkViewTest(TestCase):
     def test_요청한_상품의_상태가_없는_경우_수정하지_않는다(self):
         self.client.force_login(user=self.유저_1)
 
-        prod_list = [self.prod_1.id, self.prod_2.id]
+        prod_list = [self.상품_1.id, self.상품_2.id]
         request_data = {
             "prod_list": prod_list,
             "is_active": "H",
         }
 
         response = self.client.patch(path=self.endpoint, data=request_data, content_type='application/json')
-        self.prod_1.refresh_from_db()
-        self.prod_2.refresh_from_db()
+        self.상품_1.refresh_from_db()
+        self.상품_2.refresh_from_db()
         
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

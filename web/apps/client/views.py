@@ -19,11 +19,8 @@ from rest_framework import filters
 from rest_framework.generics import ListAPIView
 from django.utils.decorators import method_decorator
 
-from django.shortcuts import redirect
 import random
 from drf_spectacular.utils import extend_schema
-
-from django_eventstream import send_event
 
 @extend_schema(
     exclude=True

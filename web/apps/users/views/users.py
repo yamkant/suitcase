@@ -1,4 +1,6 @@
-from rest_framework import viewsets
+from rest_framework.viewsets import (
+    ModelViewSet,
+)
 from rest_framework.response import Response
 from rest_framework import status
 from users.models import User
@@ -6,11 +8,13 @@ from users.serializers import UserSerializer, UserUpdateForAdminLevelSerializer,
 from users.permissions import IsAdminLevel
 from users.constants import UserLevelEnum
 from drf_spectacular.utils import extend_schema
-from users.swagger import USER_LIST_EXAMPLES, USER_UPDATE_EXAMPLES
+from users.swagger import USER_UPDATE_EXAMPLES
+from rest_framework.parsers import JSONParser
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAdminLevel]
+    parser_classes = [JSONParser]
     lookup_field = "id"
 
     def get_queryset(self):
@@ -31,7 +35,6 @@ class UserViewSet(viewsets.ModelViewSet):
         summary="유저 목록을 조회합니다.",
         description="""전체 유저 목록을 조회합니다. (이후, 커뮤니티 관련기능 추가)""",
         tags=['유저'],
-        parameters=USER_LIST_EXAMPLES,
         responses={
             status.HTTP_200_OK: UserSerializer,
         }
