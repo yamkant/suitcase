@@ -1,7 +1,7 @@
 from rest_framework.serializers import (
-    BaseSerializer,
     ModelSerializer
 )
+from typing import Any, Optional
 
 class CreateSerializer(ModelSerializer):
     representation_serializer_class = None
@@ -15,8 +15,8 @@ class UpdateSerializer(ModelSerializer):
     def to_representation(self, instance):
         return self.representation_serializer_class(instance=instance).data
 
-class ReperesntationSerializerMixin(BaseSerializer):
-    representation_serializer_class = None
+class ReperesntationSerializerMixin(ModelSerializer):
+    representation_serializer_class: Optional[ModelSerializer] = None
 
     def to_representation(self, instance):
         return self.representation_serializer_class(instance=instance).data

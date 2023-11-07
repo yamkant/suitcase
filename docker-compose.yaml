@@ -13,7 +13,7 @@ services:
       context: ./web
       dockerfile: Dockerfile.app
     container_name: my_app
-    command: "/bin/bash /apps/entrypoint.app.sh"
+    command: "/bin/bash /web/apps/entrypoint.app.sh"
     env_file:
       - ./web/.env
     ports:
@@ -29,7 +29,7 @@ services:
       context: ./web
       dockerfile: Dockerfile.celery
     container_name: my_celery
-    command: "/bin/bash /apps/entrypoint.celery.sh"
+    command: "/bin/bash /web/apps/entrypoint.celery.sh"
     env_file:
       - ./web/.env
     environment:

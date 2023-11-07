@@ -17,7 +17,7 @@ class ProductSerializer(ModelSerializer):
         read_only_fields = fields
 
 class ProductProfileCreateSerializer(ReperesntationSerializerMixin, ModelSerializer):
-    representation_serializer_class = ProductSerializer
+    representation_serializer_class: ModelSerializer = ProductSerializer
 
     class Meta:
         model = ProductProfile

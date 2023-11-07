@@ -13,6 +13,8 @@ from rest_framework import status
 class ProductProfileViewSetTest(TestCase):
     endpoint = reverse_lazy('products:profile_list')
 
+    user_1: User
+
     @classmethod
     def setUpTestData(cls) -> None:
         cls.user_1 = User.objects.create(username="tester1", password="5933", level=UserLevelEnum.TESTER.value)

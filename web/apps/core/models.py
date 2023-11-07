@@ -1,10 +1,13 @@
-from django.db import models
+from django.db.models import (
+    Model,
+    DateTimeField,
+)
 
-class BaseModel(models.Model):
-    updated_at = models.DateTimeField(
+class BaseModel(Model):
+    updated_at: DateTimeField = DateTimeField(
         auto_now=True,
     )
-    created_at = models.DateTimeField(
+    created_at: DateTimeField = DateTimeField(
         auto_now_add=True,
     )
 
